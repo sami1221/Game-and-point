@@ -205,6 +205,11 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
 .av-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .av-cashout-overlay{position:absolute;top:10px;left:10px;background:rgba(0,208,132,0.15);border:1px solid rgba(0,208,132,0.5);border-radius:10px;padding:6px 12px;font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:var(--green);display:none;z-index:5;}
 .av-cashout-overlay.show{display:block;}
+/* FIX: Multiplier shown prominently in canvas area */
+.av-mult-canvas-overlay{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Orbitron',monospace;font-size:clamp(28px,8vw,48px);font-weight:900;color:var(--red);text-shadow:0 0 30px rgba(255,58,92,0.8),0 0 60px rgba(255,58,92,0.4);pointer-events:none;z-index:5;transition:color 0.3s;}
+.av-mult-canvas-overlay.mid{color:var(--gold);text-shadow:0 0 30px rgba(255,215,0,0.8);}
+.av-mult-canvas-overlay.high{color:var(--green);text-shadow:0 0 30px rgba(0,208,132,0.8);}
+.av-mult-canvas-overlay.hidden{display:none;}
 .av-bet-phase-msg{background:rgba(0,208,132,0.1);border:1px solid rgba(0,208,132,0.3);border-radius:10px;padding:7px;text-align:center;font-size:11px;color:var(--green);font-weight:700;margin-bottom:6px;font-family:'Orbitron',monospace;letter-spacing:.5px;animation:betMsgPulse 1s ease-in-out infinite alternate;}
 @keyframes betMsgPulse{from{opacity:.7}to{opacity:1}}
 
@@ -373,6 +378,7 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
 .ttt-board{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 auto 16px;max-width:320px;}
 .ttt-cell{background:linear-gradient(145deg,var(--dark3),var(--dark4));border:2px solid rgba(108,58,255,0.3);border-radius:14px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:52px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
 .ttt-cell:active{transform:scale(0.93);}
+/* FIX: X is red, O is blue */
 .ttt-cell.x-cell{border-color:rgba(255,58,92,0.6);background:linear-gradient(145deg,rgba(255,58,92,0.1),var(--dark4));}
 .ttt-cell.o-cell{border-color:rgba(0,170,255,0.6);background:linear-gradient(145deg,rgba(0,170,255,0.1),var(--dark4));}
 .ttt-cell.win-cell{border-color:var(--gold);background:linear-gradient(145deg,rgba(255,215,0,0.15),var(--dark4));animation:cellWin .4s ease-in-out infinite alternate;}
@@ -421,8 +427,8 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
     <button class="btn btn-primary" id="resultContinueBtn" onclick="continueGame()">▶ Continue</button>
     <button class="btn btn-outline" onclick="goHome()">🏠 Home</button>
   </div>
-</div>
-
+  </div>
+  
 <!-- PAYMENT MODAL -->
 <div class="modal-overlay" id="payModal">
   <div class="modal" style="max-width:380px">
@@ -462,8 +468,8 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
     <div class="avatar-grid" id="avatarGrid"></div>
     <button class="btn btn-outline" onclick="closeAvatarModal()">Cancel</button>
   </div>
-  </div>
- 
+</div>
+
 <!-- MAIN APP -->
 <div id="app">
   <div id="header">
@@ -488,6 +494,7 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
       <h2 id="welcomeMsg">👋 Welcome to GameZone!</h2>
       <p>Play games · Earn coins · Become champion!</p>
     </div>
+    <!-- FIX: Bonus hidden permanently after claim via JS, not just display:none which resets -->
     <div class="new-user-bonus" id="newUserBonusBtn" onclick="claimBonus()">
       <div><div style="font-size:13px;font-weight:700">🎁 New User Bonus!</div><div style="font-size:11px;color:rgba(255,215,0,0.7);margin-top:2px">Claim 200 free coins</div></div>
       <div style="font-size:26px">→</div>
@@ -503,7 +510,7 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
       <div class="game-card" onclick="openGame('tictactoe')">
         <span class="emoji">⭕</span>
         <div class="gname">OX Game</div>
-        <div class="gdesc">Beat the Hard AI! Win 5 points!</div>
+        <div class="gdesc">Beat the AI! Win 5 points!</div>
         <div class="bet-tag">1 Ad</div>
       </div>
       <div class="game-card" onclick="openGame('wheel')">
@@ -583,7 +590,7 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
     <div style="text-align:center;padding:14px 0 18px;font-size:12px;color:var(--text2);text-transform:uppercase;letter-spacing:2px">🏆 Top Players</div>
     <div id="lb-list" style="margin-bottom:20px"></div>
   </div>
-
+ 
   <!-- PROFILE -->
   <div class="page" id="page-profile">
     <div class="profile-card">
@@ -680,7 +687,7 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
     </div>
   </div>
 </div>
-
+ 
 <!-- BOTTOM NAV -->
 <div id="nav">
   <button class="nav-btn active" onclick="showPage('home')" id="nav-home"><span class="icon">🏠</span>Home</button>
@@ -701,6 +708,8 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
     <div class="mult-history" id="multHistory"></div>
     <div class="aviator-canvas-wrap">
       <canvas id="aviatorCanvas"></canvas>
+      <!-- FIX: Big multiplier shown in canvas center -->
+      <div class="av-mult-canvas-overlay hidden" id="avMultCanvasOverlay">1.00x</div>
       <div class="av-cashout-overlay" id="avCashoutOverlay">✅ Cashed Out!</div>
     </div>
     <div class="av-controls-bottom">
@@ -881,11 +890,13 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
   <div class="game-screen-scroll">
     <div class="ttt-area">
       <div class="game-coin-balance"><span class="gcb-label">Points:</span><span class="gcb-val" style="color:var(--gold)" id="tttPtsDisplay">0 pts</span></div>
+      <!-- FIX: Removed "Hard" from display; AI difficulty is hidden internally -->
       <div class="ttt-info">
         <div class="ttt-info-row"><span>Cost per game</span><span class="ttt-info-val">1 Ad</span></div>
-        <div class="ttt-info-row"><span>Win vs Hard AI</span><span class="ttt-info-val">+5 Points</span></div>
+        <div class="ttt-info-row"><span>Win vs AI</span><span class="ttt-info-val">+5 Points</span></div>
+        <!-- FIX: X is red ❌, O is blue ⭕ -->
         <div class="ttt-info-row"><span>You are</span><span class="ttt-info-val" style="color:var(--red)">❌ X</span></div>
-        <div class="ttt-info-row"><span>AI is</span><span class="ttt-info-val" style="color:var(--blue)">⭕ O (Hard)</span></div>
+        <div class="ttt-info-row"><span>AI is</span><span class="ttt-info-val" style="color:var(--blue)">⭕ O</span></div>
       </div>
       <div class="ttt-score-row">
         <div class="ttt-score-box player-score">
@@ -918,8 +929,8 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
       <button class="btn btn-outline" id="tttNewGameBtn" onclick="tttNewGame()" style="display:none">🔄 New Game (1 Ad)</button>
     </div>
   </div>
- </div>
-  
+</div>
+
 <script>
 // ===================== STATE =====================
 let state = {
@@ -963,10 +974,10 @@ function init(){
   if(state.nightAdsDate !== today){ state.nightAdsWatched=0; state.nightAdsDate=today; saveState(); }
   updateAdsUI();
 
-  // Hide bonus button if already claimed
-  if(state.bonusClaimed){
-    const bonusBtn = document.getElementById('newUserBonusBtn');
-    if(bonusBtn) bonusBtn.style.display='none';
+  // FIX: Permanently hide bonus button if already claimed (persisted in state)
+  const bonusBtn = document.getElementById('newUserBonusBtn');
+  if(state.bonusClaimed && bonusBtn){
+    bonusBtn.style.display='none';
   }
 
   if(window.Telegram?.WebApp){
@@ -1083,11 +1094,15 @@ function markTaskTT(){
 }
 
 // ===================== BONUS =====================
+// FIX: bonusClaimed is persisted in localStorage, so banner never reappears
 function claimBonus(){
   if(state.bonusClaimed){ toast('Bonus already claimed!'); return; }
-  state.bonusClaimed=true; addCoins(200);
-  document.getElementById('newUserBonusBtn').style.display='none';
-  toast('🎉 200 Coins added to your wallet!'); saveState();
+  state.bonusClaimed=true;
+  saveState();
+  addCoins(200);
+  const bonusBtn=document.getElementById('newUserBonusBtn');
+  if(bonusBtn) bonusBtn.style.display='none';
+  toast('🎉 200 Coins added to your wallet!');
 }
 
 // ===================== ADMIN =====================
@@ -1290,19 +1305,18 @@ function closeGameScreen(game){
 }
 
 // ===================== LUCKY WHEEL =====================
-// Updated segments per request:
-// 100pts → 5pts, ×10 → ×5, 10pts → 0 LOSS, swap one ×0LOSS with ×1
+// FIX: Changed "+5 pts" segment (type add_point) to "+5 coins" (type add_coin with val 5)
 const WHEEL_SEGMENTS=[
-  {label:'×5',color:'#FF3A5C',type:'multiply',val:5},         // 0 - 5%
-  {label:'+1',color:'#3A8CFF',type:'add_coin',val:1},          // 1 - 8%
-  {label:'+5 pts',color:'#8B5CF6',type:'add_point',val:5},     // 2 - 12%
-  {label:'×1',color:'#555577',type:'multiply',val:1},           // 3 - 15%
-  {label:'÷2',color:'#FF7A00',type:'half',val:0},               // 4 - 10%
-  {label:'×0 LOSS',color:'#222240',type:'multiply',val:0},     // 5 - 12% (was +10pts)
-  {label:'×2',color:'#FFD700',type:'multiply',val:2},           // 6 - 12%
-  {label:'+5 pts',color:'#A020F0',type:'add_point',val:5},     // 7 - 10% (was +100pts)
-  {label:'×0 LOSS',color:'#222240',type:'multiply',val:0},     // 8 - 11%
-  {label:'×1',color:'#2a2a4a',type:'multiply',val:1},           // 9 - 5% (was ×0LOSS, swapped with ×1)
+  {label:'×5',color:'#FF3A5C',type:'multiply',val:5},
+  {label:'+1',color:'#3A8CFF',type:'add_coin',val:1},
+  {label:'+5🥈',color:'#8B5CF6',type:'add_coin',val:5},   // FIX: was add_point, now add_coin
+  {label:'×1',color:'#555577',type:'multiply',val:1},
+  {label:'÷2',color:'#FF7A00',type:'half',val:0},
+  {label:'×0 LOSS',color:'#222240',type:'multiply',val:0},
+  {label:'×2',color:'#FFD700',type:'multiply',val:2},
+  {label:'+5🥈',color:'#A020F0',type:'add_coin',val:5},   // FIX: was add_point, now add_coin
+  {label:'×0 LOSS',color:'#222240',type:'multiply',val:0},
+  {label:'×1',color:'#2a2a4a',type:'multiply',val:1},
 ];
 const WHEEL_WEIGHTS=[5,8,12,15,10,12,12,10,11,5];
 let wheelBet=10, wheelSpinning=false, wCanvas, wCtx, wheelAngle=0;
@@ -1441,10 +1455,13 @@ function evaluateWheel(segIdx){
       state.games++;state.wins++;state.history.unshift({game:'wheel',won:true,pts:win,time:new Date().toLocaleTimeString()});saveState();
     }
   } else if(seg.type==='add_coin'){
-    addCoins(seg.val+wheelBet);
-    msg=`🎉 +${seg.val} Coin!`; sub=`+${wheelBet+seg.val} total!`;
-    state.games++;state.wins++;state.history.unshift({game:'wheel',won:true,pts:seg.val,time:new Date().toLocaleTimeString()});saveState();
+    // FIX: All coin additions (including former +5pts) now add coins
+    const bonus=seg.val;
+    addCoins(wheelBet+bonus);
+    msg=`🎉 +${bonus} Coins!`; sub=`+${wheelBet+bonus} total!`;
+    state.games++;state.wins++;state.history.unshift({game:'wheel',won:true,pts:bonus,time:new Date().toLocaleTimeString()});saveState();
   } else if(seg.type==='add_point'){
+    // Kept for legacy compatibility (not used in current segments)
     addPoints(seg.val); addCoins(wheelBet);
     msg=`⭐ +${seg.val} Points!`; sub='Bet returned!';
     state.games++;state.wins++;state.history.unshift({game:'wheel',won:true,pts:seg.val,time:new Date().toLocaleTimeString()});saveState();
@@ -1480,6 +1497,17 @@ function resizeAvCanvas(){
   avCanvas.width=wrap.clientWidth||360;
   avCanvas.height=wrap.clientHeight||320;
 }
+
+// FIX: Update the canvas-center multiplier overlay
+function updateAvMultOverlay(m, hidden){
+  const el=document.getElementById('avMultCanvasOverlay');
+  if(!el) return;
+  if(hidden){ el.classList.add('hidden'); return; }
+  el.classList.remove('hidden');
+  el.textContent=m.toFixed(2)+'x';
+  el.className='av-mult-canvas-overlay'+(m>=5?' high':m>=2?' mid':'');
+}
+  
 function buildMultHistory(){
   const el=document.getElementById('multHistory');if(!el)return;
   el.innerHTML='';
@@ -1523,6 +1551,7 @@ function resetAviator(){
   document.getElementById('avBetBtn').disabled=false;
   document.getElementById('avCashBtn').disabled=true;
   document.getElementById('avCashoutOverlay').classList.remove('show');
+  updateAvMultOverlay(1.0, true);
   if(!avCanvas||!avCanvas.parentElement)return;
   resizeAvCanvas();renderAvIdle();
   avCdown=7;showAvBetMsg(avCdown);drawAvCountdown();
@@ -1571,6 +1600,7 @@ function startAvRound(){
   avState.path=[];avState.mult=1.0;avState.speed=0.006;
   document.getElementById('avStatus').textContent='✈️ Flying!';
   if(!avState.betPlaced) document.getElementById('avBetBtn').disabled=true;
+  updateAvMultOverlay(1.0, false);
   avLoop();
 }
 function stopAviator(){
@@ -1578,6 +1608,7 @@ function stopAviator(){
   if(avCdownTimer){clearInterval(avCdownTimer);avCdownTimer=null;}
   if(avState.frameId){cancelAnimationFrame(avState.frameId);avState.frameId=null;}
   hideBetMsg();
+  updateAvMultOverlay(1.0, true);
 }
 let avTick=0;
 function avLoop(){
@@ -1586,13 +1617,17 @@ function avLoop(){
   avState.mult+=avState.speed;
   avState.speed+=0.00005;
   const m=avState.mult;
+  const multColor=m<2?'var(--red)':m<5?'#fbbf24':'#10b981';
   document.getElementById('avMult').textContent=m.toFixed(2)+'x';
-  document.getElementById('avMult').style.color=m<2?'#ff4444':m<5?'#fbbf24':'#10b981';
+  document.getElementById('avMult').style.color=multColor;
+  // FIX: Update canvas overlay with live multiplier
+  updateAvMultOverlay(m, false);
   if(avState.betPlaced&&!avState.cashedOut)
     document.getElementById('avPotWin').textContent=Math.floor(avState.bet*m);
   drawAvFrame();
   if(m>=avState.crashAt){
     avState.running=false;avState.crashed=true;
+    updateAvMultOverlay(m, true);
     drawAvCrash();
     document.getElementById('avMult').textContent='💥 CRASH';
     document.getElementById('avMult').style.color='var(--red)';
@@ -1611,8 +1646,6 @@ function avLoop(){
   avState.frameId=requestAnimationFrame(avLoop);
 }
 
-// FIXED: Removed the large multiplier text overlay that was blocking the plane view.
-// Only the small cashout overlay (top-left) remains; the big centered number is removed.
 function drawAvFrame(){
   if(!avCtx||!avCanvas)return;
   const W=avCanvas.width,H=avCanvas.height,ctx=avCtx,m=avState.mult;
@@ -1643,11 +1676,6 @@ function drawAvFrame(){
   ctx.textAlign='center';ctx.textBaseline='middle';
   ctx.fillText('✈️',0,0);
   ctx.shadowBlur=0;ctx.restore();
-  // Cashout overlay: only small top-left badge if cashed out
-  if(avState.cashedOut){
-    // Already shown via the HTML overlay element, no canvas text needed
-  }
-  // Floor line
   ctx.strokeStyle='rgba(255,60,60,0.25)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(0,H*0.88);ctx.lineTo(W,H*0.88);ctx.stroke();
 }
@@ -1700,6 +1728,7 @@ function avCashOut(){
   const overlay=document.getElementById('avCashoutOverlay');
   overlay.textContent=`✅ ${m.toFixed(2)}x — +${winCoins} Coins!`;
   overlay.classList.add('show');
+  updateAvMultOverlay(m, true);
   addCoins(winCoins);
   toast(`💰 Cashed out at ${m.toFixed(2)}x → +${winCoins} Coins!`);
   state.games++;state.wins++;
@@ -1707,7 +1736,8 @@ function avCashOut(){
   saveState();
 }
 
-// ===================== RED OR BLUE (BULL) - FIXED FACING =====================
+// ===================== RED OR BLUE (BULL) =====================
+// FIX: Bulls now face each other correctly using canvas mirroring
 let bullCanvas,bullCtx,bullState={
   phase:'idle',selectedSide:null,bet:10,timer:0,winner:null,animFrame:null,
   redX:0,blueX:0,redVX:0,blueVX:0,shake:0,
@@ -1767,28 +1797,42 @@ function startBullFight(){
   else if(r<0.90)bullState.winner='blue';
   else bullState.winner='draw';
   const W=bullCanvas.width,H=bullCanvas.height;
-  // Start bulls facing each other from opposite sides
   bullState.redX=W*0.15; bullState.blueX=W*0.85;
   bullState.redVX=0;bullState.blueVX=0;bullState.tick=0;bullState.particles=[];
   bullFightLoop();
 }
 
-// Draw bull facing a specific direction using canvas transform
-// Red bull: faces RIGHT (toward center = toward blue)
-// Blue bull: faces LEFT (toward center = toward red) — achieved by scale(-1,1)
-function drawBullEmoji(ctx, x, y, sz, faceRight, winner, tick, isWinner, isLoser){
+// Helper: draw a bull emoji facing a specific horizontal direction
+// facingRight=true → bull faces right (toward center from left side) → use 🐂 normally
+// facingRight=false → bull faces left (toward center from right side) → use 🐂 mirrored with scale(-1,1)
+function drawBullAt(ctx, x, y, sz, facingRight, dotColor){
   ctx.save();
   ctx.translate(x, y);
-  if(!faceRight) ctx.scale(-1,1); // flip so it faces left
-  if(isLoser && tick>85){ ctx.globalAlpha=0.6; ctx.rotate(faceRight?0.45:-0.45); ctx.translate(0, 12); }
-  if(isWinner && tick>85){ ctx.shadowColor=faceRight?'#FF4422':'#2244FF'; ctx.shadowBlur=28; }
-  ctx.font=sz+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.fillText(faceRight?'🐂':'🐃',0,0);
-  if(isWinner && tick>85){
-    ctx.shadowBlur=0;
-    if(!faceRight) ctx.scale(-1,1); // un-flip for crown
-    ctx.font=`${sz*0.35}px serif`;ctx.fillText('👑',0,-sz*0.65);
+  if(!facingRight){
+    // Mirror horizontally so bull faces LEFT (toward center from right side)
+    ctx.scale(-1, 1);
   }
+  ctx.font=sz+'px serif';
+  ctx.textAlign='center';
+  ctx.textBaseline='middle';
+  ctx.fillText('🐂', 0, 0);
+  // Draw indicator dot - always position it above the bull's head (unmirrored coordinates)
+  ctx.restore();
+  // Draw dot in world coordinates above the bull
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(x, y - sz*0.6, sz*0.1, 0, Math.PI*2);
+  ctx.fillStyle=dotColor;
+  ctx.fill();
+  ctx.restore();
+}
+
+function drawBullWinnerCrown(ctx, x, y, sz){
+  ctx.save();
+  ctx.font=`${sz*0.35}px serif`;
+  ctx.textAlign='center';
+  ctx.textBaseline='middle';
+  ctx.fillText('👑', x, y - sz*0.75);
   ctx.restore();
 }
 
@@ -1801,8 +1845,8 @@ function bullFightLoop(){
   // Charge toward each other
   if(t<70){
     const speed=2.2+t*0.05;
-    bullState.redX+=speed;
-    bullState.blueX-=speed;
+    bullState.redX+=speed;   // red moves right toward center
+    bullState.blueX-=speed;  // blue moves left toward center
   }
   if(bullState.redX>center-W*0.12) bullState.redX=center-W*0.12;
   if(bullState.blueX<center+W*0.12) bullState.blueX=center+W*0.12;
@@ -1862,6 +1906,7 @@ function drawBullFight(){
     ctx.arc(W*0.03+i*(W*0.07),H*0.16+Math.sin(i*1.7)*8,10+Math.sin(bullState.tick*0.05+i)*3,0,Math.PI*2);
     ctx.fillStyle=`hsla(${hue},55%,22%,0.5)`;ctx.fill();
   }
+  // Draw particles
   bullState.particles.forEach(p=>{
     const alpha=p.life/50;
     ctx.save();ctx.globalAlpha=Math.max(0,alpha);
@@ -1876,35 +1921,55 @@ function drawBullFight(){
   if(bullState.shake>5){
     ctx.fillStyle=`rgba(255,200,50,${Math.min(0.25,bullState.shake/35)})`;ctx.fillRect(-10,0,W+20,H);
   }
+
   const sz=Math.round(Math.min(W,H)*0.32);
   const gy=H*0.56;
-
-  // RED bull: faces RIGHT (toward blue) — faceRight=true
   const redIsWinner=bullState.winner==='red'&&bullState.tick>85;
+  const blueIsWinner=bullState.winner==='blue'&&bullState.tick>85;
   const redIsLoser=bullState.winner==='blue'&&bullState.tick>85;
-  ctx.save();ctx.translate(bullState.redX,gy);
-  if(redIsLoser){ctx.globalAlpha=0.6;ctx.rotate(0.45);ctx.translate(0,H*0.08);}
-  if(redIsWinner){ctx.shadowColor='#FF4422';ctx.shadowBlur=28;}
-  // Red indicator
-  ctx.save();ctx.fillStyle='#FF2222';ctx.beginPath();ctx.arc(-sz*0.08,-sz*0.65,sz*0.1,0,Math.PI*2);ctx.fill();ctx.restore();
+  const blueIsLoser=bullState.winner==='red'&&bullState.tick>85;
+
+  // Shadow glow for winner
+  if(redIsWinner){ ctx.save(); ctx.shadowColor='#FF4422'; ctx.shadowBlur=28; }
+
+  // FIX: Red bull on LEFT side, faces RIGHT (toward blue) — draw normally (no mirror)
+  ctx.save();
+  ctx.translate(bullState.redX, gy);
+  if(redIsLoser){ ctx.globalAlpha=0.6; ctx.rotate(0.3); ctx.translate(0, H*0.06); }
   ctx.font=sz+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.fillText('🐂',0,0); // faces right naturally
-  if(redIsWinner){ctx.shadowBlur=0;ctx.font=`${sz*0.35}px serif`;ctx.fillText('👑',0,-sz*0.65);}
+  ctx.fillText('🐂', 0, 0); // 🐂 naturally faces right ✓
+  ctx.restore();
+  if(redIsWinner){ ctx.restore(); }
+
+  // Red dot indicator
+  ctx.save();
+  ctx.beginPath();ctx.arc(bullState.redX, gy-sz*0.62, sz*0.1, 0, Math.PI*2);
+  ctx.fillStyle='#FF2222';ctx.fill();
   ctx.restore();
 
-  // BLUE bull: faces LEFT (toward red) — mirror with scale(-1,1)
-  const blueIsWinner=bullState.winner==='blue'&&bullState.tick>85;
-  const blueIsLoser=bullState.winner==='red'&&bullState.tick>85;
-  ctx.save();ctx.translate(bullState.blueX,gy);
-  ctx.scale(-1,1); // flip to face LEFT
-  if(blueIsLoser){ctx.globalAlpha=0.6;ctx.rotate(0.45);ctx.translate(0,H*0.08);}
-  if(blueIsWinner){ctx.shadowColor='#2244FF';ctx.shadowBlur=28;}
-  // Blue indicator (we need to un-flip for the dot position)
-  ctx.save();ctx.scale(-1,1);ctx.fillStyle='#2266FF';ctx.beginPath();ctx.arc(sz*0.08,-sz*0.65,sz*0.1,0,Math.PI*2);ctx.fill();ctx.restore();
+  // Winner crown for red
+  if(redIsWinner) drawBullWinnerCrown(ctx, bullState.redX, gy, sz);
+
+  if(blueIsWinner){ ctx.save(); ctx.shadowColor='#2244FF'; ctx.shadowBlur=28; }
+
+  // FIX: Blue bull on RIGHT side, faces LEFT (toward red) — mirror horizontally
+  ctx.save();
+  ctx.translate(bullState.blueX, gy);
+  ctx.scale(-1, 1); // Flip so bull faces LEFT (toward red bull)
+  if(blueIsLoser){ ctx.globalAlpha=0.6; ctx.rotate(0.3); ctx.translate(0, H*0.06); }
   ctx.font=sz+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.fillText('🐃',0,0);
-  if(blueIsWinner){ctx.shadowBlur=0;ctx.scale(-1,1);ctx.font=`${sz*0.35}px serif`;ctx.fillText('👑',0,-sz*0.65);}
+  ctx.fillText('🐂', 0, 0); // After mirror, bull faces left ✓
   ctx.restore();
+  if(blueIsWinner){ ctx.restore(); }
+
+  // Blue dot indicator (in world coords, no mirror needed)
+  ctx.save();
+  ctx.beginPath();ctx.arc(bullState.blueX, gy-sz*0.62, sz*0.1, 0, Math.PI*2);
+  ctx.fillStyle='#2255FF';ctx.fill();
+  ctx.restore();
+
+  // Winner crown for blue
+  if(blueIsWinner) drawBullWinnerCrown(ctx, bullState.blueX, gy, sz);
 
   // VS label
   if(bullState.tick<80){
@@ -1915,6 +1980,7 @@ function drawBullFight(){
     ctx.shadowColor='rgba(255,200,0,0.7)';ctx.shadowBlur=12;
     ctx.fillText('VS',W/2,gy-sz*0.25);ctx.shadowBlur=0;ctx.restore();
   }
+  // Progress bar
   const prog=Math.min(bullState.tick/125,1);
   ctx.fillStyle='rgba(0,0,0,0.6)';ctx.fillRect(W*0.15,8,W*0.7,8);
   const barGrad=ctx.createLinearGradient(W*0.15,0,W*0.85,0);
@@ -1932,26 +1998,32 @@ function drawBullIdle(){
   ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
   ctx.fillStyle='#2a1200';ctx.fillRect(0,H*0.76,W,H*0.24);
   const sz=Math.round(Math.min(W,H)*0.28);
+  const gy=H*0.52;
 
-  // Red bull LEFT side, faces RIGHT (toward center)
-  ctx.save();ctx.translate(W*0.22,H*0.52);
-  ctx.fillStyle='#FF2222';ctx.beginPath();ctx.arc(-sz*0.08,-sz*0.65,sz*0.1,0,Math.PI*2);ctx.fill();
+  // FIX: Red bull LEFT side, faces RIGHT toward center — draw normally
+  ctx.save();
+  ctx.translate(W*0.22, gy);
   ctx.font=sz+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.fillText('🐂',0,0); // faces right naturally ✓
+  ctx.fillText('🐂', 0, 0); // naturally faces right ✓
   ctx.restore();
+  // Red dot
+  ctx.save();ctx.fillStyle='#FF2222';ctx.beginPath();ctx.arc(W*0.22,gy-sz*0.62,sz*0.1,0,Math.PI*2);ctx.fill();ctx.restore();
   ctx.fillStyle='rgba(255,50,50,0.85)';ctx.font='bold 10px Orbitron,sans-serif';
   ctx.textAlign='center';ctx.fillText('🔴 RED',W*0.22,H*0.76+12);
 
-  // Blue bull RIGHT side, faces LEFT (toward center) — flip
-  ctx.save();ctx.translate(W*0.78,H*0.52);
-  ctx.scale(-1,1); // mirror to face left
-  ctx.save();ctx.scale(-1,1);ctx.fillStyle='#2255FF';ctx.beginPath();ctx.arc(sz*0.08,-sz*0.65,sz*0.1,0,Math.PI*2);ctx.fill();ctx.restore();
+  // FIX: Blue bull RIGHT side, faces LEFT toward center — mirror
+  ctx.save();
+  ctx.translate(W*0.78, gy);
+  ctx.scale(-1, 1); // Mirror to face left
   ctx.font=sz+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.fillText('🐃',0,0);
+  ctx.fillText('🐂', 0, 0); // after mirror faces left ✓
   ctx.restore();
+  // Blue dot
+  ctx.save();ctx.fillStyle='#2255FF';ctx.beginPath();ctx.arc(W*0.78,gy-sz*0.62,sz*0.1,0,Math.PI*2);ctx.fill();ctx.restore();
   ctx.fillStyle='rgba(0,150,255,0.85)';ctx.font='bold 10px Orbitron,sans-serif';
   ctx.textAlign='center';ctx.fillText('🔵 BLUE',W*0.78,H*0.76+12);
 
+  // VS
   ctx.fillStyle='rgba(255,200,0,0.7)';ctx.font='bold 22px Orbitron,monospace';
   ctx.textAlign='center';ctx.fillText('VS',W/2,H*0.48);
 }
@@ -2034,7 +2106,9 @@ function doRotatingSpin(){
   },3500);
 }
 
-// ===================== TIC TAC TOE (HARD AI) =====================
+// ===================== TIC TAC TOE (HARD AI - hidden from user) =====================
+// FIX: "Hard" label removed from UI. AI still uses minimax internally (hard difficulty hidden).
+// FIX: O is blue color, X is red color.
 let tttBoard=Array(9).fill(null);
 let tttGameActive=false;
 let tttPlayerScoreSession=0;
@@ -2053,7 +2127,6 @@ function openTicTacToe(){
   document.getElementById('tttPlayerScore').textContent=tttPlayerScoreSession;
   document.getElementById('tttAiScore').textContent=tttAiScoreSession;
   updateDisplay();
-  // disable cells
   for(let i=0;i<9;i++){
     const c=document.getElementById('tc'+i);
     if(c){c.onclick=null;c.classList.remove('x-cell','o-cell','win-cell');c.classList.add('empty');c.textContent='';}
@@ -2086,8 +2159,16 @@ function renderTTTBoard(){
     if(!c)continue;
     c.classList.remove('x-cell','o-cell','win-cell','empty');
     c.textContent='';
-    if(tttBoard[i]==='X'){c.classList.add('x-cell');c.textContent='❌';}
-    else if(tttBoard[i]==='O'){c.classList.add('o-cell');c.textContent='⭕';}
+    if(tttBoard[i]==='X'){
+      c.classList.add('x-cell');
+      // FIX: X shown in red color via span
+      c.innerHTML='<span style="color:#FF3A5C;">❌</span>';
+    }
+    else if(tttBoard[i]==='O'){
+      c.classList.add('o-cell');
+      // FIX: O shown in blue color via span
+      c.innerHTML='<span style="color:#00AAFF;">⭕</span>';
+    }
     else {c.classList.add('empty');}
   }
 }
@@ -2144,7 +2225,6 @@ function tttClick(idx){
 }
 
 function tttAiMove(){
-  // Hard AI: minimax
   const best=tttMinimax(tttBoard,'O');
   tttBoard[best.index]='O';
   renderTTTBoard();
@@ -2179,7 +2259,6 @@ function tttAiMove(){
 function tttShowNewGame(){
   document.getElementById('tttNewGameBtn').style.display='block';
   document.getElementById('tttWatchAdBtn').style.display='none';
-  document.getElementById('tttWatchAdBtn').disabled=false;
 }
 
 function tttNewGame(){
@@ -2208,7 +2287,7 @@ function tttCheckWinner(board){
   return null;
 }
 
-// Minimax with alpha-beta pruning for hard AI
+// Hard AI minimax with alpha-beta pruning (difficulty hidden from player)
 function tttMinimax(board, player, depth=0, alpha=-Infinity, beta=Infinity){
   const win=tttCheckWinner(board);
   if(win) return {score: win.winner==='O'?10-depth:depth-10};
@@ -2305,4 +2384,3 @@ if(wScreen) wObserver.observe(wScreen,{attributes:true,attributeFilter:['class']
 </script>
 </body>
 </html>
-  

@@ -95,6 +95,7 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
 .game-card .gdesc{font-size:10px;color:var(--text2);line-height:1.4;}
 .game-card .bet-tag{position:absolute;top:8px;right:8px;background:rgba(192,192,192,0.12);border:1px solid rgba(192,192,192,0.3);border-radius:8px;padding:2px 6px;font-size:9px;color:var(--silver);font-family:'Orbitron',monospace;}
 .game-card.featured{background:linear-gradient(145deg,rgba(108,58,255,0.15),var(--dark4));border-color:rgba(108,58,255,0.4);}
+
 /* MODALS */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(6px);}
 .modal-overlay.open{display:flex;}
@@ -170,38 +171,6 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
   transition:all .3s;pointer-events:none;white-space:nowrap;max-width:92vw;text-align:center;}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* ===== LUCKY SLOT ===== */
-.slot-machine-outer{
-  background:linear-gradient(145deg,#1a0a00,#0f0600);
-  border:3px solid var(--gold);border-radius:24px;
-  padding:4px;margin-bottom:14px;
-  box-shadow:0 0 40px rgba(255,215,0,0.2),0 0 80px rgba(255,165,0,0.08),inset 0 0 20px rgba(0,0,0,0.8);
-}
-.slot-machine-inner{background:linear-gradient(145deg,#0d0d20,#050510);border-radius:20px;padding:16px;border:2px solid rgba(255,165,0,0.2);}
-.slot-machine-top{background:linear-gradient(90deg,var(--gold),var(--gold2),var(--gold));border-radius:12px;padding:6px;text-align:center;font-family:'Orbitron',monospace;font-weight:900;font-size:11px;color:#000;letter-spacing:3px;margin-bottom:12px;box-shadow:0 2px 10px rgba(255,215,0,0.4);}
-.slot-reels{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px;}
-.slot-reel{background:linear-gradient(180deg,#020210,#080818,#020210);border:2px solid rgba(255,215,0,0.4);border-radius:14px;height:110px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;box-shadow:inset 0 0 20px rgba(0,0,0,0.8),0 0 10px rgba(255,215,0,0.1);}
-.slot-reel::before,.slot-reel::after{content:'';position:absolute;left:0;right:0;height:28px;z-index:2;}
-.slot-reel::before{top:0;background:linear-gradient(to bottom,rgba(2,2,16,0.95),transparent);}
-.slot-reel::after{bottom:0;background:linear-gradient(to top,rgba(2,2,16,0.95),transparent);}
-.slot-reel-track{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;}
-.slot-symbol{font-size:52px;transition:none;line-height:1;filter:drop-shadow(0 0 8px rgba(255,255,255,0.3));}
-.slot-reel.spin .slot-symbol{animation:reelSpin .07s linear infinite;}
-@keyframes reelSpin{0%{transform:translateY(-10px) scaleY(0.8)}50%{transform:translateY(4px) scaleY(1.1)}100%{transform:translateY(-10px) scaleY(0.8)}}
-.slot-reel.win{border-color:var(--gold);box-shadow:0 0 25px rgba(255,215,0,0.6),inset 0 0 25px rgba(255,215,0,0.15);animation:winPulse .4s ease-in-out infinite alternate;}
-@keyframes winPulse{from{box-shadow:0 0 15px rgba(255,215,0,0.4)}to{box-shadow:0 0 35px rgba(255,215,0,0.8)}}
-.slot-win-bar{height:3px;background:linear-gradient(90deg,transparent,var(--gold),#fff,var(--gold),transparent);margin:6px 0;opacity:0;transition:opacity .3s;border-radius:2px;}
-.slot-win-bar.visible{opacity:1;}
-.slot-result-casino{background:linear-gradient(135deg,rgba(0,0,0,0.6),rgba(20,10,0,0.4));border:1px solid rgba(255,215,0,0.2);border-radius:12px;padding:12px;text-align:center;margin-bottom:10px;min-height:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;}
-.slot-result-val{font-family:'Orbitron',monospace;font-size:17px;font-weight:700;}
-.slot-result-sub{font-size:11px;color:var(--text2);}
-.slot-payout-table{background:rgba(0,0,0,0.4);border:1px solid rgba(255,215,0,0.1);border-radius:12px;padding:10px;margin-bottom:10px;}
-.slot-payout-row{display:flex;align-items:center;justify-content:space-between;padding:5px 4px;font-size:12px;border-bottom:1px solid rgba(255,255,255,0.04);}
-.slot-payout-row:last-child{border:none;}
-.slot-payout-syms{font-size:14px;letter-spacing:1px;}
-.slot-payout-mult{color:var(--gold);font-family:'Orbitron',monospace;font-weight:700;font-size:11px;text-align:right;}
-.slot-payout-chance{font-size:9px;color:var(--text2);text-align:right;}
-
 /* ===== LUCKY SPIN (WHEEL) ===== */
 .spin-wheel-container{display:flex;flex-direction:column;align-items:center;padding:0;margin-bottom:14px;}
 .spin-wheel-wrap{position:relative;display:flex;flex-direction:column;align-items:center;width:100%;}
@@ -234,7 +203,6 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
 .av-adj-btn{background:rgba(255,255,255,0.06);border:none;color:var(--text);width:32px;height:32px;border-radius:8px;font-size:18px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
 .av-adj-val{flex:1;text-align:center;font-family:'Orbitron',monospace;font-size:16px;font-weight:700;color:var(--silver);}
 .av-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-/* Cashout indicator overlay on canvas */
 .av-cashout-overlay{position:absolute;top:10px;left:10px;background:rgba(0,208,132,0.15);border:1px solid rgba(0,208,132,0.5);border-radius:10px;padding:6px 12px;font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:var(--green);display:none;z-index:5;}
 .av-cashout-overlay.show{display:block;}
 .av-bet-phase-msg{background:rgba(0,208,132,0.1);border:1px solid rgba(0,208,132,0.3);border-radius:10px;padding:7px;text-align:center;font-size:11px;color:var(--green);font-weight:700;margin-bottom:6px;font-family:'Orbitron',monospace;letter-spacing:.5px;animation:betMsgPulse 1s ease-in-out infinite alternate;}
@@ -372,19 +340,16 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
 .coin-face{position:absolute;width:160px;height:160px;border-radius:50%;backface-visibility:hidden;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-size:52px;font-weight:900;box-shadow:0 0 30px rgba(0,0,0,0.8);}
 .coin-face-front{
   background:radial-gradient(circle at 35% 30%,#ffe566,#d4a017 50%,#8a6500);
-  border:5px solid #c8960a;
-  color:#7a4d00;
+  border:5px solid #c8960a;color:#7a4d00;
   text-shadow:2px 2px 4px rgba(255,255,255,0.3),-1px -1px 3px rgba(0,0,0,0.4);
 }
 .coin-face-back{
   background:radial-gradient(circle at 35% 30%,#ffe566,#d4a017 50%,#8a6500);
-  border:5px solid #c8960a;
-  color:#7a4d00;
+  border:5px solid #c8960a;color:#7a4d00;
   text-shadow:2px 2px 4px rgba(255,255,255,0.3),-1px -1px 3px rgba(0,0,0,0.4);
   transform:rotateY(180deg);
 }
 .coin-edge-ring{position:absolute;inset:0;border-radius:50%;border:3px solid rgba(255,220,80,0.3);box-shadow:inset 0 0 20px rgba(255,200,0,0.15),0 0 40px rgba(255,215,0,0.2);}
-@keyframes coinSpin{0%{transform:rotateY(0deg)}100%{transform:rotateY(360deg)}}
 .rotating-guess-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
 .guess-btn{border-radius:14px;padding:16px;text-align:center;cursor:pointer;transition:all .25s;border:2px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.03);}
 .guess-btn:active{transform:scale(0.95);}
@@ -400,8 +365,31 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
 .rotating-info-val{font-family:'Orbitron',monospace;font-weight:700;color:var(--gold);}
 .ads-badge-row{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:14px;}
 .ads-badge{background:rgba(0,208,132,0.1);border:1px solid rgba(0,208,132,0.3);border-radius:20px;padding:6px 14px;font-family:'Orbitron',monospace;font-size:12px;color:var(--green);font-weight:700;}
-.rotating-result-overlay{position:absolute;inset:0;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:48px;opacity:0;transition:opacity 0.3s;background:transparent;pointer-events:none;}
-.rotating-result-overlay.show{opacity:1;}
+
+/* ===== TIC TAC TOE (OX) ===== */
+#screen-tictactoe .game-screen-scroll{overflow-y:auto;}
+.ttt-area{max-width:420px;margin:0 auto;padding:14px;}
+.ttt-status-box{background:rgba(0,0,0,0.35);border:1px solid rgba(255,215,0,0.3);border-radius:14px;padding:12px;text-align:center;margin-bottom:14px;font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:var(--gold);min-height:48px;display:flex;align-items:center;justify-content:center;}
+.ttt-board{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 auto 16px;max-width:320px;}
+.ttt-cell{background:linear-gradient(145deg,var(--dark3),var(--dark4));border:2px solid rgba(108,58,255,0.3);border-radius:14px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:52px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
+.ttt-cell:active{transform:scale(0.93);}
+.ttt-cell.x-cell{border-color:rgba(255,58,92,0.6);background:linear-gradient(145deg,rgba(255,58,92,0.1),var(--dark4));}
+.ttt-cell.o-cell{border-color:rgba(0,170,255,0.6);background:linear-gradient(145deg,rgba(0,170,255,0.1),var(--dark4));}
+.ttt-cell.win-cell{border-color:var(--gold);background:linear-gradient(145deg,rgba(255,215,0,0.15),var(--dark4));animation:cellWin .4s ease-in-out infinite alternate;}
+@keyframes cellWin{from{box-shadow:0 0 10px rgba(255,215,0,0.3)}to{box-shadow:0 0 25px rgba(255,215,0,0.7)}}
+.ttt-cell.empty:hover{border-color:rgba(108,58,255,0.6);background:linear-gradient(145deg,rgba(108,58,255,0.08),var(--dark4));}
+.ttt-score-row{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;margin-bottom:14px;align-items:center;}
+.ttt-score-box{background:var(--dark3);border-radius:12px;padding:10px 8px;text-align:center;border:1px solid rgba(255,255,255,0.05);}
+.ttt-score-box.player-score{border-color:rgba(255,58,92,0.3);}
+.ttt-score-box.ai-score{border-color:rgba(0,170,255,0.3);}
+.ttt-score-val{font-family:'Orbitron',monospace;font-size:24px;font-weight:900;color:var(--gold);}
+.ttt-score-lbl{font-size:9px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
+.ttt-vs{font-family:'Orbitron',monospace;font-size:12px;color:var(--text2);}
+.ttt-info{background:rgba(255,58,92,0.06);border:1px solid rgba(255,58,92,0.2);border-radius:12px;padding:12px;margin-bottom:14px;}
+.ttt-info-row{display:flex;justify-content:space-between;font-size:12px;padding:2px 0;}
+.ttt-info-val{font-family:'Orbitron',monospace;font-weight:700;color:var(--green);}
+.ttt-ad-badge{background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.3);border-radius:20px;padding:5px 14px;font-family:'Orbitron',monospace;font-size:11px;color:var(--gold);text-align:center;display:inline-block;margin-bottom:12px;}
+.ttt-thinking{font-size:10px;color:var(--text2);text-align:center;font-style:italic;margin-bottom:6px;min-height:16px;}
 </style>
 </head>
 <body>
@@ -474,14 +462,14 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
     <div class="avatar-grid" id="avatarGrid"></div>
     <button class="btn btn-outline" onclick="closeAvatarModal()">Cancel</button>
   </div>
-</div>
-
+  </div>
+ 
 <!-- MAIN APP -->
 <div id="app">
   <div id="header">
     <div class="header-left">
       <div class="profile-circle-btn" id="profileCircleBtn" onclick="openProfileModal()">🎮</div>
-      <h1>⚡ GAMEZONE</h1>
+      <h1 id="headerTitle">⚡ GAMEZONE</h1>
     </div>
     <div class="header-right">
       <div id="points-badge" onclick="showPage('wallet')">
@@ -512,11 +500,11 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
         <div class="gdesc">Multiplier game! Cash out before crash!</div>
         <div class="bet-tag">10+🥈</div>
       </div>
-      <div class="game-card" onclick="openGame('slot')">
-        <span class="emoji">🎰</span>
-        <div class="gname">Lucky Slot</div>
-        <div class="gdesc">Spin 3 reels. Match symbols to win!</div>
-        <div class="bet-tag">10+🥈</div>
+      <div class="game-card" onclick="openGame('tictactoe')">
+        <span class="emoji">⭕</span>
+        <div class="gname">OX Game</div>
+        <div class="gdesc">Beat the Hard AI! Win 5 points!</div>
+        <div class="bet-tag">1 Ad</div>
       </div>
       <div class="game-card" onclick="openGame('wheel')">
         <span class="emoji">🌀</span>
@@ -595,12 +583,6 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
     <div style="text-align:center;padding:14px 0 18px;font-size:12px;color:var(--text2);text-transform:uppercase;letter-spacing:2px">🏆 Top Players</div>
     <div id="lb-list" style="margin-bottom:20px"></div>
   </div>
-  
-  <!-- LEADERBOARD -->
-  <div class="page" id="page-leaderboard">
-    <div style="text-align:center;padding:14px 0 18px;font-size:12px;color:var(--text2);text-transform:uppercase;letter-spacing:2px">🏆 Top Players</div>
-    <div id="lb-list" style="margin-bottom:20px"></div>
-  </div>
 
   <!-- PROFILE -->
   <div class="page" id="page-profile">
@@ -658,9 +640,7 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
         </a>
       </div>
     </div>
-    <div class="task-coming-soon">
-      🚀 More tasks coming soon! Stay tuned for new ways to earn points.
-    </div>
+    <div class="task-coming-soon">🚀 More tasks coming soon! Stay tuned for new ways to earn points.</div>
   </div>
 
   <!-- WALLET -->
@@ -690,7 +670,7 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
     </div>
     <div class="wallet-panel" id="walletPanel-withdraw">
       <div style="background:var(--dark3);border-radius:14px;padding:14px;margin-bottom:12px">
-        <div style="font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.6">Minimum: <strong style="color:var(--gold)">75,000 Points</strong> to withdraw. Fill all fields below.</div>
+        <div style="font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.6">Minimum: <strong style="color:var(--gold)">75,000 Points</strong> to withdraw.</div>
         <div class="withdraw-note">⏱ Withdrawal will be processed within 24 hours after submission.</div>
         <input class="withdraw-input" id="wdTelebirr" placeholder="Telebirr Phone Number (e.g. 09XX XXX XXX)" type="tel"/>
         <input class="withdraw-input" id="wdName" placeholder="Full Name (as on Telebirr)" />
@@ -750,106 +730,6 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
         <button class="btn btn-primary" id="avBetBtn" onclick="avPlaceBet()" style="margin-bottom:0">🎯 Bet</button>
         <button class="btn btn-red" id="avCashBtn" onclick="avCashOut()" disabled style="margin-bottom:0">💰 Cash Out!</button>
       </div>
-    </div>
-  </div>
-</div>
-
-<!-- ====== LUCKY SLOT SCREEN ====== -->
-<div class="game-screen" id="screen-slot">
-  <div class="game-header">
-    <button class="back-btn" onclick="closeGameScreen('slot')">←</button>
-    <h2>🎰 Lucky Slot</h2>
-    <div class="bet-info" id="slotBetInfo">0 🥈</div>
-  </div>
-  <div class="game-screen-scroll">
-    <div class="game-content">
-      <div class="game-coin-balance"><span class="gcb-label">Balance:</span><span class="gcb-val" id="slotCoinBalance">0 🥈</span></div>
-      <div style="background:var(--dark3);border-radius:14px;padding:12px;margin-bottom:12px">
-        <div class="coin-selector-label">🥈 Bet Amount</div>
-        <div class="coin-presets" id="slotPresets">
-          <div class="coin-preset active" data-val="10" onclick="selectSlotCoin(this)">10</div>
-          <div class="coin-preset" data-val="25" onclick="selectSlotCoin(this)">25</div>
-          <div class="coin-preset" data-val="50" onclick="selectSlotCoin(this)">50</div>
-          <div class="coin-preset" data-val="100" onclick="selectSlotCoin(this)">100</div>
-          <div class="coin-preset" data-val="200" onclick="selectSlotCoin(this)">200</div>
-          <div class="coin-preset" data-val="500" onclick="selectSlotCoin(this)">500</div>
-        </div>
-        <div class="coin-adjuster">
-          <button class="coin-adj-btn" onclick="adjSlotCoin(-10)">−</button>
-          <div style="flex:1;text-align:center">
-            <div class="coin-adj-val" id="slotCoinDisplay">10</div>
-            <div class="coin-adj-unit">coins</div>
-          </div>
-          <button class="coin-adj-btn" onclick="adjSlotCoin(10)">+</button>
-        </div>
-      </div>
-      <div class="slot-machine-outer">
-        <div class="slot-machine-inner">
-          <div class="slot-machine-top">🎰 LUCKY SLOT 🎰</div>
-          <div class="slot-reels">
-            <div class="slot-reel" id="slotReel0"><div class="slot-reel-track"><div class="slot-symbol" id="slotSym0">7️⃣</div></div></div>
-            <div class="slot-reel" id="slotReel1"><div class="slot-reel-track"><div class="slot-symbol" id="slotSym1">7️⃣</div></div></div>
-            <div class="slot-reel" id="slotReel2"><div class="slot-reel-track"><div class="slot-symbol" id="slotSym2">7️⃣</div></div></div>
-          </div>
-          <div class="slot-win-bar" id="slotWinLine"></div>
-          <div class="slot-result-casino" id="slotResult">
-            <div class="slot-result-val" id="slotResultVal">🎰 Ready to Spin!</div>
-            <div class="slot-result-sub" id="slotResultSub">Press SPIN below</div>
-          </div>
-          <div class="slot-payout-table">
-            <div class="section-title" style="margin-bottom:8px">Payout Rules</div>
-            <div class="slot-payout-row">
-              <span class="slot-payout-syms">7️⃣7️⃣7️⃣</span>
-              <div style="text-align:right"><div class="slot-payout-mult">×10 JACKPOT!</div><div class="slot-payout-chance">5% chance</div></div>
-            </div>
-            <div class="slot-payout-row">
-              <span class="slot-payout-syms">7️⃣7️⃣ + any</span>
-              <div style="text-align:right"><div class="slot-payout-mult">×1.5</div><div class="slot-payout-chance">Two sevens</div></div>
-            </div>
-            <div class="slot-payout-row">
-              <span class="slot-payout-syms">⭐⭐⭐</span>
-              <div style="text-align:right"><div class="slot-payout-mult">×5</div><div class="slot-payout-chance">7% chance</div></div>
-            </div>
-            <div class="slot-payout-row">
-              <span class="slot-payout-syms">⭐⭐ + any</span>
-              <div style="text-align:right"><div class="slot-payout-mult">½ refund</div><div class="slot-payout-chance">Half back</div></div>
-            </div>
-            <div class="slot-payout-row">
-              <span class="slot-payout-syms">💎💎💎</span>
-              <div style="text-align:right"><div class="slot-payout-mult">×4</div><div class="slot-payout-chance">10% chance</div></div>
-            </div>
-            <div class="slot-payout-row">
-              <span class="slot-payout-syms">💎💎 + any</span>
-              <div style="text-align:right"><div class="slot-payout-mult">¼ refund</div><div class="slot-payout-chance">25% back</div></div>
-            </div>
-            <div class="slot-payout-row">
-              <span class="slot-payout-syms">🥇🥇🥇</span>
-              <div style="text-align:right"><div class="slot-payout-mult">×3</div><div class="slot-payout-chance">13% chance</div></div>
-            </div>
-            <div class="slot-payout-row">
-              <span class="slot-payout-syms">🥇🥇 + any</span>
-              <div style="text-align:right"><div class="slot-payout-mult">No refund</div><div class="slot-payout-chance">All lost</div></div>
-            </div>
-            <div class="slot-payout-row">
-              <span class="slot-payout-syms">🍇🍇🍇</span>
-              <div style="text-align:right"><div class="slot-payout-mult">×2</div><div class="slot-payout-chance">15% chance</div></div>
-            </div>
-            <div class="slot-payout-row">
-              <span class="slot-payout-syms">🍇🍇 + any</span>
-              <div style="text-align:right"><div class="slot-payout-mult">No refund</div><div class="slot-payout-chance">All lost</div></div>
-            </div>
-            <div class="slot-payout-row">
-              <span class="slot-payout-syms">🍋🍋🍋</span>
-              <div style="text-align:right"><div class="slot-payout-mult">×1 (break even)</div><div class="slot-payout-chance">30% chance</div></div>
-            </div>
-            <div class="slot-payout-row">
-              <span class="slot-payout-syms">🍋🍋 + any</span>
-              <div style="text-align:right"><div class="slot-payout-mult">No refund</div><div class="slot-payout-chance">All lost</div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <button class="btn btn-gold" id="slotSpinBtn" onclick="spinSlot()">🎰 SPIN!</button>
     </div>
   </div>
 </div>
@@ -991,6 +871,55 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
   </div>
 </div>
 
+<!-- ====== TIC TAC TOE (OX) SCREEN ====== -->
+<div class="game-screen" id="screen-tictactoe">
+  <div class="game-header">
+    <button class="back-btn" onclick="closeGameScreen('tictactoe')">←</button>
+    <h2>⭕ OX Game</h2>
+    <div class="bet-info">1 Ad</div>
+  </div>
+  <div class="game-screen-scroll">
+    <div class="ttt-area">
+      <div class="game-coin-balance"><span class="gcb-label">Points:</span><span class="gcb-val" style="color:var(--gold)" id="tttPtsDisplay">0 pts</span></div>
+      <div class="ttt-info">
+        <div class="ttt-info-row"><span>Cost per game</span><span class="ttt-info-val">1 Ad</span></div>
+        <div class="ttt-info-row"><span>Win vs Hard AI</span><span class="ttt-info-val">+5 Points</span></div>
+        <div class="ttt-info-row"><span>You are</span><span class="ttt-info-val" style="color:var(--red)">❌ X</span></div>
+        <div class="ttt-info-row"><span>AI is</span><span class="ttt-info-val" style="color:var(--blue)">⭕ O (Hard)</span></div>
+      </div>
+      <div class="ttt-score-row">
+        <div class="ttt-score-box player-score">
+          <div class="ttt-score-val" id="tttPlayerScore">0</div>
+          <div class="ttt-score-lbl">❌ You</div>
+        </div>
+        <div class="ttt-vs">VS</div>
+        <div class="ttt-score-box ai-score">
+          <div class="ttt-score-val" id="tttAiScore">0</div>
+          <div class="ttt-score-lbl">⭕ AI</div>
+        </div>
+      </div>
+      <div class="ttt-status-box" id="tttStatus">Watch an ad to play!</div>
+      <div class="ttt-thinking" id="tttThinking"></div>
+      <div class="ttt-board" id="tttBoard">
+        <div class="ttt-cell empty" id="tc0" onclick="tttClick(0)"></div>
+        <div class="ttt-cell empty" id="tc1" onclick="tttClick(1)"></div>
+        <div class="ttt-cell empty" id="tc2" onclick="tttClick(2)"></div>
+        <div class="ttt-cell empty" id="tc3" onclick="tttClick(3)"></div>
+        <div class="ttt-cell empty" id="tc4" onclick="tttClick(4)"></div>
+        <div class="ttt-cell empty" id="tc5" onclick="tttClick(5)"></div>
+        <div class="ttt-cell empty" id="tc6" onclick="tttClick(6)"></div>
+        <div class="ttt-cell empty" id="tc7" onclick="tttClick(7)"></div>
+        <div class="ttt-cell empty" id="tc8" onclick="tttClick(8)"></div>
+      </div>
+      <div style="text-align:center;margin-bottom:12px">
+        <div class="ttt-ad-badge" id="tttAdsWatchedBadge">0 Ads watched</div>
+      </div>
+      <button class="btn btn-gold" id="tttWatchAdBtn" onclick="tttWatchAd()">📺 Watch Ad to Play</button>
+      <button class="btn btn-outline" id="tttNewGameBtn" onclick="tttNewGame()" style="display:none">🔄 New Game (1 Ad)</button>
+    </div>
+  </div>
+ </div>
+  
 <script>
 // ===================== STATE =====================
 let state = {
@@ -1006,11 +935,14 @@ let state = {
   selectedAvatar:'🎮',
   taskTgDone:false,
   taskTTDone:false,
-  rotatingAdsTotal:0
+  rotatingAdsTotal:0,
+  tttAdsTotal:0,
+  tttPlayerScore:0,
+  tttAiScore:0
 };
 
-function loadState(){try{const s=localStorage.getItem('gz_v8');if(s)state={...state,...JSON.parse(s)};}catch(e){}}
-function saveState(){try{localStorage.setItem('gz_v8',JSON.stringify(state));}catch(e){}}
+function loadState(){try{const s=localStorage.getItem('gz_v9');if(s)state={...state,...JSON.parse(s)};}catch(e){}}
+function saveState(){try{localStorage.setItem('gz_v9',JSON.stringify(state));}catch(e){}}
 
 function init(){
   loadState();
@@ -1031,7 +963,11 @@ function init(){
   if(state.nightAdsDate !== today){ state.nightAdsWatched=0; state.nightAdsDate=today; saveState(); }
   updateAdsUI();
 
-  if(state.bonusClaimed) document.getElementById('newUserBonusBtn').style.display='none';
+  // Hide bonus button if already claimed
+  if(state.bonusClaimed){
+    const bonusBtn = document.getElementById('newUserBonusBtn');
+    if(bonusBtn) bonusBtn.style.display='none';
+  }
 
   if(window.Telegram?.WebApp){
     Telegram.WebApp.ready(); Telegram.WebApp.expand();
@@ -1039,8 +975,9 @@ function init(){
     if(user){ state.username=user.first_name||'Player'; updateDisplay(); updateProfile(); }
   }
 
+  // Admin: tap header title 5 times
   let tapCount=0;
-  document.querySelector('#header h1').addEventListener('click',()=>{
+  document.getElementById('headerTitle').addEventListener('click',()=>{
     tapCount++;
     if(tapCount>=5){tapCount=0;openAdmin();}
     setTimeout(()=>{tapCount=0;},2000);
@@ -1067,7 +1004,7 @@ function updateDisplay(){
   document.getElementById('walletPoints').textContent=state.points.toLocaleString()+' pts';
   document.getElementById('walletCoins').textContent=state.coins.toLocaleString()+' 🥈';
   const bal = state.coins.toLocaleString() + ' 🥈';
-  ['avCoinBalance','slotCoinBalance','wheelCoinBalance','bullCoinBalance'].forEach(id=>{
+  ['avCoinBalance','wheelCoinBalance','bullCoinBalance'].forEach(id=>{
     const el=document.getElementById(id);
     if(el) el.textContent=bal;
   });
@@ -1075,6 +1012,10 @@ function updateDisplay(){
   if(rEl) rEl.textContent=state.points.toLocaleString()+' pts';
   const rAdEl=document.getElementById('rotatingAdsCount');
   if(rAdEl) rAdEl.textContent=(state.rotatingAdsTotal||0)+' Ads watched';
+  const tttEl=document.getElementById('tttPtsDisplay');
+  if(tttEl) tttEl.textContent=state.points.toLocaleString()+' pts';
+  const tttAdEl=document.getElementById('tttAdsWatchedBadge');
+  if(tttAdEl) tttAdEl.textContent=(state.tttAdsTotal||0)+' Ads watched';
 }
 function addPoints(n){ state.points+=n; if(state.points<0)state.points=0; updateDisplay(); saveState(); }
 function addCoins(n){ state.coins+=n; if(state.coins<0)state.coins=0; updateDisplay(); saveState(); }
@@ -1097,7 +1038,6 @@ function showPage(name){
   if(name==='tasks') updateTasksUI();
   if(name==='wheel') setTimeout(initWheelCanvas, 50);
 }
-
 function openProfileModal(){
   showPage('profile');
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
@@ -1135,17 +1075,11 @@ function updateTasksUI(){
 }
 function markTaskTg(){
   if(state.taskTgDone){ toast('✅ Already completed!'); return; }
-  setTimeout(()=>{
-    state.taskTgDone=true; addPoints(1000); saveState(); updateTasksUI();
-    toast('🎉 +1,000 Points! Welcome to the channel!');
-  },2000);
+  setTimeout(()=>{ state.taskTgDone=true; addPoints(1000); saveState(); updateTasksUI(); toast('🎉 +1,000 Points!'); },2000);
 }
 function markTaskTT(){
   if(state.taskTTDone){ toast('✅ Already completed!'); return; }
-  setTimeout(()=>{
-    state.taskTTDone=true; addPoints(1000); saveState(); updateTasksUI();
-    toast('🎉 +1,000 Points! Thanks for following!');
-  },2000);
+  setTimeout(()=>{ state.taskTTDone=true; addPoints(1000); saveState(); updateTasksUI(); toast('🎉 +1,000 Points!'); },2000);
 }
 
 // ===================== BONUS =====================
@@ -1198,7 +1132,7 @@ function updateExchangePreview(){
 function doExchange(){
   const inp=document.getElementById('exchangeAmtInput');
   const amt=parseInt(inp?.value)||0;
-  if(amt<1000){toast('⚠️ Minimum 1,000 coins to exchange!');return;}
+  if(amt<1000){toast('⚠️ Minimum 1,000 coins!');return;}
   if(state.coins<amt){toast('⚠️ Not enough coins!');return;}
   const pts=Math.floor(amt/10);
   addCoins(-amt); addPoints(pts);
@@ -1214,11 +1148,11 @@ function requestWithdraw(){
   if(state.points<75000){toast(`⚠️ Need 75,000 Points. You have ${state.points.toLocaleString()}.`);return;}
   const msg=`💸 WITHDRAW REQUEST\nTelebirr: ${tb}\nName: ${nm}\nTG: ${tg}\nPoints: ${state.points.toLocaleString()}`;
   window.open(`https://t.me/evana219?text=${encodeURIComponent(msg)}`, '_blank');
-  toast('✅ Request sent! Processing within 24 hours.');
+  toast('✅ Request sent!');
   ['wdTelebirr','wdName','wdTgUser'].forEach(id=>{ document.getElementById(id).value=''; });
 }
 
-// ===================== DAY ADS =====================
+// ===================== DAY/NIGHT ADS =====================
 function updateAdsUI(){
   const w=state.adsWatched||0;
   document.getElementById('adsWatchedLabel').textContent=`${w} / 50 watched today`;
@@ -1227,11 +1161,8 @@ function updateAdsUI(){
   document.getElementById('nightAdsLabel').textContent=`${nw} / 50 watched tonight`;
   document.getElementById('nightProgressBar').style.width=Math.min(100,(nw/50)*100)+'%';
 }
-
-// Night ads: Ethiopia time 8 PM - 10 PM = UTC 17:00 - 19:00 (EAT = UTC+3)
 function isNightAdTime(){
   const now=new Date();
-  // EAT = UTC+3, night ads 8 PM - 10 PM EAT = 20:00-22:00 EAT
   const eatHour=(now.getUTCHours()+3)%24;
   return eatHour>=20 && eatHour<22;
 }
@@ -1245,31 +1176,28 @@ function checkNightAds(){
     statusEl.style.color=state.nightAdsWatched>=50?'var(--green)':'var(--accent2)';
   } else {
     btn.disabled=true;
-    const nowUTC=new Date();
-    const eatHour=(nowUTC.getUTCHours()+3)%24;
-    const nextNight=eatHour<20?'Tonight at 8:00 PM':'Available again tomorrow night';
-    statusEl.textContent='🔒 Available 8:00 PM – 10:00 PM (ET) only. '+nextNight;
+    const eatHour=(new Date().getUTCHours()+3)%24;
+    statusEl.textContent='🔒 Available 8:00 PM – 10:00 PM (ET). '+(eatHour<20?'Tonight at 8:00 PM':'Available again tomorrow night');
     statusEl.style.color='var(--text2)';
   }
 }
-
 function watchDailyAd(){
-  if(state.adsWatched>=50){toast('📺 Daily limit reached! Come back tomorrow.');return;}
+  if(state.adsWatched>=50){toast('📺 Daily limit reached!');return;}
   showAd(()=>{
     state.adsWatched=(state.adsWatched||0)+1;
     addPoints(20);
-    if(state.adsWatched===50){ addPoints(50); toast('🎉 +20 pts! ALL 50 done! BONUS +50 pts!'); }
+    if(state.adsWatched===50){ addPoints(50); toast('🎉 ALL 50 done! BONUS +50 pts!'); }
     else toast(`📺 +20 Points! (${state.adsWatched}/50 today)`);
     updateAdsUI(); saveState();
   });
 }
 function watchNightAd(){
-  if(!isNightAdTime()){toast('🔒 Night ads available 8 PM – 10 PM (Ethiopia time) only!');return;}
+  if(!isNightAdTime()){toast('🔒 Night ads: 8 PM – 10 PM only!');return;}
   if(state.nightAdsWatched>=50){toast('✅ Tonight\'s limit reached!');return;}
   showAd(()=>{
     state.nightAdsWatched=(state.nightAdsWatched||0)+1;
     addPoints(30);
-    if(state.nightAdsWatched===50){ addPoints(30); toast('🌙 +30 pts! ALL 50 night ads done! BONUS +30 pts!'); }
+    if(state.nightAdsWatched===50){ addPoints(30); toast('🌙 ALL 50 night ads! BONUS +30 pts!'); }
     else toast(`🌙 +30 Points! (${state.nightAdsWatched}/50 tonight)`);
     updateAdsUI(); checkNightAds(); saveState();
   });
@@ -1312,7 +1240,7 @@ function closeAd(){
 
 // ===================== RESULTS =====================
 let currentGame=null;
-let currentBets={aviator:10,slot:10,wheel:10,bull:10};
+let currentBets={aviator:10,wheel:10,bull:10};
 function showResult(won, coinsWon){
   if(won){
     document.getElementById('resultEmoji').textContent='🏆';
@@ -1326,7 +1254,7 @@ function showResult(won, coinsWon){
   }
   state.games++;
   if(won) state.wins++;
-  state.history.unshift({game:currentGame,won,pts:won?coinsWon:-currentBets[currentGame],time:new Date().toLocaleTimeString()});
+  state.history.unshift({game:currentGame,won,pts:won?coinsWon:-(currentBets[currentGame]||0),time:new Date().toLocaleTimeString()});
   saveState();
   document.getElementById('resultModal').classList.add('open');
 }
@@ -1335,7 +1263,6 @@ function continueGame(){
   if(currentGame) resetGameState(currentGame);
 }
 function resetGameState(game){
-  if(game==='slot') resetSlot();
   if(game==='wheel') resetWheel();
   if(game==='bull') resetBull();
   if(game==='aviator') resetAviator();
@@ -1346,13 +1273,15 @@ function goHome(){
   currentGame=null; showPage('home');
 }
 
-// ===================== OPEN GAME =====================
+// ===================== OPEN / CLOSE GAME =====================
 function openGame(game){
   currentGame=game;
   document.getElementById('screen-'+game)?.classList.add('open');
-  resetGameState(game);
-  if(game==='wheel') setTimeout(initWheelCanvas,80);
-  if(game==='rotating') updateDisplay();
+  if(game==='wheel'){resetWheel();setTimeout(initWheelCanvas,80);}
+  else if(game==='bull') resetBull();
+  else if(game==='aviator') resetAviator();
+  else if(game==='rotating') openRotating();
+  else if(game==='tictactoe') openTicTacToe();
   updateDisplay();
 }
 function closeGameScreen(game){
@@ -1360,201 +1289,21 @@ function closeGameScreen(game){
   if(game==='aviator') stopAviator();
 }
 
-// ===================== LUCKY SLOT (new rules) =====================
-// Symbols and their triple multipliers
-const SLOT_SYMS=['7️⃣','⭐','💎','🥇','🍇','🍋'];
-// Rules:
-// 777 x10 (5%), 77+any x1.5
-// ⭐⭐⭐ x5 (7%), ⭐⭐+any ½refund
-// 💎💎💎 x4 (10%), 💎💎+any ¼refund
-// 🥇🥇🥇 x3 (13%), 🥇🥇+any no refund
-// 🍇🍇🍇 x2 (15%), 🍇🍇+any no refund
-// 🍋🍋🍋 x1 break even (30%), 🍋🍋+any no refund
-const SLOT_RULES={
-  '7️⃣':{triple:10, pairMult:1.5, pairRefund:true},
-  '⭐':{triple:5, pairMult:0.5, pairRefund:true},
-  '💎':{triple:4, pairMult:0.25, pairRefund:true},
-  '🥇':{triple:3, pairMult:0, pairRefund:false},
-  '🍇':{triple:2, pairMult:0, pairRefund:false},
-  '🍋':{triple:1, pairMult:0, pairRefund:false},
-};
-let slotSpinning=false, slotBet=10;
-
-function selectSlotCoin(el){
-  document.querySelectorAll('#slotPresets .coin-preset').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-  slotBet=parseInt(el.dataset.val);
-  document.getElementById('slotCoinDisplay').textContent=slotBet;
-  document.getElementById('slotBetInfo').textContent=slotBet+' 🥈';
-  currentBets.slot=slotBet;
-}
-function adjSlotCoin(n){
-  slotBet=Math.max(10,slotBet+n);
-  document.getElementById('slotCoinDisplay').textContent=slotBet;
-  document.getElementById('slotBetInfo').textContent=slotBet+' 🥈';
-  currentBets.slot=slotBet;
-  document.querySelectorAll('#slotPresets .coin-preset').forEach(b=>b.classList.remove('active'));
-}
-function resetSlot(){
-  slotSpinning=false;
-  ['slotReel0','slotReel1','slotReel2'].forEach((id,i)=>{
-    document.getElementById(id).classList.remove('spin','win');
-    document.getElementById('slotSym'+i).textContent='7️⃣';
-  });
-  document.getElementById('slotWinLine').classList.remove('visible');
-  document.getElementById('slotResultVal').textContent='🎰 Ready to Spin!';
-  document.getElementById('slotResultSub').textContent='Press SPIN below';
-  document.getElementById('slotResultSub').style.color='var(--text2)';
-  document.getElementById('slotResult').style.background='rgba(0,0,0,0.4)';
-  document.getElementById('slotSpinBtn').disabled=false;
-  document.getElementById('slotSpinBtn').textContent='🎰 SPIN!';
-  updateDisplay();
-}
-
-function genSlotResult(){
-  const r=Math.random();
-  let sym, outcome;
-  if(r<0.05) return {syms:['7️⃣','7️⃣','7️⃣'], outcome:'triple777'};
-  if(r<0.10){
-    // two 7s + other
-    const other=SLOT_SYMS.slice(1)[Math.floor(Math.random()*5)];
-    const pos=Math.floor(Math.random()*3);
-    const a=['7️⃣','7️⃣','7️⃣']; a[pos]=other;
-    return {syms:a, outcome:'pair77'};
-  }
-  // Weighted symbol selection for triples
-  const tripleWeights=[0,7,10,13,15,30]; // not 7 (handled above)
-  const tripleTotal=tripleWeights.reduce((a,b)=>a+b,0);
-  const pairWeights=[0,7,10,8,8,15];
-  const pairTotal=pairWeights.reduce((a,b)=>a+b,0);
-  // decide triple vs pair vs loss
-  const r2=Math.random();
-  const tripleChance=tripleTotal/100;
-  const pairChance=pairTotal/100;
-  if(r2<tripleChance){
-    // pick symbol by weight
-    let cum=0, rr=Math.random()*tripleTotal;
-    for(let i=1;i<SLOT_SYMS.length;i++){
-      cum+=tripleWeights[i];
-      if(rr<cum){ sym=SLOT_SYMS[i]; break; }
-    }
-    if(!sym) sym=SLOT_SYMS[5];
-    return {syms:[sym,sym,sym], outcome:'triple'};
-  } else if(r2<tripleChance+pairChance){
-    // pair
-    let cum=0, rr=Math.random()*pairTotal;
-    for(let i=1;i<SLOT_SYMS.length;i++){
-      cum+=pairWeights[i];
-      if(rr<cum){ sym=SLOT_SYMS[i]; break; }
-    }
-    if(!sym) sym=SLOT_SYMS[5];
-    let other; do{other=SLOT_SYMS[Math.floor(Math.random()*6)];}while(other===sym);
-    const pos=Math.floor(Math.random()*3);
-    const a=[sym,sym,other];
-    if(pos===1) a[0]=other,a[1]=sym,a[2]=sym;
-    if(pos===2) a[0]=sym,a[1]=other,a[2]=sym;
-    return {syms:a, outcome:'pair'};
-  } else {
-    // all different
-    let res;
-    do{
-      res=[SLOT_SYMS[Math.floor(Math.random()*6)],SLOT_SYMS[Math.floor(Math.random()*6)],SLOT_SYMS[Math.floor(Math.random()*6)]];
-    }while(res[0]===res[1]||res[1]===res[2]||res[0]===res[2]);
-    return {syms:res, outcome:'loss'};
-  }
-}
-
-function spinSlot(){
-  if(slotSpinning) return;
-  if(state.coins<slotBet){toast('⚠️ Not enough coins! Buy more.');return;}
-  addCoins(-slotBet);
-  slotSpinning=true;
-  document.getElementById('slotSpinBtn').disabled=true;
-  document.getElementById('slotSpinBtn').textContent='⏳ Spinning...';
-  document.getElementById('slotWinLine').classList.remove('visible');
-  document.getElementById('slotResult').style.background='rgba(0,0,0,0.4)';
-  document.getElementById('slotResultVal').textContent='🎰 Spinning...';
-  document.getElementById('slotResultSub').textContent='';
-
-  const {syms, outcome} = genSlotResult();
-
-  [0,1,2].forEach(i=>document.getElementById('slotReel'+i).classList.add('spin'));
-  let tick=0;
-  const spinI=setInterval(()=>{
-    [0,1,2].forEach(i=>{document.getElementById('slotSym'+i).textContent=SLOT_SYMS[Math.floor(Math.random()*6)];});
-    if(++tick>25) clearInterval(spinI);
-  },70);
-
-  setTimeout(()=>{ document.getElementById('slotReel0').classList.remove('spin'); document.getElementById('slotSym0').textContent=syms[0]; },1200);
-  setTimeout(()=>{ document.getElementById('slotReel1').classList.remove('spin'); document.getElementById('slotSym1').textContent=syms[1]; },1600);
-  setTimeout(()=>{ document.getElementById('slotReel2').classList.remove('spin'); document.getElementById('slotSym2').textContent=syms[2]; evaluateSlot(syms, outcome); },2000);
-}
-
-function evaluateSlot(items, outcome){
-  const rv=document.getElementById('slotResultVal');
-  const rs=document.getElementById('slotResultSub');
-  const resultBox=document.getElementById('slotResult');
-
-  if(outcome==='triple777'||outcome==='triple'){
-    const sym=items[0];
-    const mult=SLOT_RULES[sym].triple;
-    const win=slotBet*mult;
-    [0,1,2].forEach(i=>document.getElementById('slotReel'+i).classList.add('win'));
-    document.getElementById('slotWinLine').classList.add('visible');
-    resultBox.style.background='rgba(0,208,132,0.1)';
-    rv.textContent=`🏆 ${sym}${sym}${sym} ×${mult}${mult===10?' JACKPOT!':''}`;
-    rs.textContent=`Bet ${slotBet} → +${win} Coins!`; rs.style.color='var(--green)';
-    state.games++;state.wins++;state.history.unshift({game:'slot',won:true,pts:win,time:new Date().toLocaleTimeString()});saveState();
-    setTimeout(()=>{ addCoins(win); toast(`🎰 ${sym}×3! ×${mult} → +${win} Coins!`); slotSpinning=false; document.getElementById('slotSpinBtn').disabled=false; document.getElementById('slotSpinBtn').textContent='🎰 SPIN AGAIN!'; },800);
-
-  } else if(outcome==='pair77'){
-    const win=Math.floor(slotBet*1.5);
-    resultBox.style.background='rgba(255,215,0,0.08)';
-    rv.textContent='7️⃣7️⃣ ×1.5 WIN!'; rs.textContent=`Bet ${slotBet} → +${win} Coins!`; rs.style.color='var(--gold)';
-    state.games++;state.wins++;state.history.unshift({game:'slot',won:true,pts:win,time:new Date().toLocaleTimeString()});saveState();
-    setTimeout(()=>{ addCoins(win); toast(`🎉 Two 7s! +${win} Coins!`); slotSpinning=false; document.getElementById('slotSpinBtn').disabled=false; document.getElementById('slotSpinBtn').textContent='🎰 SPIN AGAIN!'; },800);
-
-  } else if(outcome==='pair'){
-    const sym=items[0]===items[1]?items[0]:items[1]===items[2]?items[1]:items[0];
-    const rule=SLOT_RULES[sym];
-    if(rule.pairRefund&&rule.pairMult>0){
-      const refund=Math.floor(slotBet*rule.pairMult);
-      resultBox.style.background='rgba(255,165,0,0.05)';
-      rv.textContent=`🤝 ${sym}${sym} Pair → ${rule.pairMult===0.5?'½':'¼'} Refund`;
-      rs.textContent=`+${refund} Coins back`; rs.style.color='var(--gold)';
-      state.games++;state.history.unshift({game:'slot',won:false,pts:refund-slotBet,time:new Date().toLocaleTimeString()});saveState();
-      setTimeout(()=>{ addCoins(refund); toast(`+${refund} Coins refunded`); slotSpinning=false; document.getElementById('slotSpinBtn').disabled=false; document.getElementById('slotSpinBtn').textContent='🎰 SPIN AGAIN!'; },800);
-    } else {
-      resultBox.style.background='rgba(255,58,92,0.08)';
-      rv.textContent=`😔 ${sym}${sym} — No Refund`; rs.textContent=`Lost ${slotBet} Coins.`; rs.style.color='var(--red)';
-      state.games++;state.history.unshift({game:'slot',won:false,pts:-slotBet,time:new Date().toLocaleTimeString()});saveState();
-      setTimeout(()=>{ toast('😔 No refund. Try again!'); slotSpinning=false; document.getElementById('slotSpinBtn').disabled=false; document.getElementById('slotSpinBtn').textContent='🎰 SPIN AGAIN!'; },800);
-    }
-  } else {
-    resultBox.style.background='rgba(255,58,92,0.08)';
-    rv.textContent='😔 No Match'; rs.textContent=`Lost ${slotBet} Coins. Try again!`; rs.style.color='var(--red)';
-    state.games++;state.history.unshift({game:'slot',won:false,pts:-slotBet,time:new Date().toLocaleTimeString()});saveState();
-    setTimeout(()=>{ toast('😔 No match. Try again!'); slotSpinning=false; document.getElementById('slotSpinBtn').disabled=false; document.getElementById('slotSpinBtn').textContent='🎰 SPIN AGAIN!'; },800);
-  }
-}
-
-// ===================== LUCKY WHEEL (FIXED) =====================
-// Segments: pointer is at the TOP. Segment that is AT the top when wheel stops = result.
-// We make pointer fixed at top, wheel spins, segment under pointer = result.
-// Probabilities: +100 pts = 10%, Loss(was +500pts removed) = added as extra loss
+// ===================== LUCKY WHEEL =====================
+// Updated segments per request:
+// 100pts → 5pts, ×10 → ×5, 10pts → 0 LOSS, swap one ×0LOSS with ×1
 const WHEEL_SEGMENTS=[
-  {label:'×10',color:'#FF3A5C',type:'multiply',val:10},       // 0 - rare 5%
+  {label:'×5',color:'#FF3A5C',type:'multiply',val:5},         // 0 - 5%
   {label:'+1',color:'#3A8CFF',type:'add_coin',val:1},          // 1 - 8%
   {label:'+5 pts',color:'#8B5CF6',type:'add_point',val:5},     // 2 - 12%
   {label:'×1',color:'#555577',type:'multiply',val:1},           // 3 - 15%
   {label:'÷2',color:'#FF7A00',type:'half',val:0},               // 4 - 10%
-  {label:'+10 pts',color:'#00C878',type:'add_point',val:10},   // 5 - 12%
+  {label:'×0 LOSS',color:'#222240',type:'multiply',val:0},     // 5 - 12% (was +10pts)
   {label:'×2',color:'#FFD700',type:'multiply',val:2},           // 6 - 12%
-  {label:'+100 pts',color:'#A020F0',type:'add_point',val:100}, // 7 - 10%
+  {label:'+5 pts',color:'#A020F0',type:'add_point',val:5},     // 7 - 10% (was +100pts)
   {label:'×0 LOSS',color:'#222240',type:'multiply',val:0},     // 8 - 11%
-  {label:'×0 LOSS',color:'#1a1a35',type:'multiply',val:0},     // 9 - 5%
+  {label:'×1',color:'#2a2a4a',type:'multiply',val:1},           // 9 - 5% (was ×0LOSS, swapped with ×1)
 ];
-// Weights add to 100
 const WHEEL_WEIGHTS=[5,8,12,15,10,12,12,10,11,5];
 let wheelBet=10, wheelSpinning=false, wCanvas, wCtx, wheelAngle=0;
 
@@ -1567,21 +1316,16 @@ function initWheelCanvas(){
   wCtx=wCanvas.getContext('2d');
   drawWheelStatic(wheelAngle);
 }
-
 function drawWheelStatic(angle){
   if(!wCtx||!wCanvas) return;
   const W=wCanvas.width, cx=W/2, cy=W/2, r=W*0.46;
   const seg=WHEEL_SEGMENTS.length;
   const arc=(Math.PI*2)/seg;
   wCtx.clearRect(0,0,W,W);
-  // Outer glow ring
   wCtx.beginPath();wCtx.arc(cx,cy,W*0.485,0,Math.PI*2);
   wCtx.fillStyle='rgba(108,58,255,0.15)';wCtx.fill();
   wCtx.strokeStyle='rgba(108,58,255,0.5)';wCtx.lineWidth=3;wCtx.stroke();
-
   for(let i=0;i<seg;i++){
-    // angle offset so segment 0 starts at top (pointer)
-    // segment i center is at: angle + i*arc - PI/2 + arc/2
     const start=angle + i*arc - Math.PI/2;
     const end=start+arc;
     wCtx.beginPath();wCtx.moveTo(cx,cy);wCtx.arc(cx,cy,r,start,end);wCtx.closePath();
@@ -1593,20 +1337,15 @@ function drawWheelStatic(angle){
     grad.addColorStop(1,WHEEL_SEGMENTS[i].color+'88');
     wCtx.fillStyle=grad;wCtx.fill();
     wCtx.strokeStyle='rgba(0,0,0,0.7)';wCtx.lineWidth=2;wCtx.stroke();
-    // Label text - drawn along the segment, pointing outward
     wCtx.save();
-    wCtx.translate(cx,cy);
-    wCtx.rotate(midAngle);
-    wCtx.textAlign='right';
+    wCtx.translate(cx,cy);wCtx.rotate(midAngle);wCtx.textAlign='right';
     wCtx.fillStyle='#fff';
     const fsize=WHEEL_SEGMENTS[i].label.length>5?8:10;
     wCtx.font=`bold ${fsize}px Orbitron,monospace`;
     wCtx.shadowColor='rgba(0,0,0,0.9)';wCtx.shadowBlur=4;
     wCtx.fillText(WHEEL_SEGMENTS[i].label, r*0.88, 3);
-    wCtx.shadowBlur=0;
-    wCtx.restore();
+    wCtx.shadowBlur=0;wCtx.restore();
   }
-  // Center circle
   const cg=wCtx.createRadialGradient(cx,cy,0,cx,cy,W*0.1);
   cg.addColorStop(0,'#4a3a8a');cg.addColorStop(1,'#111125');
   wCtx.beginPath();wCtx.arc(cx,cy,W*0.1,0,Math.PI*2);
@@ -1616,11 +1355,9 @@ function drawWheelStatic(angle){
   wCtx.textAlign='center';wCtx.textBaseline='middle';
   wCtx.fillText('GO',cx,cy);
 }
-
 function selectWheelCoin(el){
   document.querySelectorAll('#wheelPresets .coin-preset').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-  wheelBet=parseInt(el.dataset.val);
+  el.classList.add('active'); wheelBet=parseInt(el.dataset.val);
   document.getElementById('wheelCoinDisplay').textContent=wheelBet;
   document.getElementById('wheelBetInfo').textContent=wheelBet+' 🥈';
   currentBets.wheel=wheelBet;
@@ -1642,7 +1379,6 @@ function resetWheel(){
   document.getElementById('wheelSpinBtn').textContent='🌀 SPIN!';
   updateDisplay();
 }
- 
 function pickWheelSegment(){
   const total=WHEEL_WEIGHTS.reduce((a,b)=>a+b,0);
   let rr=Math.random()*total, cum=0;
@@ -1652,7 +1388,6 @@ function pickWheelSegment(){
   }
   return 3;
 }
-
 function spinWheel(){
   if(wheelSpinning) return;
   if(state.coins<wheelBet){toast('⚠️ Not enough coins!');return;}
@@ -1660,29 +1395,17 @@ function spinWheel(){
   wheelSpinning=true;
   document.getElementById('wheelSpinBtn').disabled=true;
   document.getElementById('wheelSpinBtn').textContent='⏳ Spinning...';
-
   const segIdx=pickWheelSegment();
   const numSeg=WHEEL_SEGMENTS.length;
   const arc=(Math.PI*2)/numSeg;
-
-  // The pointer is fixed at the top. The wheel angle 'wheelAngle' means segment 0
-  // starts at (wheelAngle - PI/2). We want segIdx to be under pointer (top = -PI/2 from center).
-  // Segment i's center is at: wheelAngle + i*arc - PI/2 + arc/2
-  // We want: wheelAngle + segIdx*arc - PI/2 + arc/2 = -PI/2 + 2k*PI (top)
-  // => wheelAngle = -segIdx*arc - arc/2 + 2k*PI
-  // Add many full rotations for spin effect
   const spins=Math.PI*2*(6+Math.floor(Math.random()*4));
-  // Normalize current angle
   const curAngle=wheelAngle%(Math.PI*2);
   const targetAngleBase=-segIdx*arc - arc/2;
-  // Make targetAngle positive and beyond current
   const targetAngle=targetAngleBase + Math.PI*2*Math.ceil((-targetAngleBase+curAngle)/(Math.PI*2)+0.01) + spins;
-
   let startTime=null;
   const startAngle=wheelAngle;
   const delta=targetAngle-startAngle;
   const duration=4000+Math.random()*1200;
-
   function animate(ts){
     if(!startTime) startTime=ts;
     const elapsed=ts-startTime;
@@ -1690,17 +1413,11 @@ function spinWheel(){
     const eased=1-Math.pow(1-progress,4);
     wheelAngle=startAngle+delta*eased;
     drawWheelStatic(wheelAngle);
-    if(progress<1){
-      requestAnimationFrame(animate);
-    } else {
-      wheelAngle=targetAngle;
-      drawWheelStatic(wheelAngle);
-      setTimeout(()=>evaluateWheel(segIdx),300);
-    }
+    if(progress<1){ requestAnimationFrame(animate); }
+    else { wheelAngle=targetAngle; drawWheelStatic(wheelAngle); setTimeout(()=>evaluateWheel(segIdx),300); }
   }
   requestAnimationFrame(animate);
 }
-
 function evaluateWheel(segIdx){
   const seg=WHEEL_SEGMENTS[segIdx];
   const rb=document.getElementById('wheelResultBox');
@@ -1742,7 +1459,7 @@ function evaluateWheel(segIdx){
   wheelSpinning=false;document.getElementById('wheelSpinBtn').disabled=false;document.getElementById('wheelSpinBtn').textContent='🌀 SPIN AGAIN!';
 }
 
-// ===================== AVIATOR (FIXED - cashout keeps plane flying) =====================
+// ===================== AVIATOR =====================
 let avState={
   running:false,betting:false,mult:1.0,speed:0.006,crashed:false,
   betPlaced:false,cashedOut:false,crashAt:1.5,cashoutMult:0,
@@ -1882,12 +1599,10 @@ function avLoop(){
     document.getElementById('avStatus').textContent='💥 Crashed!';
     document.getElementById('avBetBtn').disabled=false;
     document.getElementById('avCashBtn').disabled=true;
-    // Only show loss result if bet placed but NOT cashed out
     if(avState.betPlaced&&!avState.cashedOut){currentGame='aviator';showResult(false,0);}
     avState.history.unshift(parseFloat(m.toFixed(2)));
     if(avState.history.length>10)avState.history.pop();
     buildMultHistory();
-    // Auto-restart if user already cashed out or didn't bet
     if(!avState.betPlaced||avState.cashedOut){
       setTimeout(()=>{if(document.getElementById('screen-aviator').classList.contains('open'))resetAviator();},3500);
     }
@@ -1895,6 +1610,9 @@ function avLoop(){
   }
   avState.frameId=requestAnimationFrame(avLoop);
 }
+
+// FIXED: Removed the large multiplier text overlay that was blocking the plane view.
+// Only the small cashout overlay (top-left) remains; the big centered number is removed.
 function drawAvFrame(){
   if(!avCtx||!avCanvas)return;
   const W=avCanvas.width,H=avCanvas.height,ctx=avCtx,m=avState.mult;
@@ -1925,26 +1643,15 @@ function drawAvFrame(){
   ctx.textAlign='center';ctx.textBaseline='middle';
   ctx.fillText('✈️',0,0);
   ctx.shadowBlur=0;ctx.restore();
-  // Show cashout mult overlay on canvas if cashed out
+  // Cashout overlay: only small top-left badge if cashed out
   if(avState.cashedOut){
-    ctx.fillStyle='rgba(0,208,132,0.85)';
-    ctx.font=`bold ${Math.round(H*0.1)}px Orbitron,monospace`;
-    ctx.textAlign='center';ctx.textBaseline='top';
-    ctx.shadowColor='rgba(0,208,132,0.8)';ctx.shadowBlur=15;
-    ctx.fillText(`✅ ${avState.cashoutMult.toFixed(2)}x`,W/2,8);
-    ctx.shadowBlur=0;
-  } else {
-    const col=m<2?'#ff4444':m<5?'#fbbf24':'#10b981';
-    ctx.fillStyle=col;
-    ctx.font=`bold ${Math.round(H*0.14)}px Orbitron,monospace`;
-    ctx.textAlign='center';ctx.textBaseline='top';
-    ctx.shadowColor=col;ctx.shadowBlur=20;
-    ctx.fillText(m.toFixed(2)+'x',W/2,8);
-    ctx.shadowBlur=0;
+    // Already shown via the HTML overlay element, no canvas text needed
   }
+  // Floor line
   ctx.strokeStyle='rgba(255,60,60,0.25)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(0,H*0.88);ctx.lineTo(W,H*0.88);ctx.stroke();
 }
+
 function drawAvCrash(){
   if(!avCtx||!avCanvas)return;
   const W=avCanvas.width,H=avCanvas.height,ctx=avCtx;
@@ -1990,27 +1697,22 @@ function avCashOut(){
   document.getElementById('avCashBtn').disabled=true;
   document.getElementById('avStatus').textContent=`✅ ${m.toFixed(2)}x CASHED!`;
   document.getElementById('avPotWin').textContent=winCoins;
-  // Show overlay
   const overlay=document.getElementById('avCashoutOverlay');
   overlay.textContent=`✅ ${m.toFixed(2)}x — +${winCoins} Coins!`;
   overlay.classList.add('show');
-  // Add winnings immediately — plane keeps flying until crash
   addCoins(winCoins);
   toast(`💰 Cashed out at ${m.toFixed(2)}x → +${winCoins} Coins!`);
-  // Record win in history but don't show result modal - plane still flies
   state.games++;state.wins++;
   state.history.unshift({game:'aviator',won:true,pts:winCoins,time:new Date().toLocaleTimeString()});
   saveState();
-  // Plane will keep flying and crashing on its own, then auto reset
 }
 
-// ===================== RED OR BLUE (BULL) =====================
+// ===================== RED OR BLUE (BULL) - FIXED FACING =====================
 let bullCanvas,bullCtx,bullState={
   phase:'idle',selectedSide:null,bet:10,timer:0,winner:null,animFrame:null,
   redX:0,blueX:0,redVX:0,blueVX:0,shake:0,
   tick:0,particles:[]
 };
-
 function initBull(){
   bullCanvas=document.getElementById('bullCanvas');
   if(!bullCanvas)return;
@@ -2065,9 +1767,29 @@ function startBullFight(){
   else if(r<0.90)bullState.winner='blue';
   else bullState.winner='draw';
   const W=bullCanvas.width,H=bullCanvas.height;
-  bullState.redX=W*0.15;bullState.blueX=W*0.85;
+  // Start bulls facing each other from opposite sides
+  bullState.redX=W*0.15; bullState.blueX=W*0.85;
   bullState.redVX=0;bullState.blueVX=0;bullState.tick=0;bullState.particles=[];
   bullFightLoop();
+}
+
+// Draw bull facing a specific direction using canvas transform
+// Red bull: faces RIGHT (toward center = toward blue)
+// Blue bull: faces LEFT (toward center = toward red) — achieved by scale(-1,1)
+function drawBullEmoji(ctx, x, y, sz, faceRight, winner, tick, isWinner, isLoser){
+  ctx.save();
+  ctx.translate(x, y);
+  if(!faceRight) ctx.scale(-1,1); // flip so it faces left
+  if(isLoser && tick>85){ ctx.globalAlpha=0.6; ctx.rotate(faceRight?0.45:-0.45); ctx.translate(0, 12); }
+  if(isWinner && tick>85){ ctx.shadowColor=faceRight?'#FF4422':'#2244FF'; ctx.shadowBlur=28; }
+  ctx.font=sz+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText(faceRight?'🐂':'🐃',0,0);
+  if(isWinner && tick>85){
+    ctx.shadowBlur=0;
+    if(!faceRight) ctx.scale(-1,1); // un-flip for crown
+    ctx.font=`${sz*0.35}px serif`;ctx.fillText('👑',0,-sz*0.65);
+  }
+  ctx.restore();
 }
 
 function bullFightLoop(){
@@ -2076,13 +1798,12 @@ function bullFightLoop(){
   const t=bullState.tick;
   const W=bullCanvas.width,H=bullCanvas.height;
   const center=W*0.5;
-  // Phase 1: Bulls charge toward each other from front (horns first)
+  // Charge toward each other
   if(t<70){
     const speed=2.2+t*0.05;
     bullState.redX+=speed;
     bullState.blueX-=speed;
   }
-  // Stop at collision distance
   if(bullState.redX>center-W*0.12) bullState.redX=center-W*0.12;
   if(bullState.blueX<center+W*0.12) bullState.blueX=center+W*0.12;
 
@@ -2128,75 +1849,61 @@ function drawBullFight(){
   const ctx=bullCtx,W=bullCanvas.width,H=bullCanvas.height;
   const shake=bullState.shake>0?(Math.random()-0.5)*bullState.shake:0;
   ctx.save();ctx.translate(Math.round(shake),0);
-
   const bg=ctx.createLinearGradient(0,0,0,H);
   bg.addColorStop(0,'#1a0500');bg.addColorStop(0.6,'#0d0300');bg.addColorStop(1,'#050100');
   ctx.fillStyle=bg;ctx.fillRect(-10,0,W+20,H);
-
   const floorY=H*0.76;
   ctx.fillStyle='#2a1200';ctx.fillRect(-10,floorY,W+20,H);
   ctx.strokeStyle='rgba(100,40,0,0.3)';ctx.lineWidth=1;
   for(let x=-10;x<W+10;x+=18){ctx.beginPath();ctx.moveTo(x,floorY);ctx.lineTo(x,H);ctx.stroke();}
-
-  // Crowd
   for(let i=0;i<14;i++){
     const hue=i%2===0?0:220;
     ctx.beginPath();
     ctx.arc(W*0.03+i*(W*0.07),H*0.16+Math.sin(i*1.7)*8,10+Math.sin(bullState.tick*0.05+i)*3,0,Math.PI*2);
     ctx.fillStyle=`hsla(${hue},55%,22%,0.5)`;ctx.fill();
   }
-
-  // Particles
   bullState.particles.forEach(p=>{
     const alpha=p.life/50;
     ctx.save();ctx.globalAlpha=Math.max(0,alpha);
     if(p.type==='spark'){
-      ctx.fillStyle=p.color;
-      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
-      ctx.strokeStyle=p.color;ctx.lineWidth=1;
-      ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x-p.vx*3,p.y-p.vy*3);ctx.stroke();
+      ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
+      ctx.strokeStyle=p.color;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x-p.vx*3,p.y-p.vy*3);ctx.stroke();
     } else {
       ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=p.color;ctx.fill();
     }
     ctx.restore();
   });
-
   if(bullState.shake>5){
     ctx.fillStyle=`rgba(255,200,50,${Math.min(0.25,bullState.shake/35)})`;ctx.fillRect(-10,0,W+20,H);
   }
-
   const sz=Math.round(Math.min(W,H)*0.32);
   const gy=H*0.56;
 
-  // RED BULL - facing right (normal), no color overlay, natural emoji colors
-  ctx.save();
-  ctx.translate(bullState.redX,gy);
-  if(bullState.winner==='blue'&&bullState.tick>85){ctx.globalAlpha=0.6;ctx.rotate(0.45);ctx.translate(0,H*0.08);}
-  if(bullState.winner==='red'&&bullState.tick>85){ctx.shadowColor='#FF4422';ctx.shadowBlur=28;}
+  // RED bull: faces RIGHT (toward blue) — faceRight=true
+  const redIsWinner=bullState.winner==='red'&&bullState.tick>85;
+  const redIsLoser=bullState.winner==='blue'&&bullState.tick>85;
+  ctx.save();ctx.translate(bullState.redX,gy);
+  if(redIsLoser){ctx.globalAlpha=0.6;ctx.rotate(0.45);ctx.translate(0,H*0.08);}
+  if(redIsWinner){ctx.shadowColor='#FF4422';ctx.shadowBlur=28;}
+  // Red indicator
+  ctx.save();ctx.fillStyle='#FF2222';ctx.beginPath();ctx.arc(-sz*0.08,-sz*0.65,sz*0.1,0,Math.PI*2);ctx.fill();ctx.restore();
   ctx.font=sz+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';
-  // Red indicator dot
-  ctx.fillStyle='#FF2222';ctx.beginPath();ctx.arc(-sz*0.08,-sz*0.65,sz*0.1,0,Math.PI*2);ctx.fill();
-  ctx.fillText('🐂',0,0);
-  if(bullState.winner==='red'&&bullState.tick>85){
-    ctx.shadowBlur=0;ctx.font=`${sz*0.35}px serif`;ctx.fillText('👑',0,-sz*0.65);
-  }
+  ctx.fillText('🐂',0,0); // faces right naturally
+  if(redIsWinner){ctx.shadowBlur=0;ctx.font=`${sz*0.35}px serif`;ctx.fillText('👑',0,-sz*0.65);}
   ctx.restore();
 
-  // BLUE BULL - mirrored (facing left toward red bull), no color overlay
-  ctx.save();
-  ctx.translate(bullState.blueX,gy);
-  ctx.scale(-1,1); // mirror so it faces left (horns toward red)
-  if(bullState.winner==='red'&&bullState.tick>85){ctx.globalAlpha=0.6;ctx.rotate(-0.45);ctx.translate(0,H*0.08);}
-  if(bullState.winner==='blue'&&bullState.tick>85){ctx.shadowColor='#2244FF';ctx.shadowBlur=28;}
+  // BLUE bull: faces LEFT (toward red) — mirror with scale(-1,1)
+  const blueIsWinner=bullState.winner==='blue'&&bullState.tick>85;
+  const blueIsLoser=bullState.winner==='red'&&bullState.tick>85;
+  ctx.save();ctx.translate(bullState.blueX,gy);
+  ctx.scale(-1,1); // flip to face LEFT
+  if(blueIsLoser){ctx.globalAlpha=0.6;ctx.rotate(0.45);ctx.translate(0,H*0.08);}
+  if(blueIsWinner){ctx.shadowColor='#2244FF';ctx.shadowBlur=28;}
+  // Blue indicator (we need to un-flip for the dot position)
+  ctx.save();ctx.scale(-1,1);ctx.fillStyle='#2266FF';ctx.beginPath();ctx.arc(sz*0.08,-sz*0.65,sz*0.1,0,Math.PI*2);ctx.fill();ctx.restore();
   ctx.font=sz+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';
-  // Blue indicator dot (flip back for dot)
-  ctx.save();ctx.scale(-1,1);
-  ctx.fillStyle='#2266FF';ctx.beginPath();ctx.arc(sz*0.08,-sz*0.65,sz*0.1,0,Math.PI*2);ctx.fill();
-  ctx.restore();
   ctx.fillText('🐃',0,0);
-  if(bullState.winner==='blue'&&bullState.tick>85){
-    ctx.shadowBlur=0;ctx.scale(-1,1);ctx.font=`${sz*0.35}px serif`;ctx.fillText('👑',0,-sz*0.65);
-  }
+  if(blueIsWinner){ctx.shadowBlur=0;ctx.scale(-1,1);ctx.font=`${sz*0.35}px serif`;ctx.fillText('👑',0,-sz*0.65);}
   ctx.restore();
 
   // VS label
@@ -2208,7 +1915,6 @@ function drawBullFight(){
     ctx.shadowColor='rgba(255,200,0,0.7)';ctx.shadowBlur=12;
     ctx.fillText('VS',W/2,gy-sz*0.25);ctx.shadowBlur=0;ctx.restore();
   }
-
   const prog=Math.min(bullState.tick/125,1);
   ctx.fillStyle='rgba(0,0,0,0.6)';ctx.fillRect(W*0.15,8,W*0.7,8);
   const barGrad=ctx.createLinearGradient(W*0.15,0,W*0.85,0);
@@ -2227,22 +1933,22 @@ function drawBullIdle(){
   ctx.fillStyle='#2a1200';ctx.fillRect(0,H*0.76,W,H*0.24);
   const sz=Math.round(Math.min(W,H)*0.28);
 
-  // Red bull left - facing right
+  // Red bull LEFT side, faces RIGHT (toward center)
   ctx.save();ctx.translate(W*0.22,H*0.52);
-  ctx.font=sz+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';
-  // Red dot
   ctx.fillStyle='#FF2222';ctx.beginPath();ctx.arc(-sz*0.08,-sz*0.65,sz*0.1,0,Math.PI*2);ctx.fill();
-  ctx.fillText('🐂',0,0);ctx.restore();
+  ctx.font=sz+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('🐂',0,0); // faces right naturally ✓
+  ctx.restore();
   ctx.fillStyle='rgba(255,50,50,0.85)';ctx.font='bold 10px Orbitron,sans-serif';
   ctx.textAlign='center';ctx.fillText('🔴 RED',W*0.22,H*0.76+12);
 
-  // Blue bull right - mirrored to face left
-  ctx.save();ctx.translate(W*0.78,H*0.52);ctx.scale(-1,1);
+  // Blue bull RIGHT side, faces LEFT (toward center) — flip
+  ctx.save();ctx.translate(W*0.78,H*0.52);
+  ctx.scale(-1,1); // mirror to face left
+  ctx.save();ctx.scale(-1,1);ctx.fillStyle='#2255FF';ctx.beginPath();ctx.arc(sz*0.08,-sz*0.65,sz*0.1,0,Math.PI*2);ctx.fill();ctx.restore();
   ctx.font=sz+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.save();ctx.scale(-1,1);
-  ctx.fillStyle='#2255FF';ctx.beginPath();ctx.arc(sz*0.08,-sz*0.65,sz*0.1,0,Math.PI*2);ctx.fill();
+  ctx.fillText('🐃',0,0);
   ctx.restore();
-  ctx.fillText('🐃',0,0);ctx.restore();
   ctx.fillStyle='rgba(0,150,255,0.85)';ctx.font='bold 10px Orbitron,sans-serif';
   ctx.textAlign='center';ctx.fillText('🔵 BLUE',W*0.78,H*0.76+12);
 
@@ -2270,10 +1976,9 @@ function resolveBullFight(){
 }
 
 // ===================== ROTATING GAME =====================
-let rotatingGuess=null, rotatingSpinning=false, rotatingAdReady=false;
-
+let rotatingGuess=null, rotatingSpinning=false;
 function openRotating(){
-  rotatingGuess=null; rotatingSpinning=false; rotatingAdReady=false;
+  rotatingGuess=null; rotatingSpinning=false;
   document.getElementById('guessBtnT').className='guess-btn';
   document.getElementById('guessBtnS').className='guess-btn';
   document.getElementById('rotatingStatus').textContent='Watch an ad to spin!';
@@ -2281,7 +1986,6 @@ function openRotating(){
   document.getElementById('rotatingWatchAdBtn').textContent='📺 Watch Ad to Spin';
   updateDisplay();
 }
-
 function selectRotatingGuess(g){
   if(rotatingSpinning) return;
   rotatingGuess=g;
@@ -2289,7 +1993,6 @@ function selectRotatingGuess(g){
   document.getElementById('guessBtnS').className='guess-btn'+(g==='S'?' selected-S':'');
   document.getElementById('rotatingStatus').textContent=`You chose: ${g}. Now watch an ad to spin!`;
 }
-
 function rotatingWatchAd(){
   if(rotatingSpinning){toast('Already spinning!');return;}
   if(!rotatingGuess){toast('⚠️ Choose T or S first!');return;}
@@ -2297,66 +2000,236 @@ function rotatingWatchAd(){
   showAd(()=>{
     state.rotatingAdsTotal=(state.rotatingAdsTotal||0)+1;
     saveState();updateDisplay();
-    rotatingAdReady=true;
     doRotatingSpin();
   });
 }
-
 function doRotatingSpin(){
   if(!rotatingGuess){toast('Choose T or S!');return;}
   rotatingSpinning=true;
   document.getElementById('rotatingStatus').textContent='🪙 Spinning...';
   const coin=document.getElementById('rotatingCoin');
-  // Random result
   const result=Math.random()<0.5?'T':'S';
-  // Spin animation: many rotations, land on correct face
-  const targetFace=result==='T'?0:1; // 0 = T face front, 1 = S face back
-  // Full rotations + landing
+  const targetFace=result==='T'?0:1;
   const fullSpins=8+Math.floor(Math.random()*6);
   const targetDeg=fullSpins*360+(targetFace===1?180:0);
   coin.style.transition=`transform ${2.5+Math.random()*1}s cubic-bezier(0.2, 0.8, 0.3, 1)`;
   coin.style.transform=`rotateY(${targetDeg}deg)`;
-
   setTimeout(()=>{
     rotatingSpinning=false;
     const won=result===rotatingGuess;
-    if(won){
-      document.getElementById('rotatingStatus').textContent=`✅ ${result}! Correct! +5 Points!`;
-      addPoints(5);
-      toast('🎉 Correct! +5 Points!');
-    } else {
-      document.getElementById('rotatingStatus').textContent=`❌ ${result}! Wrong guess. Watch ad to try again!`;
-      toast(`😔 It was ${result}. Better luck next time!`);
-    }
+    if(won){ document.getElementById('rotatingStatus').textContent=`✅ ${result}! Correct! +5 Points!`; addPoints(5); toast('🎉 Correct! +5 Points!'); }
+    else { document.getElementById('rotatingStatus').textContent=`❌ ${result}! Wrong guess.`; toast(`😔 It was ${result}. Try again!`); }
     state.games++;if(won)state.wins++;
     state.history.unshift({game:'rotating',won,pts:won?5:0,time:new Date().toLocaleTimeString()});
     saveState();
-    // Reset for next play
     setTimeout(()=>{
       rotatingGuess=null;
       document.getElementById('guessBtnT').className='guess-btn';
       document.getElementById('guessBtnS').className='guess-btn';
       document.getElementById('rotatingWatchAdBtn').disabled=false;
       document.getElementById('rotatingWatchAdBtn').textContent='📺 Watch Ad to Spin Again';
-      // Reset coin display
-      coin.style.transition='none';
-      coin.style.transform='rotateY(0deg)';
+      coin.style.transition='none'; coin.style.transform='rotateY(0deg)';
     },2000);
     updateDisplay();
   },3500);
 }
 
-// Override openGame to handle rotating
-const _origOpenGame=openGame;
-function openGame(game){
-  currentGame=game;
-  document.getElementById('screen-'+game)?.classList.add('open');
-  if(game==='slot') resetSlot();
-  else if(game==='wheel'){resetWheel();setTimeout(initWheelCanvas,80);}
-  else if(game==='bull') resetBull();
-  else if(game==='aviator') resetAviator();
-  else if(game==='rotating') openRotating();
+// ===================== TIC TAC TOE (HARD AI) =====================
+let tttBoard=Array(9).fill(null);
+let tttGameActive=false;
+let tttPlayerScoreSession=0;
+let tttAiScoreSession=0;
+
+function openTicTacToe(){
+  tttBoard=Array(9).fill(null);
+  tttGameActive=false;
+  tttPlayerScoreSession=state.tttPlayerScore||0;
+  tttAiScoreSession=state.tttAiScore||0;
+  renderTTTBoard();
+  document.getElementById('tttStatus').textContent='Watch an ad to play!';
+  document.getElementById('tttThinking').textContent='';
+  document.getElementById('tttWatchAdBtn').style.display='block';
+  document.getElementById('tttNewGameBtn').style.display='none';
+  document.getElementById('tttPlayerScore').textContent=tttPlayerScoreSession;
+  document.getElementById('tttAiScore').textContent=tttAiScoreSession;
   updateDisplay();
+  // disable cells
+  for(let i=0;i<9;i++){
+    const c=document.getElementById('tc'+i);
+    if(c){c.onclick=null;c.classList.remove('x-cell','o-cell','win-cell');c.classList.add('empty');c.textContent='';}
+  }
+}
+
+function tttWatchAd(){
+  document.getElementById('tttWatchAdBtn').disabled=true;
+  showAd(()=>{
+    state.tttAdsTotal=(state.tttAdsTotal||0)+1;
+    saveState();updateDisplay();
+    tttStartGame();
+  });
+}
+
+function tttStartGame(){
+  tttBoard=Array(9).fill(null);
+  tttGameActive=true;
+  document.getElementById('tttStatus').textContent="Your turn! You are ❌";
+  document.getElementById('tttThinking').textContent='';
+  document.getElementById('tttWatchAdBtn').style.display='none';
+  document.getElementById('tttNewGameBtn').style.display='none';
+  renderTTTBoard();
+  enableTTTCells();
+}
+
+function renderTTTBoard(){
+  for(let i=0;i<9;i++){
+    const c=document.getElementById('tc'+i);
+    if(!c)continue;
+    c.classList.remove('x-cell','o-cell','win-cell','empty');
+    c.textContent='';
+    if(tttBoard[i]==='X'){c.classList.add('x-cell');c.textContent='❌';}
+    else if(tttBoard[i]==='O'){c.classList.add('o-cell');c.textContent='⭕';}
+    else {c.classList.add('empty');}
+  }
+}
+
+function enableTTTCells(){
+  for(let i=0;i<9;i++){
+    const c=document.getElementById('tc'+i);
+    if(c){
+      const idx=i;
+      c.onclick=()=>tttClick(idx);
+    }
+  }
+}
+function disableTTTCells(){
+  for(let i=0;i<9;i++){
+    const c=document.getElementById('tc'+i);
+    if(c) c.onclick=null;
+  }
+}
+
+function tttClick(idx){
+  if(!tttGameActive) return;
+  if(tttBoard[idx]) return;
+  tttBoard[idx]='X';
+  renderTTTBoard();
+  const win=tttCheckWinner(tttBoard);
+  if(win){
+    tttHighlightWin(win.line);
+    tttGameActive=false;
+    tttPlayerScoreSession++;
+    state.tttPlayerScore=tttPlayerScoreSession;
+    document.getElementById('tttPlayerScore').textContent=tttPlayerScoreSession;
+    document.getElementById('tttStatus').textContent='🏆 You Won! +5 Points!';
+    addPoints(5);
+    state.games++;state.wins++;
+    state.history.unshift({game:'tictactoe',won:true,pts:5,time:new Date().toLocaleTimeString()});
+    saveState();toast('🏆 You beat the AI! +5 Points!');
+    setTimeout(()=>tttShowNewGame(),1500);
+    return;
+  }
+  if(tttBoard.every(v=>v)){
+    tttGameActive=false;
+    document.getElementById('tttStatus').textContent="🤝 Draw!";
+    state.games++;
+    state.history.unshift({game:'tictactoe',won:false,pts:0,time:new Date().toLocaleTimeString()});
+    saveState();toast('🤝 Draw!');
+    setTimeout(()=>tttShowNewGame(),1500);
+    return;
+  }
+  disableTTTCells();
+  document.getElementById('tttStatus').textContent='🤖 AI is thinking...';
+  document.getElementById('tttThinking').textContent='Calculating best move...';
+  setTimeout(()=>tttAiMove(),600);
+}
+
+function tttAiMove(){
+  // Hard AI: minimax
+  const best=tttMinimax(tttBoard,'O');
+  tttBoard[best.index]='O';
+  renderTTTBoard();
+  document.getElementById('tttThinking').textContent='';
+  const win=tttCheckWinner(tttBoard);
+  if(win){
+    tttHighlightWin(win.line);
+    tttGameActive=false;
+    tttAiScoreSession++;
+    state.tttAiScore=tttAiScoreSession;
+    document.getElementById('tttAiScore').textContent=tttAiScoreSession;
+    document.getElementById('tttStatus').textContent='🤖 AI Wins! Try again!';
+    state.games++;
+    state.history.unshift({game:'tictactoe',won:false,pts:0,time:new Date().toLocaleTimeString()});
+    saveState();toast('😔 AI wins! Watch an ad to try again.');
+    setTimeout(()=>tttShowNewGame(),1500);
+    return;
+  }
+  if(tttBoard.every(v=>v)){
+    tttGameActive=false;
+    document.getElementById('tttStatus').textContent="🤝 Draw!";
+    state.games++;
+    state.history.unshift({game:'tictactoe',won:false,pts:0,time:new Date().toLocaleTimeString()});
+    saveState();toast('🤝 Draw!');
+    setTimeout(()=>tttShowNewGame(),1500);
+    return;
+  }
+  document.getElementById('tttStatus').textContent="Your turn! ❌";
+  enableTTTCells();
+}
+
+function tttShowNewGame(){
+  document.getElementById('tttNewGameBtn').style.display='block';
+  document.getElementById('tttWatchAdBtn').style.display='none';
+  document.getElementById('tttWatchAdBtn').disabled=false;
+}
+
+function tttNewGame(){
+  document.getElementById('tttNewGameBtn').style.display='none';
+  document.getElementById('tttWatchAdBtn').style.display='block';
+  document.getElementById('tttWatchAdBtn').disabled=false;
+  document.getElementById('tttWatchAdBtn').textContent='📺 Watch Ad to Play Again';
+  tttBoard=Array(9).fill(null);
+  tttGameActive=false;
+  renderTTTBoard();
+  document.getElementById('tttStatus').textContent='Watch an ad to play!';
+  document.getElementById('tttThinking').textContent='';
+  disableTTTCells();
+}
+
+function tttHighlightWin(line){
+  line.forEach(i=>{ document.getElementById('tc'+i)?.classList.add('win-cell'); });
+}
+
+const TTT_WINS=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+function tttCheckWinner(board){
+  for(const line of TTT_WINS){
+    const [a,b,c]=line;
+    if(board[a]&&board[a]===board[b]&&board[a]===board[c]) return {winner:board[a],line};
+  }
+  return null;
+}
+
+// Minimax with alpha-beta pruning for hard AI
+function tttMinimax(board, player, depth=0, alpha=-Infinity, beta=Infinity){
+  const win=tttCheckWinner(board);
+  if(win) return {score: win.winner==='O'?10-depth:depth-10};
+  const empty=board.map((v,i)=>v===null?i:null).filter(v=>v!==null);
+  if(!empty.length) return {score:0};
+  let bestMove={index:-1, score: player==='O'?-Infinity:Infinity};
+  for(const idx of empty){
+    board[idx]=player;
+    const result=tttMinimax(board, player==='O'?'X':'O', depth+1, alpha, beta);
+    board[idx]=null;
+    result.index=idx;
+    if(player==='O'){
+      if(result.score>bestMove.score) bestMove=result;
+      alpha=Math.max(alpha,result.score);
+    } else {
+      if(result.score<bestMove.score) bestMove=result;
+      beta=Math.min(beta,result.score);
+    }
+    if(beta<=alpha) break;
+  }
+  return bestMove;
 }
 
 // ===================== LEADERBOARD =====================
@@ -2404,15 +2277,15 @@ function buildHistory(){
   if(!state.history?.length){
     el.innerHTML='<div style="text-align:center;color:var(--text2);padding:20px;font-size:13px">📭 No history yet</div>';return;
   }
-  const icons={aviator:'✈️',slot:'🎰',wheel:'🌀',bull:'🐂',rotating:'🪙'};
-  const names={aviator:'Aviator',slot:'Lucky Slot',wheel:'Lucky Spin',bull:'Red or Blue',rotating:'Rotating'};
+  const icons={aviator:'✈️',wheel:'🌀',bull:'🐂',rotating:'🪙',tictactoe:'⭕'};
+  const names={aviator:'Aviator',wheel:'Lucky Spin',bull:'Red or Blue',rotating:'Rotating',tictactoe:'OX Game'};
   el.innerHTML=state.history.slice(0,20).map(h=>`
     <div class="h-item">
       <div class="h-left">
         <div class="h-icon">${icons[h.game]||'🎮'}</div>
         <div><div class="h-name">${names[h.game]||h.game}</div><div class="h-time">${h.time}</div></div>
       </div>
-      <div class="h-pts ${h.pts>=0?'win':'loss'}">${h.pts>=0?'+':''}${h.pts}${h.game==='rotating'||h.game==='wheel'&&h.pts>0?'pts':'🥈'}</div>
+      <div class="h-pts ${h.pts>=0?'win':'loss'}">${h.pts>=0?'+':''}${h.pts}${(h.game==='rotating'||h.game==='tictactoe')&&h.pts>0?' pts':'🥈'}</div>
     </div>`).join('');
 }
 
@@ -2431,4 +2304,5 @@ const wScreen=document.getElementById('screen-wheel');
 if(wScreen) wObserver.observe(wScreen,{attributes:true,attributeFilter:['class']});
 </script>
 </body>
-</html> 
+</html>
+  

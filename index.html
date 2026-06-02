@@ -171,7 +171,7 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
   transition:all .3s;pointer-events:none;white-space:nowrap;max-width:92vw;text-align:center;}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* ===== LUCKY SLOT (Casino Style) ===== */
+/* ===== LUCKY SLOT ===== */
 .slot-machine-outer{
   background:linear-gradient(145deg,#1a0a00,#0f0600);
   border:3px solid var(--gold);border-radius:24px;
@@ -216,22 +216,24 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
 .slot-result-casino{
   background:linear-gradient(135deg,rgba(0,0,0,0.6),rgba(20,10,0,0.4));
   border:1px solid rgba(255,215,0,0.2);border-radius:12px;
-  padding:12px;text-align:center;margin-bottom:10px;min-height:58px;
+  padding:12px;text-align:center;margin-bottom:10px;min-height:80px;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
 }
-.slot-result-val{font-family:'Orbitron',monospace;font-size:17px;font-weight:700;}
+.slot-result-val{font-family:'Orbitron',monospace;font-size:15px;font-weight:700;}
 .slot-result-sub{font-size:11px;color:var(--text2);}
+.slot-result-rule{font-size:10px;color:rgba(255,215,0,0.6);margin-top:3px;font-style:italic;}
 .slot-payout-table{background:rgba(0,0,0,0.4);border:1px solid rgba(255,215,0,0.1);border-radius:12px;padding:10px;margin-bottom:10px;}
-.slot-payout-row{display:flex;align-items:center;justify-content:space-between;padding:4px 2px;font-size:12px;border-bottom:1px solid rgba(255,255,255,0.04);}
+.slot-payout-row{display:flex;align-items:center;justify-content:space-between;padding:5px 2px;font-size:11px;border-bottom:1px solid rgba(255,255,255,0.04);}
 .slot-payout-row:last-child{border:none;}
-.slot-payout-syms{font-size:14px;letter-spacing:2px;}
-.slot-payout-mult{color:var(--gold);font-family:'Orbitron',monospace;font-weight:700;font-size:11px;}
+.slot-payout-syms{font-size:13px;letter-spacing:2px;min-width:80px;}
+.slot-payout-mult{color:var(--gold);font-family:'Orbitron',monospace;font-weight:700;font-size:10px;text-align:right;}
+.slot-payout-desc{font-size:9px;color:var(--text2);text-align:right;}
 
 /* ===== LUCKY SPIN (WHEEL) ===== */
-.spin-wheel-container{display:flex;flex-direction:column;align-items:center;padding:0 10px 0;margin-bottom:14px;}
-.spin-wheel-wrap{position:relative;width:260px;height:280px;margin-bottom:16px;display:flex;flex-direction:column;align-items:center;}
-.spin-pointer{font-size:28px;z-index:10;filter:drop-shadow(0 4px 8px rgba(255,215,0,0.8));margin-bottom:2px;flex-shrink:0;}
-#wheelCanvas{border-radius:50%;box-shadow:0 0 50px rgba(108,58,255,0.3),0 0 100px rgba(0,0,0,0.5);}
+.spin-wheel-container{display:flex;flex-direction:column;align-items:center;padding:0 4px 0;margin-bottom:14px;}
+.spin-wheel-wrap{position:relative;width:100%;max-width:340px;margin-bottom:12px;display:flex;flex-direction:column;align-items:center;}
+.spin-pointer{font-size:32px;z-index:10;filter:drop-shadow(0 4px 8px rgba(255,215,0,0.8));margin-bottom:2px;flex-shrink:0;}
+#wheelCanvas{border-radius:50%;box-shadow:0 0 50px rgba(108,58,255,0.3),0 0 100px rgba(0,0,0,0.5);width:100%;height:auto;max-width:340px;}
 .spin-result-box{background:rgba(0,0,0,0.35);border:1px solid rgba(255,215,0,0.25);border-radius:14px;padding:12px;text-align:center;width:100%;margin-bottom:12px;min-height:60px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;}
 .spin-result-val{font-family:'Orbitron',monospace;font-size:20px;font-weight:700;color:var(--gold);}
 .spin-result-sub{font-size:11px;color:var(--text2);}
@@ -259,7 +261,6 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
 .av-adj-btn{background:rgba(255,255,255,0.06);border:none;color:var(--text);width:32px;height:32px;border-radius:8px;font-size:18px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
 .av-adj-val{flex:1;text-align:center;font-family:'Orbitron',monospace;font-size:16px;font-weight:700;color:var(--silver);}
 .av-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-/* Aviator betting phase message */
 .av-bet-phase-msg{
   background:rgba(0,208,132,0.1);border:1px solid rgba(0,208,132,0.3);
   border-radius:10px;padding:7px;text-align:center;
@@ -268,8 +269,8 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
   animation:betMsgPulse 1s ease-in-out infinite alternate;
 }
 @keyframes betMsgPulse{from{opacity:.7}to{opacity:1}}
-  
-/* ===== RED OR BLUE ===== */
+
+/* ===== RED OR BLUE (BULL) ===== */
 #bull-area{max-width:440px;margin:0 auto;}
 .bull-arena{background:radial-gradient(ellipse at 50% 80%,#1a0500,#0a0300);
   border:2px solid rgba(255,80,0,0.3);border-radius:16px;
@@ -282,8 +283,6 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
 .bull-team-btn.selected.red{background:rgba(255,30,30,0.3);border-color:#FF2020;box-shadow:0 0 25px rgba(255,30,30,0.4);}
 .bull-team-btn.selected.blue{background:rgba(0,100,255,0.3);border-color:#0055FF;box-shadow:0 0 25px rgba(0,100,255,0.4);}
 .bull-emoji-wrap{font-size:44px;display:block;margin-bottom:6px;position:relative;}
-.bull-emoji-red{filter:drop-shadow(0 0 8px rgba(255,50,50,0.8)) hue-rotate(0deg) saturate(2);}
-.bull-emoji-blue{filter:drop-shadow(0 0 8px rgba(0,100,255,0.8)) hue-rotate(200deg) saturate(3);}
 .bull-team-btn .bull-name{font-family:'Orbitron',monospace;font-size:12px;font-weight:700;letter-spacing:.5px;}
 .bull-team-btn .bull-odds{font-size:11px;color:var(--text2);margin-top:3px;}
 .bull-status{background:rgba(0,0,0,0.3);border-radius:12px;padding:12px;text-align:center;margin-bottom:10px;font-family:'Orbitron',monospace;font-size:13px;min-height:44px;display:flex;align-items:center;justify-content:center;}
@@ -337,7 +336,7 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
 /* TASKS PAGE */
 .task-card{background:var(--dark3);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:12px;position:relative;overflow:hidden;}
 .task-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2));}
-.task-icon{font-size:32px;margin-bottom:8px;}
+.task-icon-img{width:44px;height:44px;object-fit:contain;margin-bottom:8px;border-radius:10px;}
 .task-title{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;margin-bottom:4px;}
 .task-reward{color:var(--gold);font-family:'Orbitron',monospace;font-size:12px;margin-bottom:10px;}
 .task-done{color:var(--green);font-size:12px;font-weight:700;}
@@ -388,6 +387,11 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
 .ads-progress-bar-green{background:linear-gradient(90deg,var(--green),#00a065);}
 .ads-progress-bar-purple{background:linear-gradient(90deg,var(--accent),var(--accent2));}
 .ads-night-status{font-size:11px;color:var(--text2);margin-top:6px;text-align:center;}
+
+/* Exchange input */
+.exchange-input-wrap{display:flex;align-items:center;gap:10px;background:var(--dark2);border:1.5px solid rgba(255,255,255,0.1);border-radius:11px;padding:8px 12px;margin-bottom:10px;}
+.exchange-text-input{flex:1;background:transparent;border:none;outline:none;color:var(--silver);font-family:'Orbitron',monospace;font-size:18px;font-weight:700;width:100%;}
+.exchange-text-input::placeholder{color:rgba(192,192,192,0.3);}
 </style>
 </head>
 <body>
@@ -519,7 +523,6 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
     </div>
     <div class="section-title">📺 Daily Ads</div>
     <div class="ads-section">
-      <!-- Day Ads (always available) -->
       <div class="ads-card ads-card-day">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
           <span style="font-size:26px">☀️</span>
@@ -532,13 +535,13 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
         <div class="ads-progress"><div class="ads-progress-bar ads-progress-bar-green" id="adsProgressBar" style="width:0%"></div></div>
         <button class="btn btn-green" style="margin-top:10px;margin-bottom:0" onclick="watchDailyAd()">▶ Watch Ad (+20 pts)</button>
       </div>
-      <!-- Night Ads (10 PM – 12 AM) -->
+      <!-- Night Ads: Ethiopia time 8 PM – 10 PM (UTC+3 20:00–22:00) -->
       <div class="ads-card ads-card-night">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
           <span style="font-size:26px">🌙</span>
           <div>
             <div style="font-weight:700;font-size:13px">Night Ads — Bonus Points</div>
-            <div style="font-size:11px;color:var(--text2)">Available 10:00 PM – 12:00 AM only</div>
+            <div style="font-size:11px;color:var(--text2)">Available 8:00 PM – 10:00 PM (ET) only</div>
             <div style="font-size:11px;color:var(--text2)">1 ad = 30 pts · Finish all 50 → +30 pts bonus</div>
           </div>
         </div>
@@ -567,7 +570,7 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
     <div class="shop-note">⏱ Coins will be credited within 2–4 hours after payment confirmation.</div>
     <div style="background:var(--dark3);border-radius:14px;padding:14px;margin-top:12px;margin-bottom:20px;border:1px solid rgba(255,255,255,0.04)">
       <div style="font-size:12px;font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;">📌 Payment Method</div>
-      <div style="font-size:12px;color:var(--text2);line-height:2">📱 <strong style="color:var(--green)">Telebirr: 0921 378 547</strong><br>👤 ስም: Asnake<br>📸 Screenshot + username → Admin</div>
+      <div style="font-size:12px;color:var(--text2);line-height:2">📱 <strong style="color:var(--green)">Telebirr: 0921 378 547</strong><br>👤 Name: Asnake<br>📸 Screenshot + username → Admin</div>
       <a href="https://t.me/evana219" target="_blank" style="text-decoration:none;margin-top:10px;display:block"><button class="tg-btn">✈️ Send to @evana219</button></a>
     </div>
   </div>
@@ -609,24 +612,24 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
 
     <!-- Telegram Task -->
     <div class="task-card" id="taskTg">
-      <div class="task-icon">📢</div>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" class="task-icon-img" alt="Telegram" onerror="this.style.display='none'">
       <div class="task-title">Join Telegram Channel</div>
       <div class="task-reward">+1,000 Points Reward</div>
       <div id="taskTgStatus">
         <a href="https://t.me/gameandpoint12" target="_blank" id="taskTgJoinBtn">
-          <button class="btn btn-primary" style="margin-bottom:0" onclick="markTaskTg()">📢 Join Channel</button>
+          <button class="btn btn-primary" style="margin-bottom:0" onclick="markTaskTg()">Join Channel</button>
         </a>
       </div>
     </div>
 
     <!-- TikTok Task -->
     <div class="task-card" id="taskTT">
-      <div class="task-icon">🎵</div>
+      <img src="https://upload.wikimedia.org/wikipedia/en/a/a9/TikTok_logo.svg" class="task-icon-img" alt="TikTok" onerror="this.style.display='none'">
       <div class="task-title">Follow TikTok Account</div>
       <div class="task-reward">+1,000 Points Reward</div>
       <div id="taskTTStatus">
         <a href="https://www.tiktok.com/@game.and.point" target="_blank" id="taskTTFollowBtn">
-          <button class="btn btn-blue" style="margin-bottom:0" onclick="markTaskTT()">🎵 Follow on TikTok</button>
+          <button class="btn btn-blue" style="margin-bottom:0" onclick="markTaskTT()">Follow on TikTok</button>
         </a>
       </div>
     </div>
@@ -650,16 +653,15 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
       <button class="wallet-tab" onclick="switchWalletTab('withdraw')">💸 Withdraw</button>
     </div>
     <div class="wallet-panel active" id="walletPanel-exchange">
-      <div class="exchange-rate"><strong>100 Coins = 10 Points</strong> &nbsp;|&nbsp; Min: 100 Coins</div>
+      <div class="exchange-rate"><strong>100 Coins = 10 Points</strong> &nbsp;|&nbsp; Min: 1,000 Coins</div>
       <div style="background:var(--dark3);border-radius:14px;padding:14px;margin-bottom:12px">
-        <div class="section-title">Exchange Amount</div>
-        <div class="coin-adjuster" style="margin-bottom:10px">
-          <button class="coin-adj-btn" onclick="adjExchange(-100)">−</button>
-          <div style="flex:1;text-align:center">
-            <div class="coin-adj-val" id="exchangeAmt">100</div>
-            <div class="coin-adj-unit">Coins → <span id="exchangePts" style="color:var(--gold)">10 pts</span></div>
-          </div>
-          <button class="coin-adj-btn" onclick="adjExchange(100)">+</button>
+        <div class="section-title">Exchange Amount (Coins)</div>
+        <div class="exchange-input-wrap">
+          <span style="color:var(--text2);font-size:13px">🥈</span>
+          <input class="exchange-text-input" id="exchangeTextInput" type="number" min="1000" step="100" placeholder="1000" oninput="onExchangeInput(this.value)">
+        </div>
+        <div style="font-size:12px;color:var(--text2);text-align:center;margin-bottom:10px">
+          → You receive: <span id="exchangePtsPreview" style="color:var(--gold);font-family:'Orbitron',monospace;font-weight:700">100 pts</span>
         </div>
         <button class="btn btn-silver" onclick="doExchange()">🔄 Exchange Now</button>
       </div>
@@ -706,7 +708,6 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
         <div class="av-stat"><div class="avv" id="avPotWin" style="color:var(--gold)">0</div><div class="avl">Potential</div></div>
         <div class="av-stat"><div class="avv" id="avStatus" style="font-size:10px;color:var(--text2)">Ready</div><div class="avl">Status</div></div>
       </div>
-      <!-- Coin balance display in aviator -->
       <div class="game-coin-balance"><span class="gcb-label">Balance:</span><span class="gcb-val" id="avCoinBalance">0 🥈</span></div>
       <div class="section-title" style="margin-bottom:6px">Select Coins</div>
       <div class="av-coin-row" id="avCoinRow">
@@ -738,7 +739,6 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
   </div>
   <div class="game-screen-scroll">
     <div class="game-content">
-      <!-- Coin balance display -->
       <div class="game-coin-balance"><span class="gcb-label">Balance:</span><span class="gcb-val" id="slotCoinBalance">0 🥈</span></div>
       <div style="background:var(--dark3);border-radius:14px;padding:12px;margin-bottom:12px">
         <div class="coin-selector-label">🥈 Bet Amount</div>
@@ -759,7 +759,6 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
           <button class="coin-adj-btn" onclick="adjSlotCoin(10)">+</button>
         </div>
       </div>
-      <!-- Casino-style slot machine -->
       <div class="slot-machine-outer">
         <div class="slot-machine-inner">
           <div class="slot-machine-top">🎰 LUCKY SLOT 🎰</div>
@@ -772,17 +771,59 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
           <div class="slot-result-casino" id="slotResult">
             <div class="slot-result-val" id="slotResultVal">🎰 Ready to Spin!</div>
             <div class="slot-result-sub" id="slotResultSub">Press SPIN below</div>
+            <div class="slot-result-rule" id="slotResultRule"></div>
           </div>
+          <!-- Payout Table -->
           <div class="slot-payout-table">
-            <div class="section-title" style="margin-bottom:8px">Payout Table</div>
-            <div class="slot-payout-row"><span class="slot-payout-syms">7️⃣7️⃣7️⃣</span><span class="slot-payout-mult">×10 JACKPOT!</span></div>
-            <div class="slot-payout-row"><span class="slot-payout-syms">⭐⭐⭐</span><span class="slot-payout-mult">×5</span></div>
-            <div class="slot-payout-row"><span class="slot-payout-syms">💎💎💎</span><span class="slot-payout-mult">×4</span></div>
-            <div class="slot-payout-row"><span class="slot-payout-syms">🍇🍇🍇</span><span class="slot-payout-mult">×3</span></div>
-            <div class="slot-payout-row"><span class="slot-payout-syms">🍋🍋🍋</span><span class="slot-payout-mult">×2</span></div>
-            <div class="slot-payout-row"><span class="slot-payout-syms">🥇🥇🥇</span><span class="slot-payout-mult">×2</span></div>
-            <div class="slot-payout-row"><span class="slot-payout-syms">7️⃣7️⃣ + any</span><span class="slot-payout-mult">×1.5</span></div>
-            <div class="slot-payout-row"><span class="slot-payout-syms">Any 2 match</span><span class="slot-payout-mult">×0.5 (refund)</span></div>
+            <div class="section-title" style="margin-bottom:8px">Payout Rules</div>
+            <div class="slot-payout-row">
+              <span class="slot-payout-syms">7️⃣7️⃣7️⃣</span>
+              <div style="text-align:right"><div class="slot-payout-mult">×10 JACKPOT!</div><div class="slot-payout-desc">5% chance</div></div>
+            </div>
+            <div class="slot-payout-row">
+              <span class="slot-payout-syms">7️⃣7️⃣ + any</span>
+              <div style="text-align:right"><div class="slot-payout-mult">×1.5</div><div class="slot-payout-desc">Two sevens</div></div>
+            </div>
+            <div class="slot-payout-row">
+              <span class="slot-payout-syms">⭐⭐⭐</span>
+              <div style="text-align:right"><div class="slot-payout-mult">×5</div><div class="slot-payout-desc">7% chance</div></div>
+            </div>
+            <div class="slot-payout-row">
+              <span class="slot-payout-syms">⭐⭐ + any</span>
+              <div style="text-align:right"><div class="slot-payout-mult">½ refund</div><div class="slot-payout-desc">Half back</div></div>
+            </div>
+            <div class="slot-payout-row">
+              <span class="slot-payout-syms">💎💎💎</span>
+              <div style="text-align:right"><div class="slot-payout-mult">×4</div><div class="slot-payout-desc">10% chance</div></div>
+            </div>
+            <div class="slot-payout-row">
+              <span class="slot-payout-syms">💎💎 + any</span>
+              <div style="text-align:right"><div class="slot-payout-mult">¼ refund</div><div class="slot-payout-desc">25% back</div></div>
+            </div>
+            <div class="slot-payout-row">
+              <span class="slot-payout-syms">🥇🥇🥇</span>
+              <div style="text-align:right"><div class="slot-payout-mult">×3</div><div class="slot-payout-desc">13% chance</div></div>
+            </div>
+            <div class="slot-payout-row">
+              <span class="slot-payout-syms">🥇🥇 + any</span>
+              <div style="text-align:right"><div class="slot-payout-mult">No refund</div><div class="slot-payout-desc">All lost</div></div>
+            </div>
+            <div class="slot-payout-row">
+              <span class="slot-payout-syms">🍇🍇🍇</span>
+              <div style="text-align:right"><div class="slot-payout-mult">×2</div><div class="slot-payout-desc">15% chance</div></div>
+            </div>
+            <div class="slot-payout-row">
+              <span class="slot-payout-syms">🍇🍇 + any</span>
+              <div style="text-align:right"><div class="slot-payout-mult">No refund</div><div class="slot-payout-desc">All lost</div></div>
+            </div>
+            <div class="slot-payout-row">
+              <span class="slot-payout-syms">🍋🍋🍋</span>
+              <div style="text-align:right"><div class="slot-payout-mult">×1 (break even)</div><div class="slot-payout-desc">30% chance</div></div>
+            </div>
+            <div class="slot-payout-row">
+              <span class="slot-payout-syms">🍋🍋 + any</span>
+              <div style="text-align:right"><div class="slot-payout-mult">No refund</div><div class="slot-payout-desc">All lost</div></div>
+            </div>
           </div>
         </div>
       </div>
@@ -799,10 +840,9 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
     <div class="bet-info" id="wheelBetInfo">0 🥈</div>
   </div>
   <div class="game-screen-scroll">
-    <div class="game-content">
-      <!-- Coin balance display -->
+    <div class="game-content" style="padding:8px;">
       <div class="game-coin-balance"><span class="gcb-label">Balance:</span><span class="gcb-val" id="wheelCoinBalance">0 🥈</span></div>
-      <div style="background:var(--dark3);border-radius:14px;padding:12px;margin-bottom:12px">
+      <div style="background:var(--dark3);border-radius:14px;padding:10px;margin-bottom:10px">
         <div class="coin-selector-label">🥈 Bet Amount</div>
         <div class="coin-presets" id="wheelPresets">
           <div class="coin-preset active" data-val="10" onclick="selectWheelCoin(this)">10</div>
@@ -824,7 +864,7 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
       <div class="spin-wheel-container">
         <div class="spin-wheel-wrap">
           <div class="spin-pointer">▼</div>
-          <canvas id="wheelCanvas" width="260" height="260"></canvas>
+          <canvas id="wheelCanvas" width="340" height="340"></canvas>
         </div>
         <div class="spin-result-box" id="wheelResultBox">
           <div class="spin-result-val" id="wheelResultVal">Spin to Win!</div>
@@ -845,7 +885,6 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
   </div>
   <div class="game-screen-scroll">
     <div class="game-content">
-      <!-- Coin balance display -->
       <div class="game-coin-balance"><span class="gcb-label">Balance:</span><span class="gcb-val" id="bullCoinBalance">0 🥈</span></div>
       <div style="background:var(--dark3);border-radius:14px;padding:12px;margin-bottom:12px">
         <div class="coin-selector-label">🥈 Bet Amount</div>
@@ -871,12 +910,12 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
         <div class="bull-status" id="bullStatus">Choose a bull and place your bet!</div>
         <div class="bull-bet-row">
           <div class="bull-team-btn red" id="bullRedBtn" onclick="selectBull('red')">
-            <span class="bull-emoji-wrap"><span class="bull-emoji-red">🐂</span></span>
+            <span class="bull-emoji-wrap" id="redBullWrap"></span>
             <div class="bull-name" style="color:#FF3030;text-shadow:0 0 10px rgba(255,50,50,0.7)">🔴 RED BULL</div>
             <div class="bull-odds">2x if wins</div>
           </div>
           <div class="bull-team-btn blue" id="bullBlueBtn" onclick="selectBull('blue')">
-            <span class="bull-emoji-wrap"><span class="bull-emoji-blue">🐃</span></span>
+            <span class="bull-emoji-wrap" id="blueBullWrap"></span>
             <div class="bull-name" style="color:#0088FF;text-shadow:0 0 10px rgba(0,100,255,0.7)">🔵 BLUE BULL</div>
             <div class="bull-odds">2x if wins</div>
           </div>
@@ -940,7 +979,6 @@ function init(){
     setTimeout(()=>{tapCount=0;},2000);
   });
 
-  // Check night ads every minute
   setInterval(checkNightAds, 60000);
 }
 
@@ -960,7 +998,6 @@ function updateDisplay(){
   document.getElementById('coins-val').textContent=state.coins.toLocaleString();
   document.getElementById('walletPoints').textContent=state.points.toLocaleString()+' pts';
   document.getElementById('walletCoins').textContent=state.coins.toLocaleString()+' 🥈';
-  // Update in-game balances
   const bal = state.coins.toLocaleString() + ' 🥈';
   ['avCoinBalance','slotCoinBalance','wheelCoinBalance','bullCoinBalance'].forEach(id=>{
     const el=document.getElementById(id);
@@ -990,7 +1027,6 @@ function showPage(name){
 
 function openProfileModal(){
   showPage('profile');
-  // If in main nav, switch nav highlight
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
 }
 
@@ -1020,12 +1056,10 @@ function closeAvatarModal(){ document.getElementById('avatarModal').classList.re
 
 // ===================== TASKS =====================
 function updateTasksUI(){
-  // Telegram task
   const tgStatus=document.getElementById('taskTgStatus');
   if(state.taskTgDone){
     tgStatus.innerHTML='<div class="task-done">✅ Completed! +1,000 Points earned</div>';
   }
-  // TikTok task
   const ttStatus=document.getElementById('taskTTStatus');
   if(state.taskTTDone){
     ttStatus.innerHTML='<div class="task-done">✅ Completed! +1,000 Points earned</div>';
@@ -1033,7 +1067,6 @@ function updateTasksUI(){
 }
 function markTaskTg(){
   if(state.taskTgDone){ toast('✅ Already completed!'); return; }
-  // Give points after a brief delay (simulating join verification)
   setTimeout(()=>{
     state.taskTgDone=true;
     addPoints(1000);
@@ -1089,23 +1122,30 @@ function openPayModal(coins,price){
 function closePayModal(){ document.getElementById('payModal').classList.remove('open'); }
 
 // ===================== WALLET =====================
-let exchangeAmt=100;
+let exchangeAmtCoins = 1000;
 function switchWalletTab(tab){
   document.querySelectorAll('.wallet-tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.wallet-panel').forEach(p=>p.classList.remove('active'));
   document.querySelector(`.wallet-tab[onclick*="${tab}"]`)?.classList.add('active');
   document.getElementById('walletPanel-'+tab)?.classList.add('active');
 }
-function adjExchange(n){
-  exchangeAmt=Math.max(100,exchangeAmt+n);
-  document.getElementById('exchangeAmt').textContent=exchangeAmt;
-  document.getElementById('exchangePts').textContent=Math.floor(exchangeAmt/10)+' pts';
+function onExchangeInput(val){
+  const n = parseInt(val) || 0;
+  exchangeAmtCoins = n;
+  const pts = Math.floor(n / 10);
+  document.getElementById('exchangePtsPreview').textContent = pts + ' pts';
 }
 function doExchange(){
-  if(state.coins<exchangeAmt){toast('⚠️ Not enough coins!');return;}
-  const pts=Math.floor(exchangeAmt/10);
-  addCoins(-exchangeAmt); addPoints(pts);
-  toast(`✅ ${exchangeAmt} Coins → ${pts} Points!`);
+  const input = document.getElementById('exchangeTextInput');
+  const amt = parseInt(input.value) || 0;
+  if(amt < 1000){ toast('⚠️ Minimum exchange is 1,000 coins!'); return; }
+  if(state.coins < amt){ toast('⚠️ Not enough coins!'); return; }
+  const pts = Math.floor(amt / 10);
+  addCoins(-amt);
+  addPoints(pts);
+  toast(`✅ ${amt} Coins → ${pts} Points!`);
+  input.value = '';
+  document.getElementById('exchangePtsPreview').textContent = '0 pts';
 }
 function requestWithdraw(){
   const tb=document.getElementById('wdTelebirr').value.trim();
@@ -1131,21 +1171,25 @@ function updateAdsUI(){
   document.getElementById('nightProgressBar').style.width=Math.min(100,(nw/50)*100)+'%';
 }
 
+// Night ads: Ethiopia time 8 PM – 10 PM = UTC 17:00–19:00
+function isEthiopiaNightAds(){
+  const now = new Date();
+  // Ethiopia is UTC+3, night ads 20:00–22:00 ET = 17:00–19:00 UTC
+  const utcH = now.getUTCHours();
+  return (utcH >= 17 && utcH < 19);
+}
+
 function checkNightAds(){
-  const now=new Date();
-  const h=now.getHours();
-  // 22:00 (10 PM) to 23:59 (midnight) = hours 22 and 23
-  const isNightTime=(h>=22 && h<=23);
+  const isNight = isEthiopiaNightAds();
   const btn=document.getElementById('nightAdBtn');
   const statusEl=document.getElementById('nightAdsStatus');
-  if(isNightTime){
+  if(isNight){
     btn.disabled=(state.nightAdsWatched>=50);
-    statusEl.textContent=state.nightAdsWatched>=50?'✅ Tonight\'s limit reached!':'🌙 Night ads are active now!';
+    statusEl.textContent=state.nightAdsWatched>=50?'✅ Tonight\'s limit reached!':'🌙 Night ads are active now! (8–10 PM ET)';
     statusEl.style.color=state.nightAdsWatched>=50?'var(--green)':'var(--accent2)';
   } else {
     btn.disabled=true;
-    const nextNight=h<22?`Tonight at 10:00 PM`:`Available again tomorrow night`;
-    statusEl.textContent='🔒 Available 10:00 PM – 12:00 AM only. '+nextNight;
+    statusEl.textContent='🔒 Available 8:00 PM – 10:00 PM (Ethiopia Time) only.';
     statusEl.style.color='var(--text2)';
   }
 }
@@ -1155,7 +1199,6 @@ function watchDailyAd(){
   showAd(()=>{
     state.adsWatched=(state.adsWatched||0)+1;
     addPoints(20);
-    // Bonus for completing all 50
     if(state.adsWatched===50){
       addPoints(50);
       toast('🎉 +20 pts! ALL 50 done! BONUS +50 pts! Total +70 pts!');
@@ -1167,9 +1210,7 @@ function watchDailyAd(){
 }
 
 function watchNightAd(){
-  const now=new Date();
-  const h=now.getHours();
-  if(h<22||h>23){toast('🔒 Night ads available 10 PM – 12 AM only!');return;}
+  if(!isEthiopiaNightAds()){toast('🔒 Night ads available 8 PM – 10 PM (Ethiopia Time) only!');return;}
   if(state.nightAdsWatched>=50){toast('✅ Tonight\'s limit reached!');return;}
   showAd(()=>{
     state.nightAdsWatched=(state.nightAdsWatched||0)+1;
@@ -1220,7 +1261,7 @@ function closeAd(){
 }
 
 // ===================== RESULTS =====================
-let currentGame=null, pendingWin=0;
+let currentGame=null;
 function showResult(won, coinsWon){
   if(won){
     document.getElementById('resultEmoji').textContent='🏆';
@@ -1264,7 +1305,7 @@ function openGame(game){
   currentGame=game;
   document.getElementById('screen-'+game)?.classList.add('open');
   resetGameState(game);
-  updateDisplay(); // refresh balances
+  updateDisplay();
 }
 function closeGameScreen(game){
   document.getElementById('screen-'+game)?.classList.remove('open');
@@ -1272,8 +1313,25 @@ function closeGameScreen(game){
 }
 
 // ===================== LUCKY SLOT =====================
-const SLOT_SYMS=['7️⃣','🍇','🍋','⭐','💎','🥇'];
-const SLOT_MULT={'7️⃣':10,'⭐':5,'💎':4,'🍇':3,'🍋':2,'🥇':2};
+// Symbols in order: 7, Star, Diamond, Gold, Grape, Lemon
+const SLOT_SYMS=['7️⃣','⭐','💎','🥇','🍇','🍋'];
+// Symbol configs: {mult3x, refund2x, chance3x}
+// Rules:
+// 7: triple=×10 (5%), two=×1.5
+// ⭐: triple=×5 (7%), two=½ refund
+// 💎: triple=×4 (10%), two=¼ refund
+// 🥇: triple=×3 (13%), two=lose
+// 🍇: triple=×2 (15%), two=lose
+// 🍋: triple=×1 (30%), two=lose
+const SLOT_RULES = {
+  '7️⃣': { mult:10, chance:0.05, twoMult:1.5, twoRefund:'1.5x', twoDesc:'Two 7s → ×1.5 win!' },
+  '⭐':  { mult:5,  chance:0.07, twoMult:0.5, twoRefund:'half', twoDesc:'Two ⭐ → ½ bet refunded' },
+  '💎':  { mult:4,  chance:0.10, twoMult:0.25,twoRefund:'quarter',twoDesc:'Two 💎 → ¼ bet refunded' },
+  '🥇':  { mult:3,  chance:0.13, twoMult:0,   twoRefund:'none', twoDesc:'Two 🥇 → bet lost' },
+  '🍇':  { mult:2,  chance:0.15, twoMult:0,   twoRefund:'none', twoDesc:'Two 🍇 → bet lost' },
+  '🍋':  { mult:1,  chance:0.30, twoMult:0,   twoRefund:'none', twoDesc:'Three 🍋 → break even (×1)' },
+};
+
 let slotSpinning=false, slotBet=10;
 
 function selectSlotCoin(el){
@@ -1300,12 +1358,69 @@ function resetSlot(){
   document.getElementById('slotWinLine').classList.remove('visible');
   document.getElementById('slotResultVal').textContent='🎰 Ready to Spin!';
   document.getElementById('slotResultSub').textContent='Press SPIN below';
+  document.getElementById('slotResultRule').textContent='';
   document.getElementById('slotResultSub').style.color='var(--text2)';
   document.getElementById('slotResult').style.background='rgba(0,0,0,0.4)';
   document.getElementById('slotSpinBtn').disabled=false;
   document.getElementById('slotSpinBtn').textContent='🎰 SPIN!';
   updateDisplay();
 }
+
+function generateSlotResult(){
+  // Build weighted outcome
+  // Total chance of triples: 5+7+10+13+15+30 = 80%
+  // Two 7s: 3%, Two star: 4%, Two diamond: 4%... rest = loss
+  const r = Math.random() * 100;
+  
+  if(r < 5)  return { type:'triple', sym:'7️⃣' };
+  if(r < 12) return { type:'triple', sym:'⭐' };
+  if(r < 22) return { type:'triple', sym:'💎' };
+  if(r < 35) return { type:'triple', sym:'🥇' };
+  if(r < 50) return { type:'triple', sym:'🍇' };
+  if(r < 80) return { type:'triple', sym:'🍋' };
+  // Two 7s
+  if(r < 83) return { type:'two', sym:'7️⃣' };
+  // Two stars
+  if(r < 86) return { type:'two', sym:'⭐' };
+  // Two diamonds
+  if(r < 89) return { type:'two', sym:'💎' };
+  // Two gold
+  if(r < 92) return { type:'two', sym:'🥇' };
+  // Two grape
+  if(r < 95) return { type:'two', sym:'🍇' };
+  // Two lemon
+  if(r < 97) return { type:'two', sym:'🍋' };
+  // All different = pure loss
+  return { type:'loss' };
+}
+
+function buildReelDisplay(outcome){
+  // Returns array of 3 symbols matching the outcome
+  if(outcome.type === 'triple'){
+    return [outcome.sym, outcome.sym, outcome.sym];
+  }
+  if(outcome.type === 'two'){
+    const sym = outcome.sym;
+    // Pick a different symbol for the odd one
+    let other;
+    do { other = SLOT_SYMS[Math.floor(Math.random() * SLOT_SYMS.length)]; } while(other === sym);
+    const pos = Math.floor(Math.random() * 3);
+    const reels = [sym, sym, sym];
+    reels[pos] = other;
+    return reels;
+  }
+  // Loss: all different
+  let reels;
+  do {
+    reels = [
+      SLOT_SYMS[Math.floor(Math.random()*6)],
+      SLOT_SYMS[Math.floor(Math.random()*6)],
+      SLOT_SYMS[Math.floor(Math.random()*6)]
+    ];
+  } while(reels[0]===reels[1] || reels[1]===reels[2] || reels[0]===reels[2]);
+  return reels;
+}
+
 function spinSlot(){
   if(slotSpinning) return;
   if(state.coins<slotBet){toast('⚠️ Not enough coins! Buy more.');return;}
@@ -1315,38 +1430,8 @@ function spinSlot(){
   document.getElementById('slotSpinBtn').textContent='⏳ Spinning...';
   document.getElementById('slotWinLine').classList.remove('visible');
 
-  const r=Math.random();
-  let result;
-  if(r<0.04){
-    result=['7️⃣','7️⃣','7️⃣']; // jackpot 4%
-  } else if(r<0.10){
-    const sym=SLOT_SYMS.slice(1)[Math.floor(Math.random()*5)];
-    result=[sym,sym,sym]; // other triple 6%
-  } else if(r<0.26){
-    // Two 7s + one other 16%
-    const other=SLOT_SYMS.slice(1)[Math.floor(Math.random()*5)];
-    const pos=Math.floor(Math.random()*3);
-    result=['7️⃣','7️⃣','7️⃣']; result[pos]=other;
-    // Ensure only 2 sevens
-    let sevens=result.filter(s=>s==='7️⃣').length;
-    if(sevens===3){result[Math.floor(Math.random()*3)]=SLOT_SYMS[1+Math.floor(Math.random()*5)];}
-  } else if(r<0.50){
-    // Any pair (NOT 7s pair counted as two-7s) 24%
-    const sym=SLOT_SYMS[Math.floor(Math.random()*6)];
-    let other; do{other=SLOT_SYMS[Math.floor(Math.random()*6)];}while(other===sym);
-    const pos=Math.floor(Math.random()*3);
-    result=[sym,sym,other];
-    if(pos===1) result=[sym,other,sym];
-    if(pos===2) result=[other,sym,sym];
-  } else {
-    // All different — loss
-    const sh=[...SLOT_SYMS].sort(()=>Math.random()-.5);
-    result=[sh[0],sh[1],sh[2]];
-    // Guarantee no matches
-    while(result[0]===result[1]||result[1]===result[2]||result[0]===result[2]){
-      result=[SLOT_SYMS[Math.floor(Math.random()*6)],SLOT_SYMS[Math.floor(Math.random()*6)],SLOT_SYMS[Math.floor(Math.random()*6)]];
-    }
-  }
+  const outcome = generateSlotResult();
+  const result = buildReelDisplay(outcome);
 
   [0,1,2].forEach(i=>document.getElementById('slotReel'+i).classList.add('spin'));
   let tick=0;
@@ -1355,7 +1440,6 @@ function spinSlot(){
     if(++tick>25) clearInterval(spinI);
   },70);
 
-  // Stop reels sequentially for dramatic effect
   setTimeout(()=>{
     document.getElementById('slotReel0').classList.remove('spin');
     document.getElementById('slotSym0').textContent=result[0];
@@ -1367,84 +1451,100 @@ function spinSlot(){
   setTimeout(()=>{
     document.getElementById('slotReel2').classList.remove('spin');
     document.getElementById('slotSym2').textContent=result[2];
-    evaluateSlot(result);
+    evaluateSlot(outcome);
   }, 2000);
 }
 
-function evaluateSlot(items){
-  const [a,b,c]=items;
+function evaluateSlot(outcome){
   const resultBox=document.getElementById('slotResult');
   const rv=document.getElementById('slotResultVal');
   const rs=document.getElementById('slotResultSub');
+  const rr=document.getElementById('slotResultRule');
 
-  // Count sevens
-  const sevenCount=[a,b,c].filter(s=>s==='7️⃣').length;
-
-  if(a===b && b===c){
-    // Triple match
-    const mult=SLOT_MULT[a]||2;
-    const win=slotBet*mult;
-    [0,1,2].forEach(i=>document.getElementById('slotReel'+i).classList.add('win'));
-    document.getElementById('slotWinLine').classList.add('visible');
-    resultBox.style.background='rgba(0,208,132,0.1)';
-    rv.textContent=`🏆 ${a}${a}${a}  ×${mult} WIN!`;
-    rs.textContent=`Bet ${slotBet} → +${win} Coins!`;
-    rs.style.color='var(--green)';
-    state.games++; state.wins++;
-    state.history.unshift({game:'slot',won:true,pts:win,time:new Date().toLocaleTimeString()});
+  if(outcome.type === 'triple'){
+    const rule = SLOT_RULES[outcome.sym];
+    const mult = rule.mult;
+    const win = slotBet * mult;
+    if(mult > 1){
+      [0,1,2].forEach(i=>document.getElementById('slotReel'+i).classList.add('win'));
+      document.getElementById('slotWinLine').classList.add('visible');
+      resultBox.style.background='rgba(0,208,132,0.1)';
+      rv.textContent=`🏆 ${outcome.sym}${outcome.sym}${outcome.sym} × ${mult}!`;
+      rs.textContent=`Bet ${slotBet} → +${win} Coins!`;
+      rs.style.color='var(--green)';
+      rr.textContent= mult===1 ? 'Break even — bet returned' : `${mult === 10?'JACKPOT!':mult+'x multiplier'}`;
+    } else {
+      // ×1 = lemon triple = break even
+      resultBox.style.background='rgba(255,165,0,0.05)';
+      rv.textContent=`🍋🍋🍋 Break Even!`;
+      rs.textContent=`Bet ${slotBet} → Returned ${slotBet} coins`;
+      rs.style.color='var(--gold)';
+      rr.textContent='Three lemons → bet returned (×1)';
+    }
+    state.history.unshift({game:'slot',won:mult>1,pts:mult>1?win:0,time:new Date().toLocaleTimeString()});
     saveState();
     setTimeout(()=>{
       addCoins(win);
-      toast(`🎰 ${a}${a}${a}! ×${mult} → +${win} Coins!`);
+      if(mult>1) toast(`🎰 ${outcome.sym}×3! ×${mult} → +${win} Coins!`);
+      else toast(`🍋 Break even! ${win} coins back.`);
       slotSpinning=false;
       document.getElementById('slotSpinBtn').disabled=false;
       document.getElementById('slotSpinBtn').textContent='🎰 SPIN AGAIN!';
     },800);
 
-  } else if(sevenCount===2){
-    // Exactly two 7s
-    const win=Math.floor(slotBet*1.5);
-    resultBox.style.background='rgba(255,215,0,0.08)';
-    rv.textContent='7️⃣7️⃣ ×1.5 WIN!';
-    rs.textContent=`Bet ${slotBet} → +${win} Coins!`;
-    rs.style.color='var(--gold)';
-    state.games++; state.wins++;
-    state.history.unshift({game:'slot',won:true,pts:win,time:new Date().toLocaleTimeString()});
+  } else if(outcome.type === 'two'){
+    const rule = SLOT_RULES[outcome.sym];
+    let refund = 0;
+    let msg='', sub='', ruleText='';
+    if(rule.twoRefund === '1.5x'){
+      refund = Math.floor(slotBet * 1.5);
+      msg = `7️⃣7️⃣ × 1.5 Win!`;
+      sub = `Bet ${slotBet} → +${refund} Coins!`;
+      ruleText = 'Two 7s → ×1.5 win!';
+      resultBox.style.background='rgba(255,215,0,0.08)';
+      rs.style.color='var(--gold)';
+    } else if(rule.twoRefund === 'half'){
+      refund = Math.floor(slotBet * 0.5);
+      msg = `⭐⭐ Half Refund`;
+      sub = `${refund} Coins returned`;
+      ruleText = 'Two stars → ½ bet refunded';
+      resultBox.style.background='rgba(255,215,0,0.05)';
+      rs.style.color='var(--gold)';
+    } else if(rule.twoRefund === 'quarter'){
+      refund = Math.floor(slotBet * 0.25);
+      msg = `💎💎 ¼ Refund`;
+      sub = `${refund} Coins returned`;
+      ruleText = 'Two diamonds → ¼ bet refunded';
+      resultBox.style.background='rgba(255,165,0,0.05)';
+      rs.style.color='rgba(255,165,0,0.9)';
+    } else {
+      // none — all lost
+      msg = `${outcome.sym}${outcome.sym} — Lost`;
+      sub = `Lost ${slotBet} Coins`;
+      ruleText = rule.twoDesc;
+      resultBox.style.background='rgba(255,58,92,0.08)';
+      rs.style.color='var(--red)';
+    }
+    rv.textContent = msg;
+    rs.textContent = sub;
+    rr.textContent = ruleText;
+    state.history.unshift({game:'slot',won:refund>0,pts:refund>0?refund-slotBet:-slotBet,time:new Date().toLocaleTimeString()});
     saveState();
     setTimeout(()=>{
-      addCoins(win);
-      toast(`🎉 Two 7s! +${win} Coins!`);
-      slotSpinning=false;
-      document.getElementById('slotSpinBtn').disabled=false;
-      document.getElementById('slotSpinBtn').textContent='🎰 SPIN AGAIN!';
-    },800);
-
-  } else if((a===b || b===c || a===c) && sevenCount<2){
-    // Any pair (non-7s pair, or single 7 with pair of another)
-    // Only give refund if it's truly any 2 matching (not 7+7 which is handled above)
-    const refund=Math.floor(slotBet*0.5);
-    resultBox.style.background='rgba(255,165,0,0.05)';
-    rv.textContent='🤝 Pair → ½ Refund';
-    rs.textContent=`Bet ${slotBet} → +${refund} Coins back`;
-    rs.style.color='var(--gold)';
-    state.games++;
-    state.history.unshift({game:'slot',won:false,pts:refund-slotBet,time:new Date().toLocaleTimeString()});
-    saveState();
-    setTimeout(()=>{
-      addCoins(refund);
-      toast(`+${refund} Coins refunded`);
+      if(refund>0) addCoins(refund);
+      toast(refund > 0 ? `+${refund} Coins back!` : `😔 Lost ${slotBet} coins`);
       slotSpinning=false;
       document.getElementById('slotSpinBtn').disabled=false;
       document.getElementById('slotSpinBtn').textContent='🎰 SPIN AGAIN!';
     },800);
 
   } else {
-    // No match
+    // Pure loss
     resultBox.style.background='rgba(255,58,92,0.08)';
     rv.textContent='😔 No Match';
     rs.textContent=`Lost ${slotBet} Coins. Try again!`;
     rs.style.color='var(--red)';
-    state.games++;
+    rr.textContent='All different symbols — no prize';
     state.history.unshift({game:'slot',won:false,pts:-slotBet,time:new Date().toLocaleTimeString()});
     saveState();
     setTimeout(()=>{
@@ -1455,74 +1555,106 @@ function evaluateSlot(items){
     },800);
   }
 }
- 
+
 // ===================== LUCKY WHEEL =====================
+// Pointer is at TOP. Segments are rendered starting from angle (wheel rotation offset).
+// To fix pointer accuracy: pointer at top = angle 270deg from positive x-axis = -PI/2
+// When wheel stops, segment at the TOP pointer position is awarded.
+// 
+// Segment order and weights (10 segments):
+// Index: label, type, val, weight
 const WHEEL_SEGMENTS=[
-  {label:'×10',color:'#FF3A5C',type:'multiply',val:10},
-  {label:'+1',color:'#3A8CFF',type:'add_coin',val:1},
-  {label:'+5 pts',color:'#8B5CF6',type:'add_point',val:5},
-  {label:'×1',color:'#555577',type:'multiply',val:1},
-  {label:'÷2',color:'#FF7A00',type:'half',val:0},
-  {label:'+10 pts',color:'#00C878',type:'add_point',val:10},
-  {label:'×2',color:'#FFD700',type:'multiply',val:2},
-  {label:'+100 pts',color:'#A020F0',type:'add_point',val:100},
-  {label:'×0',color:'#333350',type:'multiply',val:0},
-  {label:'+500 pts',color:'#FF6AB0',type:'add_point',val:500},
+  {label:'×10',  color:'#FF3A5C', type:'multiply',   val:10},   // 0 - rare
+  {label:'+1',   color:'#3A8CFF', type:'add_coin',   val:1},    // 1
+  {label:'+5 pts',color:'#8B5CF6',type:'add_point',  val:5},    // 2
+  {label:'×1',   color:'#555577', type:'multiply',   val:1},    // 3
+  {label:'÷2',   color:'#FF7A00', type:'half',       val:0},    // 4
+  {label:'+10 pts',color:'#00C878',type:'add_point', val:10},   // 5
+  {label:'×2',   color:'#FFD700', type:'multiply',   val:2},    // 6
+  {label:'+100 pts',color:'#A020F0',type:'add_point',val:100},  // 7 - 10%
+  {label:'×0',   color:'#333350', type:'multiply',   val:0},    // 8
+  {label:'+500 pts',color:'#FF6AB0',type:'add_point',val:500},  // 9 - 5%
 ];
+
+// Weights for each segment index
+const WHEEL_WEIGHTS = [0.04, 0.14, 0.13, 0.14, 0.12, 0.14, 0.13, 0.10, 0.11, 0.05];
+
 let wheelBet=10, wheelSpinning=false, wCanvas, wCtx, wheelAngle=0;
 
 function initWheel(){
   wCanvas=document.getElementById('wheelCanvas');
   if(!wCanvas) return;
   wCtx=wCanvas.getContext('2d');
+  // Make canvas square based on actual size
+  const w = wCanvas.offsetWidth || 340;
+  wCanvas.width = w;
+  wCanvas.height = w;
   drawWheelStatic(0);
 }
+
 function drawWheelStatic(angle){
-  if(!wCtx) return;
-  const W=260,H=260,cx=130,cy=130,r=118,seg=WHEEL_SEGMENTS.length;
+  if(!wCtx||!wCanvas) return;
+  const W=wCanvas.width, H=wCanvas.height;
+  const cx=W/2, cy=H/2, r=Math.min(W,H)*0.46;
+  const seg=WHEEL_SEGMENTS.length;
   const arc=(Math.PI*2)/seg;
   wCtx.clearRect(0,0,W,H);
+
   // Outer ring
-  wCtx.beginPath();wCtx.arc(cx,cy,125,0,Math.PI*2);
+  wCtx.beginPath();wCtx.arc(cx,cy,r+8,0,Math.PI*2);
   wCtx.fillStyle='rgba(108,58,255,0.2)';wCtx.fill();
-  wCtx.strokeStyle='rgba(108,58,255,0.6)';wCtx.lineWidth=3;wCtx.stroke();
+  wCtx.strokeStyle='rgba(108,58,255,0.7)';wCtx.lineWidth=3;wCtx.stroke();
+
+  // Decorative dots on outer ring
+  for(let i=0;i<seg;i++){
+    const dotAngle=angle+i*arc-Math.PI/2+arc/2;
+    const dx=cx+Math.cos(dotAngle)*(r+4);
+    const dy=cy+Math.sin(dotAngle)*(r+4);
+    wCtx.beginPath();wCtx.arc(dx,dy,3,0,Math.PI*2);
+    wCtx.fillStyle='rgba(255,215,0,0.6)';wCtx.fill();
+  }
+
   // Segments
   for(let i=0;i<seg;i++){
     const start=angle+i*arc-Math.PI/2;
     const end=start+arc;
     wCtx.beginPath();wCtx.moveTo(cx,cy);wCtx.arc(cx,cy,r,start,end);wCtx.closePath();
-    // Gradient fill
     const midAngle=start+arc/2;
     const gx=cx+Math.cos(midAngle)*r*0.5;
     const gy=cy+Math.sin(midAngle)*r*0.5;
     const grad=wCtx.createRadialGradient(gx,gy,0,gx,gy,r*0.7);
-    grad.addColorStop(0,WHEEL_SEGMENTS[i].color+'dd');
-    grad.addColorStop(1,WHEEL_SEGMENTS[i].color+'88');
+    grad.addColorStop(0,WHEEL_SEGMENTS[i].color+'ee');
+    grad.addColorStop(1,WHEEL_SEGMENTS[i].color+'77');
     wCtx.fillStyle=grad;wCtx.fill();
-    wCtx.strokeStyle='rgba(0,0,0,0.6)';wCtx.lineWidth=2;wCtx.stroke();
-    // Label — positioned in middle of segment, properly centered
+    wCtx.strokeStyle='rgba(0,0,0,0.5)';wCtx.lineWidth=1.5;wCtx.stroke();
+
+    // Label text
     wCtx.save();
     wCtx.translate(cx,cy);
     wCtx.rotate(start+arc/2);
     wCtx.textAlign='center';
     wCtx.fillStyle='#fff';
-    const fsize=WHEEL_SEGMENTS[i].label.length>4?9:11;
+    const lbl=WHEEL_SEGMENTS[i].label;
+    const fsize=lbl.length>6?8:lbl.length>4?9:11;
     wCtx.font=`bold ${fsize}px Orbitron,monospace`;
-    wCtx.shadowColor='rgba(0,0,0,0.9)';wCtx.shadowBlur=5;
-    wCtx.fillText(WHEEL_SEGMENTS[i].label,r*0.65,4);
+    wCtx.shadowColor='rgba(0,0,0,0.95)';wCtx.shadowBlur=4;
+    wCtx.fillText(lbl,r*0.62,4);
     wCtx.shadowBlur=0;
     wCtx.restore();
   }
+
   // Center circle
   const cg=wCtx.createRadialGradient(cx,cy,0,cx,cy,24);
   cg.addColorStop(0,'#3a2a6a');cg.addColorStop(1,'#111125');
-  wCtx.beginPath();wCtx.arc(cx,cy,24,0,Math.PI*2);
+  wCtx.beginPath();wCtx.arc(cx,cy,22,0,Math.PI*2);
   wCtx.fillStyle=cg;wCtx.fill();
-  wCtx.strokeStyle='rgba(255,215,0,0.6)';wCtx.lineWidth=2;wCtx.stroke();
-  wCtx.fillStyle='#FFD700';wCtx.font='bold 13px Orbitron,monospace';
+  wCtx.strokeStyle='rgba(255,215,0,0.7)';wCtx.lineWidth=2;wCtx.stroke();
+  wCtx.fillStyle='#FFD700';
+  wCtx.font='bold 12px Orbitron,monospace';
   wCtx.textAlign='center';wCtx.textBaseline='middle';
   wCtx.fillText('GO',cx,cy);
 }
+
 function selectWheelCoin(el){
   document.querySelectorAll('#wheelPresets .coin-preset').forEach(b=>b.classList.remove('active'));
   el.classList.add('active');
@@ -1540,7 +1672,13 @@ function adjWheelCoin(n){
 }
 function resetWheel(){
   wheelSpinning=false; wheelAngle=0;
-  drawWheelStatic(0);
+  // Resize canvas to current width
+  if(wCanvas){
+    const w = wCanvas.offsetWidth || 340;
+    wCanvas.width = w;
+    wCanvas.height = w;
+    drawWheelStatic(0);
+  }
   document.getElementById('wheelResultVal').textContent='Spin to Win!';
   document.getElementById('wheelResultSub').textContent='Press SPIN below';
   document.getElementById('wheelResultBox').style.borderColor='rgba(255,215,0,0.25)';
@@ -1548,6 +1686,21 @@ function resetWheel(){
   document.getElementById('wheelSpinBtn').textContent='🌀 SPIN!';
   updateDisplay();
 }
+
+function pickWeightedSegment(){
+  // Adjust weights based on bet
+  let w=[...WHEEL_WEIGHTS];
+  if(wheelBet>=500){ w[9]=0.08; w[7]=0.13; }
+  else if(wheelBet>=100){ w[9]=0.06; w[7]=0.12; }
+  const total=w.reduce((a,b)=>a+b,0);
+  let cum=0; const rr=Math.random()*total;
+  for(let i=0;i<w.length;i++){
+    cum+=w[i];
+    if(rr<cum) return i;
+  }
+  return 3; // fallback ×1
+}
+
 function spinWheel(){
   if(wheelSpinning) return;
   if(state.coins<wheelBet){toast('⚠️ Not enough coins!');return;}
@@ -1556,55 +1709,45 @@ function spinWheel(){
   document.getElementById('wheelSpinBtn').disabled=true;
   document.getElementById('wheelSpinBtn').textContent='⏳ Spinning...';
 
-  // Determine result with rarities
-  // +500pts: 1% chance regardless of bet
-  const r=Math.random();
-  let segIdx;
-  const weights=[0.06,0.12,0.13,0.15,0.13,0.15,0.13,0.08,0.10,0.01];
-  // Adjust for bet size
-  let adj=[...weights];
-  if(wheelBet>=500){ adj[9]=0.05; adj[7]=0.15; }
-  else if(wheelBet>=100){ adj[9]=0.02; adj[7]=0.10; }
-  const total=adj.reduce((a,b)=>a+b,0);
-  let cum=0, rr=Math.random()*total;
-  for(let i=0;i<adj.length;i++){
-    cum+=adj[i];
-    if(rr<cum){segIdx=i;break;}
-  }
-  if(segIdx===undefined) segIdx=3;
-
+  const segIdx = pickWeightedSegment();
   const numSeg=WHEEL_SEGMENTS.length;
   const arc=(Math.PI*2)/numSeg;
-  // Pointer is at top (angle = -PI/2 in canvas coordinates). 
-  // Segment i occupies [angle + i*arc - PI/2, angle + (i+1)*arc - PI/2].
-  // To land segIdx at pointer: mid of segment should be at top.
-  // Mid of segment i (from angle=0): i*arc + arc/2 - PI/2
-  // We need: (wheelAngle + i*arc + arc/2 - PI/2) mod 2PI = 0 (top)
-  // So wheelAngle = -(i*arc + arc/2 - PI/2) = PI/2 - i*arc - arc/2
-  const targetOffset=(Math.PI/2) - segIdx*arc - arc/2;
-  const spins=(Math.PI*2)*(8+Math.floor(Math.random()*5));
-  // Make final angle land exactly on segment center
-  const finalAngle=spins+((targetOffset%( Math.PI*2))+(Math.PI*2))%(Math.PI*2);
+
+  // The pointer is at top (12 o'clock position).
+  // Each segment i occupies angles: [angle + i*arc - PI/2, angle + (i+1)*arc - PI/2]
+  // Mid of segment i from the rotation angle is: angle + i*arc + arc/2 - PI/2
+  // For pointer at top (0 degrees from positive y-axis), we need:
+  //   angle + segIdx*arc + arc/2 - PI/2 = 0 (mod 2PI)
+  //   => angle = PI/2 - segIdx*arc - arc/2
+  const targetAngle = Math.PI/2 - segIdx*arc - arc/2;
+  const normalizedTarget = ((targetAngle % (Math.PI*2)) + Math.PI*2) % (Math.PI*2);
+  
+  // Add multiple full spins for dramatic effect
+  const spins = (Math.PI*2) * (6 + Math.floor(Math.random()*4));
+  const finalAngle = spins + normalizedTarget;
 
   let startTime=null;
-  const duration=4500+Math.random()*1000;
+  const duration=4000+Math.random()*1500;
+
   function animate(ts){
     if(!startTime) startTime=ts;
     const elapsed=ts-startTime;
     const progress=Math.min(elapsed/duration,1);
+    // Ease out quartic
     const eased=1-Math.pow(1-progress,4);
-    wheelAngle=finalAngle*eased;
-    drawWheelStatic(wheelAngle);
+    const currentAngle=finalAngle*eased;
+    drawWheelStatic(currentAngle);
     if(progress<1){
       requestAnimationFrame(animate);
     } else {
-      wheelAngle=finalAngle%(Math.PI*2);
+      wheelAngle=normalizedTarget;
       drawWheelStatic(wheelAngle);
       setTimeout(()=>evaluateWheel(segIdx),400);
     }
   }
   requestAnimationFrame(animate);
 }
+
 function evaluateWheel(segIdx){
   const seg=WHEEL_SEGMENTS[segIdx];
   const rb=document.getElementById('wheelResultBox');
@@ -1618,7 +1761,6 @@ function evaluateWheel(segIdx){
       document.getElementById('wheelResultSub').style.color='var(--red)';
       document.getElementById('wheelResultVal').textContent=msg;
       document.getElementById('wheelResultSub').textContent=sub;
-      state.games++;
       state.history.unshift({game:'wheel',won:false,pts:-wheelBet,time:new Date().toLocaleTimeString()});
       saveState(); toast(msg);
       wheelSpinning=false;
@@ -1628,37 +1770,36 @@ function evaluateWheel(segIdx){
     } else if(seg.val===1){
       msg='😐 ×1 — Break Even'; sub='Coins returned.';
       addCoins(wheelBet);
-      state.games++;
       state.history.unshift({game:'wheel',won:false,pts:0,time:new Date().toLocaleTimeString()});
       saveState();
     } else {
       const win=wheelBet*seg.val;
       msg=`🏆 ×${seg.val} WIN!`; sub=`Bet ${wheelBet} → +${win} Coins!`;
       addCoins(win);
-      state.games++; state.wins++;
+      state.wins++;
       state.history.unshift({game:'wheel',won:true,pts:win,time:new Date().toLocaleTimeString()});
       saveState();
     }
   } else if(seg.type==='add_coin'){
     addCoins(seg.val+wheelBet);
     msg=`🎉 +${seg.val} Coin Bonus!`; sub=`+${wheelBet+seg.val} total!`;
-    state.games++; state.wins++;
+    state.wins++;
     state.history.unshift({game:'wheel',won:true,pts:seg.val,time:new Date().toLocaleTimeString()});
     saveState();
   } else if(seg.type==='add_point'){
     addPoints(seg.val); addCoins(wheelBet);
     msg=`⭐ +${seg.val} Points!`; sub='Bet returned!';
-    state.games++; state.wins++;
+    state.wins++;
     state.history.unshift({game:'wheel',won:true,pts:seg.val,time:new Date().toLocaleTimeString()});
     saveState();
   } else if(seg.type==='half'){
     const refund=Math.floor(wheelBet*0.5);
     addCoins(refund);
     msg='÷2 — Half lost'; sub=`${refund} Coins back.`;
-    state.games++;
     state.history.unshift({game:'wheel',won:false,pts:-Math.floor(wheelBet*0.5),time:new Date().toLocaleTimeString()});
     saveState();
   }
+  state.games++;
   document.getElementById('wheelResultVal').textContent=msg;
   document.getElementById('wheelResultSub').textContent=sub;
   toast(msg);
@@ -1734,7 +1875,6 @@ function resetAviator(){
   if(!avCanvas||!avCanvas.parentElement) return;
   resizeAvCanvas();
   renderAvIdle();
-  // 7 second countdown for betting
   avCdown=7;
   showAvBetMsg(avCdown);
   drawAvCountdown();
@@ -1793,7 +1933,6 @@ function startAvRound(){
   avState.running=true; avState.betting=false; avState.crashed=false;
   avState.path=[]; avState.mult=1.0; avState.speed=0.006;
   document.getElementById('avStatus').textContent='✈️ Flying!';
-  // Disable bet button after flight starts
   if(!avState.betPlaced) document.getElementById('avBetBtn').disabled=true;
   avLoop();
 }
@@ -1823,13 +1962,27 @@ function avLoop(){
     document.getElementById('avStatus').textContent='💥 Crashed!';
     document.getElementById('avBetBtn').disabled=false;
     document.getElementById('avCashBtn').disabled=true;
-    if(avState.betPlaced&&!avState.cashedOut){currentGame='aviator';showResult(false,0);}
+    // FIX: Only show loss result if player had placed a bet and did NOT cash out
+    if(avState.betPlaced && !avState.cashedOut){
+      currentGame='aviator';
+      state.games++;
+      state.history.unshift({game:'aviator',won:false,pts:-avState.bet,time:new Date().toLocaleTimeString()});
+      saveState();
+      document.getElementById('resultEmoji').textContent='😔';
+      document.getElementById('resultTitle').textContent='Crashed! 💥';
+      document.getElementById('resultDesc').textContent=`Lost ${avState.bet} coins. Crashed at ${m.toFixed(2)}x`;
+      document.getElementById('resultModal').classList.add('open');
+    }
     avState.history.unshift(parseFloat(m.toFixed(2)));
     if(avState.history.length>10) avState.history.pop();
     buildMultHistory();
-    if(!avState.betPlaced||avState.cashedOut){
-      setTimeout(()=>{if(document.getElementById('screen-aviator').classList.contains('open'))resetAviator();},3500);
-    }
+    // Auto-restart after crash (regardless of player)
+    setTimeout(()=>{
+      if(document.getElementById('screen-aviator').classList.contains('open')){
+        document.getElementById('resultModal').classList.remove('open');
+        resetAviator();
+      }
+    },3500);
     return;
   }
   avState.frameId=requestAnimationFrame(avLoop);
@@ -1916,12 +2069,30 @@ function avCashOut(){
   const m=avState.mult;
   document.getElementById('avCashBtn').disabled=true;
   document.getElementById('avStatus').textContent=`✅ ${m.toFixed(2)}x`;
-  currentGame='aviator';
+  const winCoins=Math.floor(avState.bet*m);
+  addCoins(winCoins);
   hideBetMsg();
-  showResult(true,Math.floor(avState.bet*m));
+  // Show win toast but do NOT stop the game — let it continue running
+  toast(`💰 Cashed out at ${m.toFixed(2)}x! +${winCoins} Coins!`);
+  state.games++;
+  state.wins++;
+  state.history.unshift({game:'aviator',won:true,pts:winCoins,time:new Date().toLocaleTimeString()});
+  saveState();
+  updateDisplay();
+  // Show result overlay but auto-dismiss after 2s so round can continue
+  document.getElementById('resultEmoji').textContent='💰';
+  document.getElementById('resultTitle').textContent='Cashed Out! 🎉';
+  document.getElementById('resultDesc').textContent=`+${winCoins} Coins at ${m.toFixed(2)}x!`;
+  document.getElementById('resultContinueBtn').style.display='none';
+  document.getElementById('resultModal').classList.add('open');
+  setTimeout(()=>{
+    document.getElementById('resultModal').classList.remove('open');
+    document.getElementById('resultContinueBtn').style.display='';
+  },2000);
 }
 
 // ===================== RED OR BLUE (BULL) =====================
+// Draw bulls using canvas paths — no emoji with color overlay
 let bullCanvas,bullCtx,bullState={
   phase:'idle',selectedSide:null,bet:10,timer:0,winner:null,animFrame:null,
   redX:0,blueX:0,redVX:0,blueVX:0,shake:0,
@@ -1934,6 +2105,9 @@ function initBull(){
   bullCtx=bullCanvas.getContext('2d');
   resizeBullCanvas();
   drawBullIdle();
+  // Draw mini bulls in buttons
+  drawButtonBull('redBullWrap','red');
+  drawButtonBull('blueBullWrap','blue');
 }
 function resizeBullCanvas(){
   if(!bullCanvas) return;
@@ -1942,6 +2116,158 @@ function resizeBullCanvas(){
   bullCanvas.width=W; bullCanvas.height=H;
   bullCanvas.style.height=H+'px';
 }
+
+// Draw a bull shape using canvas paths
+function drawBull(ctx, x, y, scale, color, facingRight, alpha=1){
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.translate(x, y);
+  if(!facingRight) ctx.scale(-1,1);
+  ctx.scale(scale, scale);
+
+  const bodyColor = color === 'red' ? '#c0392b' : '#2471a3';
+  const darkColor = color === 'red' ? '#922b21' : '#1a5276';
+  const lightColor = color === 'red' ? '#e74c3c' : '#2e86c1';
+  const hornColor = '#6d4c41';
+  const noseColor = '#f4a460';
+
+  // Body
+  ctx.beginPath();
+  ctx.ellipse(0, 0, 38, 28, -0.15, 0, Math.PI*2);
+  ctx.fillStyle = bodyColor;
+  ctx.fill();
+
+  // Chest bump (charging pose)
+  ctx.beginPath();
+  ctx.ellipse(-30, 5, 22, 20, 0.3, 0, Math.PI*2);
+  ctx.fillStyle = bodyColor;
+  ctx.fill();
+
+  // Neck
+  ctx.beginPath();
+  ctx.ellipse(-22, -8, 16, 12, -0.4, 0, Math.PI*2);
+  ctx.fillStyle = lightColor;
+  ctx.fill();
+
+  // Head
+  ctx.beginPath();
+  ctx.ellipse(-38, -10, 18, 15, 0.1, 0, Math.PI*2);
+  ctx.fillStyle = bodyColor;
+  ctx.fill();
+
+  // Snout
+  ctx.beginPath();
+  ctx.ellipse(-50, -6, 10, 8, 0.2, 0, Math.PI*2);
+  ctx.fillStyle = noseColor;
+  ctx.fill();
+
+  // Nostril left
+  ctx.beginPath();
+  ctx.ellipse(-53, -5, 2.5, 2, 0, 0, Math.PI*2);
+  ctx.fillStyle = darkColor;
+  ctx.fill();
+  // Nostril right
+  ctx.beginPath();
+  ctx.ellipse(-47, -5, 2.5, 2, 0, 0, Math.PI*2);
+  ctx.fillStyle = darkColor;
+  ctx.fill();
+
+  // Eye
+  ctx.beginPath();
+  ctx.arc(-32, -18, 4, 0, Math.PI*2);
+  ctx.fillStyle = '#1a1a1a';
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(-31, -19, 1.5, 0, Math.PI*2);
+  ctx.fillStyle = 'white';
+  ctx.fill();
+
+  // Horn 1
+  ctx.beginPath();
+  ctx.moveTo(-28, -22);
+  ctx.quadraticCurveTo(-20, -40, -10, -35);
+  ctx.lineWidth = 5;
+  ctx.strokeStyle = hornColor;
+  ctx.lineCap = 'round';
+  ctx.stroke();
+
+  // Horn 2
+  ctx.beginPath();
+  ctx.moveTo(-36, -23);
+  ctx.quadraticCurveTo(-36, -42, -22, -42);
+  ctx.lineWidth = 5;
+  ctx.strokeStyle = hornColor;
+  ctx.stroke();
+
+  // Front legs (charging pose - one raised)
+  ctx.beginPath();
+  ctx.moveTo(-25, 22);
+  ctx.lineTo(-30, 42);
+  ctx.lineTo(-24, 42);
+  ctx.lineWidth = 10;
+  ctx.strokeStyle = darkColor;
+  ctx.lineCap = 'round';
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(-15, 24);
+  ctx.lineTo(-5, 38); // raised front leg
+  ctx.lineWidth = 10;
+  ctx.strokeStyle = darkColor;
+  ctx.stroke();
+
+  // Back legs
+  ctx.beginPath();
+  ctx.moveTo(20, 22);
+  ctx.lineTo(22, 42);
+  ctx.lineWidth = 10;
+  ctx.strokeStyle = darkColor;
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(30, 20);
+  ctx.lineTo(35, 40);
+  ctx.lineWidth = 10;
+  ctx.strokeStyle = darkColor;
+  ctx.stroke();
+
+  // Tail
+  ctx.beginPath();
+  ctx.moveTo(38, -5);
+  ctx.quadraticCurveTo(52, -15, 48, -28);
+  ctx.lineWidth = 4;
+  ctx.strokeStyle = darkColor;
+  ctx.lineCap = 'round';
+  ctx.stroke();
+  // Tail tuft
+  ctx.beginPath();
+  ctx.arc(48, -30, 5, 0, Math.PI*2);
+  ctx.fillStyle = darkColor;
+  ctx.fill();
+
+  // Highlight sheen on body
+  ctx.beginPath();
+  ctx.ellipse(-5, -8, 18, 10, -0.3, 0, Math.PI*2);
+  ctx.fillStyle = lightColor + '55';
+  ctx.fill();
+
+  ctx.restore();
+}
+
+function drawButtonBull(wrapperId, color){
+  const wrap = document.getElementById(wrapperId);
+  if(!wrap) return;
+  const cv = document.createElement('canvas');
+  cv.width = 80; cv.height = 70;
+  cv.style.display = 'block';
+  cv.style.margin = '0 auto';
+  const ctx = cv.getContext('2d');
+  const facingRight = (color === 'red'); // red faces right (toward blue)
+  drawBull(ctx, color==='red'?55:25, 40, 0.7, color, facingRight);
+  wrap.innerHTML='';
+  wrap.appendChild(cv);
+}
+
 function selectBullCoin(el){
   document.querySelectorAll('#bullPresets .coin-preset').forEach(b=>b.classList.remove('active'));
   el.classList.add('active');
@@ -1987,84 +2313,97 @@ function startBullFight(){
   else if(r<0.90) bullState.winner='blue';
   else bullState.winner='draw';
   const W=bullCanvas.width,H=bullCanvas.height;
-  bullState.redX=W*0.15; bullState.blueX=W*0.85;
+  // Start bulls far apart, facing each other
+  bullState.redX=W*0.12; bullState.blueX=W*0.88;
   bullState.redVX=0; bullState.blueVX=0;
   bullState.tick=0; bullState.particles=[];
   bullFightLoop();
 }
+
 function bullFightLoop(){
   if(!document.getElementById('screen-bull').classList.contains('open')) return;
   bullState.tick++;
   const t=bullState.tick;
   const W=bullCanvas.width,H=bullCanvas.height;
   const center=W*0.5;
+  const collisionDist = W * 0.28;
 
-  if(t<70){
-    const speed=2.2+t*0.05;
-    bullState.redX+=speed;
-    bullState.blueX-=speed;
+  // Phase 1: Charge toward each other (tick 0-60)
+  if(t < 60){
+    const speed = 1.5 + t*0.04;
+    bullState.redX += speed;
+    bullState.blueX -= speed;
   }
-  if(bullState.redX>center-W*0.14) bullState.redX=center-W*0.14;
-  if(bullState.blueX<center+W*0.14) bullState.blueX=center+W*0.14;
+  // Clamp at collision distance
+  if(bullState.redX > center - collisionDist/2) bullState.redX = center - collisionDist/2;
+  if(bullState.blueX < center + collisionDist/2) bullState.blueX = center + collisionDist/2;
 
-  // Collision effects
-  if(t>=20&&t<70&&t%5===0){
-    bullState.shake=10+Math.random()*6;
-    for(let i=0;i<8;i++){
+  // Collision effects (tick 20-70)
+  if(t >= 20 && t < 70 && t%4===0){
+    bullState.shake = 8 + Math.random()*5;
+    for(let i=0;i<10;i++){
       bullState.particles.push({
-        x:center,y:H*0.52,
-        vx:(Math.random()-0.5)*8,
-        vy:(Math.random()-0.9)*7,
-        life:25+Math.floor(Math.random()*20),
+        x:center, y:H*0.48,
+        vx:(Math.random()-0.5)*10,
+        vy:(Math.random()-0.9)*8,
+        life:30+Math.floor(Math.random()*20),
         color:Math.random()<0.5?'#FF2020':'#0055FF',
-        r:2+Math.random()*5,
-        type:Math.random()<0.3?'star':'circle'
+        r:2+Math.random()*6, type:Math.random()<0.3?'star':'circle'
       });
     }
   }
-    
-  // Resolution phase
+  // Impact sparks
+  if(t===30||t===45||t===60){
+    for(let i=0;i<20;i++){
+      const angle = Math.random()*Math.PI*2;
+      const spd = 3+Math.random()*8;
+      bullState.particles.push({
+        x:center, y:H*0.45,
+        vx:Math.cos(angle)*spd, vy:Math.sin(angle)*spd-3,
+        life:20+Math.floor(Math.random()*15),
+        color:'#FFD700', r:1+Math.random()*3, type:'circle'
+      });
+    }
+  }
+
+  // Resolution phase (tick 80+)
   if(t===80){
     if(bullState.winner==='red'){
-      bullState.blueVX=-10;
-      for(let i=0;i<15;i++){
+      bullState.blueVX=-8;
+      for(let i=0;i<18;i++){
         bullState.particles.push({
-          x:bullState.blueX,y:H*0.5,
-          vx:(Math.random()-0.3)*10,
-          vy:(Math.random()-1)*8,
-          life:40+Math.floor(Math.random()*20),
-          color:'#0055FF',r:3+Math.random()*5,type:'circle'
+          x:bullState.blueX, y:H*0.48,
+          vx:(Math.random()-0.2)*10, vy:(Math.random()-1)*9,
+          life:50, color:'#0055FF', r:3+Math.random()*5, type:'circle'
         });
       }
     } else if(bullState.winner==='blue'){
-      bullState.redVX=10;
-      for(let i=0;i<15;i++){
+      bullState.redVX=8;
+      for(let i=0;i<18;i++){
         bullState.particles.push({
-          x:bullState.redX,y:H*0.5,
-          vx:(Math.random()+0.3)*-10,
-          vy:(Math.random()-1)*8,
-          life:40+Math.floor(Math.random()*20),
-          color:'#FF2020',r:3+Math.random()*5,type:'circle'
+          x:bullState.redX, y:H*0.48,
+          vx:(Math.random()+0.2)*-10, vy:(Math.random()-1)*9,
+          life:50, color:'#FF2020', r:3+Math.random()*5, type:'circle'
         });
       }
     } else {
-      bullState.redVX=-6; bullState.blueVX=6;
+      bullState.redVX=-5; bullState.blueVX=5;
     }
   }
   if(t>80){
     bullState.redX+=bullState.redVX;
     bullState.blueX+=bullState.blueVX;
-    bullState.redVX*=0.88;
-    bullState.blueVX*=0.88;
+    bullState.redVX*=0.90;
+    bullState.blueVX*=0.90;
   }
 
-  bullState.particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=0.25;p.life--;});
+  bullState.particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=0.3;p.life--;});
   bullState.particles=bullState.particles.filter(p=>p.life>0);
-  if(bullState.shake>0) bullState.shake*=0.85;
+  if(bullState.shake>0) bullState.shake*=0.82;
 
   drawBullFight();
 
-  if(t>120){
+  if(t>130){
     cancelAnimationFrame(bullState.animFrame);
     bullState.phase='result';
     setTimeout(()=>resolveBullFight(),400);
@@ -2075,52 +2414,55 @@ function bullFightLoop(){
 
 function drawBullFight(){
   if(!bullCtx||!bullCanvas) return;
-  const ctx=bullCtx,W=bullCanvas.width,H=bullCanvas.height;
+  const ctx=bullCtx, W=bullCanvas.width, H=bullCanvas.height;
   const shake=bullState.shake>0?(Math.random()-0.5)*bullState.shake:0;
   ctx.save();
   ctx.translate(Math.round(shake),0);
 
   // Arena background
   const bg=ctx.createLinearGradient(0,0,0,H);
-  bg.addColorStop(0,'#1a0500');
-  bg.addColorStop(0.6,'#0d0300');
-  bg.addColorStop(1,'#050100');
-  ctx.fillStyle=bg;ctx.fillRect(-10,0,W+20,H);
+  bg.addColorStop(0,'#2c0a00');
+  bg.addColorStop(0.5,'#1a0500');
+  bg.addColorStop(1,'#0a0200');
+  ctx.fillStyle=bg; ctx.fillRect(-10,0,W+20,H);
 
   // Arena floor
-  const floorY=H*0.76;
-  ctx.fillStyle='#2a1200';ctx.fillRect(-10,floorY,W+20,H);
-  // Floor texture
-  ctx.strokeStyle='rgba(100,40,0,0.3)';ctx.lineWidth=1;
-  for(let x=-10;x<W+10;x+=18){ctx.beginPath();ctx.moveTo(x,floorY);ctx.lineTo(x,H);ctx.stroke();}
-  // Shadow line
-  const floorGrad=ctx.createLinearGradient(0,floorY-8,0,floorY+8);
-  floorGrad.addColorStop(0,'rgba(255,100,0,0)');
-  floorGrad.addColorStop(0.5,'rgba(255,60,0,0.15)');
-  floorGrad.addColorStop(1,'rgba(0,0,0,0)');
-  ctx.fillStyle=floorGrad;ctx.fillRect(-10,floorY-8,W+20,16);
+  const floorY=H*0.78;
+  const floorGrad=ctx.createLinearGradient(0,floorY,0,H);
+  floorGrad.addColorStop(0,'#3d1500');
+  floorGrad.addColorStop(1,'#1a0800');
+  ctx.fillStyle=floorGrad; ctx.fillRect(-10,floorY,W+20,H-floorY);
 
-  // Background crowd (blurry blobs)
-  for(let i=0;i<12;i++){
-    const hue=i%2===0?0:220;
+  // Floor lines (dirt texture)
+  ctx.strokeStyle='rgba(80,30,0,0.3)'; ctx.lineWidth=1;
+  for(let x=0;x<W;x+=20){ ctx.beginPath();ctx.moveTo(x,floorY);ctx.lineTo(x,H);ctx.stroke(); }
+
+  // Crowd silhouettes
+  for(let i=0;i<16;i++){
     ctx.beginPath();
-    const crowdX=W*0.04+i*(W*0.08);
-    const crowdY=H*0.18+Math.sin(i*1.5)*10;
-    ctx.arc(crowdX,crowdY,12+Math.sin(bullState.tick*0.05+i)*4,0,Math.PI*2);
-    ctx.fillStyle=`hsla(${hue},60%,25%,0.4)`;ctx.fill();
+    const cx=W*0.03+i*(W*0.065);
+    const cy=H*0.12+Math.sin(i*1.7+bullState.tick*0.03)*5;
+    ctx.arc(cx,cy,10+Math.sin(bullState.tick*0.05+i)*3,0,Math.PI*2);
+    ctx.fillStyle=`rgba(${i%2===0?'180,30,30':'30,60,180'},0.35)`;
+    ctx.fill();
   }
+
+  // Arena lighting effect
+  const spotGrad=ctx.createRadialGradient(W/2,H*0.4,0,W/2,H*0.4,W*0.5);
+  spotGrad.addColorStop(0,'rgba(255,200,100,0.08)');
+  spotGrad.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=spotGrad; ctx.fillRect(-10,0,W+20,H);
 
   // Particles
   bullState.particles.forEach(p=>{
-    const alpha=p.life/50;
-    ctx.save();
-    ctx.globalAlpha=Math.max(0,alpha);
+    const alpha=Math.max(0,p.life/50);
+    ctx.save(); ctx.globalAlpha=alpha;
     if(p.type==='star'){
       ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.life*0.2);
       ctx.fillStyle=p.color;
-      for(let j=0;j<5;j++){
-        ctx.rotate(Math.PI*2/5);
-        ctx.beginPath();ctx.moveTo(0,-p.r*1.5);ctx.lineTo(p.r*0.5,0);ctx.lineTo(0,p.r*0.5);ctx.lineTo(-p.r*0.5,0);
+      for(let j=0;j<4;j++){
+        ctx.rotate(Math.PI/2);
+        ctx.beginPath();ctx.moveTo(0,-p.r*1.5);ctx.lineTo(p.r*0.4,0);ctx.lineTo(0,p.r*0.5);ctx.lineTo(-p.r*0.4,0);
         ctx.closePath();ctx.fill();
       }
       ctx.restore();
@@ -2131,117 +2473,101 @@ function drawBullFight(){
     ctx.restore();
   });
 
-  // Flash on collision
+  // Flash on impact
   if(bullState.shake>5){
-    ctx.fillStyle=`rgba(255,255,255,${Math.min(0.3,bullState.shake/30)})`;
+    ctx.fillStyle=`rgba(255,255,200,${Math.min(0.25,bullState.shake/30)})`;
     ctx.fillRect(-10,0,W+20,H);
   }
 
-  // Winner crown / loser flash
-  const sz=Math.round(Math.min(W,H)*0.3);
-  ctx.font=sz+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';
-  const gy=H*0.60;
+  // Scale for bulls
+  const sc = Math.min(W,H) / 280;
+  const bullY = H*0.62;
 
-  // Red Bull (left) — colored red
+  // Red bull (left, faces right)
+  let redAlpha = 1;
+  let redTilt = 0;
+  let redYOff = 0;
+  if(bullState.winner==='blue' && bullState.tick>85){
+    redAlpha=0.7;
+    redTilt = Math.sin(bullState.tick*0.3)*0.3 + 0.5;
+    redYOff = (bullState.tick-85)*0.8;
+  }
   ctx.save();
-  ctx.translate(bullState.redX,gy);
-  if(bullState.winner==='blue'&&bullState.tick>85){
-    ctx.globalAlpha=0.55;
-    ctx.rotate(0.5);
-    ctx.translate(0,H*0.1);
-  }
+  ctx.translate(bullState.redX, bullY+redYOff);
+  ctx.rotate(redTilt);
+  ctx.globalAlpha=redAlpha;
+  drawBull(ctx, 0, 0, sc*1.1, 'red', true);
   if(bullState.winner==='red'&&bullState.tick>85){
-    ctx.shadowColor='#FF2020';ctx.shadowBlur=30;
-  }
-  // Red tint overlay
-  ctx.fillText('🐂',0,0);
-  // Red color overlay using composite
-  ctx.globalCompositeOperation='source-atop';
-  ctx.fillStyle='rgba(255,50,50,0.5)';
-  ctx.fillRect(-sz/2,-sz/2,sz,sz);
-  ctx.globalCompositeOperation='source-over';
-  if(bullState.winner==='red'&&bullState.tick>85){
-    ctx.font='20px serif';ctx.fillText('👑',0,-sz*0.6);
+    ctx.font='18px serif';ctx.textAlign='center';
+    ctx.fillText('👑',0,-60*sc);
   }
   ctx.restore();
 
-  // Blue Bull (right) — colored blue
+  // Blue bull (right, faces left)
+  let blueAlpha = 1;
+  let blueTilt = 0;
+  let blueYOff = 0;
+  if(bullState.winner==='red' && bullState.tick>85){
+    blueAlpha=0.7;
+    blueTilt = -(Math.sin(bullState.tick*0.3)*0.3 + 0.5);
+    blueYOff = (bullState.tick-85)*0.8;
+  }
   ctx.save();
-  ctx.translate(bullState.blueX,gy);
-  ctx.scale(-1,1);
-  if(bullState.winner==='red'&&bullState.tick>85){
-    ctx.globalAlpha=0.55;
-    ctx.rotate(-0.5);
-    ctx.translate(0,H*0.1);
-  }
+  ctx.translate(bullState.blueX, bullY+blueYOff);
+  ctx.rotate(blueTilt);
+  ctx.globalAlpha=blueAlpha;
+  drawBull(ctx, 0, 0, sc*1.1, 'blue', false);
   if(bullState.winner==='blue'&&bullState.tick>85){
-    ctx.shadowColor='#0055FF';ctx.shadowBlur=30;
-  }
-  ctx.fillText('🐃',0,0);
-  ctx.globalCompositeOperation='source-atop';
-  ctx.fillStyle='rgba(0,80,255,0.55)';
-  ctx.fillRect(-sz/2,-sz/2,sz,sz);
-  ctx.globalCompositeOperation='source-over';
-  if(bullState.winner==='blue'&&bullState.tick>85){
-    ctx.scale(-1,1);ctx.font='20px serif';ctx.fillText('👑',0,-sz*0.6);
+    ctx.font='18px serif';ctx.textAlign='center';
+    ctx.fillText('👑',0,-60*sc);
   }
   ctx.restore();
-
-  // "VS" label during fight
-  if(bullState.tick<80){
+ 
+  // "VS" label during charge
+  if(bullState.tick<75){
     const vsPulse=0.7+0.3*Math.abs(Math.sin(bullState.tick*0.15));
     ctx.save();ctx.globalAlpha=vsPulse;
-    ctx.fillStyle='rgba(255,200,0,0.9)';
-    ctx.font='bold 18px Orbitron,monospace';
+    ctx.fillStyle='rgba(255,200,0,0.95)';
+    ctx.font=`bold ${Math.round(W*0.06)}px Orbitron,monospace`;
     ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.shadowColor='rgba(255,200,0,0.6)';ctx.shadowBlur=10;
-    ctx.fillText('VS',W/2,gy-sz*0.2);
+    ctx.shadowColor='rgba(255,200,0,0.7)';ctx.shadowBlur=12;
+    ctx.fillText('VS',W/2,bullY-50*sc);
     ctx.shadowBlur=0;ctx.restore();
   }
 
   // Progress bar
-  const prog=Math.min(bullState.tick/120,1);
-  ctx.fillStyle='rgba(0,0,0,0.6)';ctx.fillRect(W*0.15,8,W*0.7,8);
+  const prog=Math.min(bullState.tick/130,1);
+  ctx.fillStyle='rgba(0,0,0,0.6)';ctx.fillRect(W*0.15,6,W*0.7,7);
   const barGrad=ctx.createLinearGradient(W*0.15,0,W*0.85,0);
   barGrad.addColorStop(0,'#FF2020');barGrad.addColorStop(0.5,'#FFD700');barGrad.addColorStop(1,'#0055FF');
-  ctx.fillStyle=barGrad;ctx.fillRect(W*0.15,8,W*0.7*prog,8);
-  ctx.strokeStyle='rgba(255,255,255,0.2)';ctx.lineWidth=1;ctx.strokeRect(W*0.15,8,W*0.7,8);
+  ctx.fillStyle=barGrad;ctx.fillRect(W*0.15,6,W*0.7*prog,7);
+  ctx.strokeStyle='rgba(255,255,255,0.2)';ctx.lineWidth=1;ctx.strokeRect(W*0.15,6,W*0.7,7);
 
   ctx.restore();
 }
 
 function drawBullIdle(){
   if(!bullCtx||!bullCanvas) return;
-  const ctx=bullCtx,W=bullCanvas.width,H=bullCanvas.height;
+  const ctx=bullCtx, W=bullCanvas.width, H=bullCanvas.height;
   const bg=ctx.createLinearGradient(0,0,0,H);
-  bg.addColorStop(0,'#1a0500');bg.addColorStop(1,'#050100');
+  bg.addColorStop(0,'#2c0a00');bg.addColorStop(1,'#0a0200');
   ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
-  ctx.fillStyle='#2a1200';ctx.fillRect(0,H*0.76,W,H*0.24);
-  const sz=Math.round(Math.min(W,H)*0.28);
-  ctx.font=sz+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  const floorY=H*0.78;
+  ctx.fillStyle='#3d1500';ctx.fillRect(0,floorY,W,H-floorY);
 
-  // Red bull idle
-  ctx.save();ctx.translate(W*0.22,H*0.55);
-  ctx.fillText('🐂',0,0);
-  ctx.globalCompositeOperation='source-atop';
-  ctx.fillStyle='rgba(255,50,50,0.5)';ctx.fillRect(-sz/2,-sz/2,sz,sz);
-  ctx.globalCompositeOperation='source-over';
-  ctx.restore();
-  ctx.fillStyle='rgba(255,50,50,0.8)';ctx.font='bold 10px Orbitron,sans-serif';
-  ctx.fillText('🔴 RED',W*0.22,H*0.76+12);
+  const sc=Math.min(W,H)/280;
+  const bullY=H*0.62;
+  drawBull(ctx, W*0.22, bullY, sc*1.0, 'red', true);
+  drawBull(ctx, W*0.78, bullY, sc*1.0, 'blue', false);
 
-  // Blue bull idle
-  ctx.save();ctx.translate(W*0.78,H*0.55);ctx.scale(-1,1);
-  ctx.fillText('🐃',0,0);
-  ctx.globalCompositeOperation='source-atop';
-  ctx.fillStyle='rgba(0,80,255,0.55)';ctx.fillRect(-sz/2,-sz/2,sz,sz);
-  ctx.globalCompositeOperation='source-over';
-  ctx.restore();
-  ctx.fillStyle='rgba(0,150,255,0.8)';ctx.font='bold 10px Orbitron,sans-serif';
-  ctx.fillText('🔵 BLUE',W*0.78,H*0.76+12);
-
-  ctx.fillStyle='rgba(255,200,0,0.6)';ctx.font='bold 22px Orbitron,monospace';
-  ctx.fillText('VS',W/2,H*0.5);
+  // Labels
+  ctx.fillStyle='rgba(255,50,50,0.9)';ctx.font=`bold ${Math.round(W*0.033)}px Orbitron,sans-serif`;
+  ctx.textAlign='center';ctx.fillText('🔴 RED',W*0.22,H*0.82);
+  ctx.fillStyle='rgba(0,150,255,0.9)';
+  ctx.fillText('🔵 BLUE',W*0.78,H*0.82);
+  ctx.fillStyle='rgba(255,200,0,0.7)';
+  ctx.font=`bold ${Math.round(W*0.07)}px Orbitron,monospace`;
+  ctx.fillText('VS',W/2,bullY-40*sc);
 }
 
 function resolveBullFight(){
@@ -2335,8 +2661,19 @@ const avObserver=new MutationObserver(()=>{
 });
 const avScreen=document.getElementById('screen-aviator');
 if(avScreen) avObserver.observe(avScreen,{attributes:true,attributeFilter:['class']});
+
+// Re-init wheel canvas when opened
+const wheelObserver=new MutationObserver(()=>{
+  if(document.getElementById('screen-wheel').classList.contains('open')){
+    setTimeout(()=>{
+      const w=wCanvas.offsetWidth||340;
+      wCanvas.width=w; wCanvas.height=w;
+      drawWheelStatic(wheelAngle);
+    },50);
+  }
+});
+const wheelScreen=document.getElementById('screen-wheel');
+if(wheelScreen) wheelObserver.observe(wheelScreen,{attributes:true,attributeFilter:['class']});
 </script>
 </body>
-</html>
-
-                                                                                                                              </div>
+</html> 

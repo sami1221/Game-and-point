@@ -1778,4 +1778,610 @@ function selectBull(side){
 }
 function resetBull(){
   if(bullState.animFrame){cancelAnimationFrame(bullState.animFrame);bullState.animFrame=null;}
-  
+   bullState.phase='idle';bullState.selectedSide=null;bullState.timer=0;bullState.winner=null;bullState.particles=[];
+  document.getElementById('bullRedBtn').classList.remove('selected');
+  document.getElementById('bullBlueBtn').classList.remove('selected');
+  document.getElementById('bullStatus').textContent='Choose a bull and place your bet!';
+  document.getElementById('bullFightBtn').disabled=false;
+  document.getElementById('bullFightBtn').textContent='🐂 Start Fight!';
+  resizeBullCanvas();drawBullIdle();updateDisplay();
+}
+function startBullFight(){
+  if(!bullState.selectedSide){toast('⚠️ Choose Red or Blue first!');return;}
+  if(state.coins<bullState.bet){toast('⚠️ Not enough coins!');return;}
+  addCoins(-bullState.bet);
+  document.getElementById('bullFightBtn').disabled=true;
+  document.getElementById('bullFightBtn').textContent='⚔️ Fighting...';
+  bullState.phase='fighting';
+  const r=Math.random();
+  if(r<0.47)bullState.winner='red';
+  else if(r<0.90)bullState.winner='blue';
+  else bullState.winner='draw';
+  const W=bullCanvas.width,H=bullCanvas.height;
+  bullState.redX=W*0.15; bullState.blueX=W*0.85;
+  bullState.redVX=0;bullState.blueVX=0;bullState.tick=0;bullState.particles=[];
+  bullFightLoop();
+}
+
+// Helper: draw a bull emoji facing a specific horizontal direction
+// facingRight=true → bull faces right (toward center from left side) → use 🐂 normally
+// facingRight=false → bull faces left (toward center from right side) → use 🐂 mirrored with scale(-1,1)
+function drawBullAt(ctx, x, y, sz, facingRight, dotColor){
+  ctx.save();
+  ctx.translate(x, y);
+  if(!facingRight){
+    // Mirror horizontally so bull faces LEFT (toward center from right side)
+    ctx.scale(-1, 1);
+  }
+  ctx.font=sz+'px serif';
+  ctx.textAlign='center';
+  ctx.textBaseline='middle';
+  ctx.fillText('🐂', 0, 0);
+  // Draw indicator dot - always position it above the bull's head (unmirrored coordinates)
+  ctx.restore();
+  // Draw dot in world coordinates above the bull
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(x, y - sz*0.6, sz*0.1, 0, Math.PI*2);
+  ctx.fillStyle=dotColor;
+  ctx.fill();
+  ctx.restore();
+}
+
+function drawBullWinnerCrown(ctx, x, y, sz){
+  ctx.save();
+  ctx.font=`${sz*0.35}px serif`;
+  ctx.textAlign='center';
+  ctx.textBaseline='middle';
+  ctx.fillText('👑', x, y - sz*0.75);
+  ctx.restore();
+}
+
+function bullFightLoop(){
+  if(!document.getElementById('screen-bull').classList.contains('open'))return;
+  bullState.tick++;
+  const t=bullState.tick;
+  const W=bullCanvas.width,H=bullCanvas.height;
+  const center=W*0.5;
+  // Charge toward each other
+  if(t<70){
+    const speed=2.2+t*0.05;
+    bullState.redX+=speed;   // red moves right toward center
+    bullState.blueX-=speed;  // blue moves left toward center
+  }
+  if(bullState.redX>center-W*0.12) bullState.redX=center-W*0.12;
+  if(bullState.blueX<center+W*0.12) bullState.blueX=center+W*0.12;
+
+  if(t>=20&&t<70&&t%5===0){
+    bullState.shake=10+Math.random()*6;
+    for(let i=0;i<10;i++){
+      bullState.particles.push({
+        x:center,y:H*0.48,vx:(Math.random()-0.5)*10,vy:(Math.random()-0.9)*8,
+        life:30+Math.floor(Math.random()*20),
+        color:['#FFD700','#FF6600','#FF3333','#FFFFFF'][Math.floor(Math.random()*4)],
+        r:2+Math.random()*4,type:'spark'
+      });
+    }
+  }
+  if(t===80){
+    if(bullState.winner==='red'){
+      bullState.blueVX=-12;
+      for(let i=0;i<18;i++) bullState.particles.push({x:bullState.blueX,y:H*0.45,vx:(Math.random()-0.3)*12,vy:(Math.random()-1.1)*9,life:50,color:'#4488FF',r:3+Math.random()*5,type:'circle'});
+    } else if(bullState.winner==='blue'){
+      bullState.redVX=12;
+      for(let i=0;i<18;i++) bullState.particles.push({x:bullState.redX,y:H*0.45,vx:(Math.random()+0.3)*-12,vy:(Math.random()-1.1)*9,life:50,color:'#FF4433',r:3+Math.random()*5,type:'circle'});
+    } else {
+      bullState.redVX=-7;bullState.blueVX=7;
+    }
+  }
+  if(t>80){
+    bullState.redX+=bullState.redVX;bullState.blueX+=bullState.blueVX;
+    bullState.redVX*=0.88;bullState.blueVX*=0.88;
+  }
+  bullState.particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=0.28;p.life--;});
+  bullState.particles=bullState.particles.filter(p=>p.life>0);
+  if(bullState.shake>0)bullState.shake*=0.82;
+  drawBullFight();
+  if(t>125){
+    cancelAnimationFrame(bullState.animFrame);bullState.phase='result';
+    setTimeout(()=>resolveBullFight(),400);return;
+  }
+  bullState.animFrame=requestAnimationFrame(bullFightLoop);
+}
+
+function drawBullFight(){
+  if(!bullCtx||!bullCanvas)return;
+  const ctx=bullCtx,W=bullCanvas.width,H=bullCanvas.height;
+  const shake=bullState.shake>0?(Math.random()-0.5)*bullState.shake:0;
+  ctx.save();ctx.translate(Math.round(shake),0);
+  const bg=ctx.createLinearGradient(0,0,0,H);
+  bg.addColorStop(0,'#1a0500');bg.addColorStop(0.6,'#0d0300');bg.addColorStop(1,'#050100');
+  ctx.fillStyle=bg;ctx.fillRect(-10,0,W+20,H);
+  const floorY=H*0.76;
+  ctx.fillStyle='#2a1200';ctx.fillRect(-10,floorY,W+20,H);
+  ctx.strokeStyle='rgba(100,40,0,0.3)';ctx.lineWidth=1;
+  for(let x=-10;x<W+10;x+=18){ctx.beginPath();ctx.moveTo(x,floorY);ctx.lineTo(x,H);ctx.stroke();}
+  for(let i=0;i<14;i++){
+    const hue=i%2===0?0:220;
+    ctx.beginPath();
+    ctx.arc(W*0.03+i*(W*0.07),H*0.16+Math.sin(i*1.7)*8,10+Math.sin(bullState.tick*0.05+i)*3,0,Math.PI*2);
+    ctx.fillStyle=`hsla(${hue},55%,22%,0.5)`;ctx.fill();
+  }
+  // Draw particles
+  bullState.particles.forEach(p=>{
+    const alpha=p.life/50;
+    ctx.save();ctx.globalAlpha=Math.max(0,alpha);
+    if(p.type==='spark'){
+      ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
+      ctx.strokeStyle=p.color;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x-p.vx*3,p.y-p.vy*3);ctx.stroke();
+    } else {
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=p.color;ctx.fill();
+    }
+    ctx.restore();
+  });
+  if(bullState.shake>5){
+    ctx.fillStyle=`rgba(255,200,50,${Math.min(0.25,bullState.shake/35)})`;ctx.fillRect(-10,0,W+20,H);
+  }
+
+  const sz=Math.round(Math.min(W,H)*0.32);
+  const gy=H*0.56;
+  const redIsWinner=bullState.winner==='red'&&bullState.tick>85;
+  const blueIsWinner=bullState.winner==='blue'&&bullState.tick>85;
+  const redIsLoser=bullState.winner==='blue'&&bullState.tick>85;
+  const blueIsLoser=bullState.winner==='red'&&bullState.tick>85;
+
+  // Shadow glow for winner
+  if(redIsWinner){ ctx.save(); ctx.shadowColor='#FF4422'; ctx.shadowBlur=28; }
+
+  // FIX: Red bull on LEFT side, faces LEFT (away from blue) — mirror horizontally
+  ctx.save();
+  ctx.translate(bullState.redX, gy);
+  if(redIsLoser){ ctx.globalAlpha=0.6; ctx.rotate(0.3); ctx.translate(0, H*0.06); }
+  ctx.scale(-1, 1); // Mirror so red bull faces LEFT (away)
+  ctx.font=sz+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('🐂', 0, 0);
+  ctx.restore();
+  if(redIsWinner){ ctx.restore(); }
+
+  // Red dot indicator
+  ctx.save();
+  ctx.beginPath();ctx.arc(bullState.redX, gy-sz*0.62, sz*0.1, 0, Math.PI*2);
+  ctx.fillStyle='#FF2222';ctx.fill();
+  ctx.restore();
+
+  // Winner crown for red
+  if(redIsWinner) drawBullWinnerCrown(ctx, bullState.redX, gy, sz);
+
+  if(blueIsWinner){ ctx.save(); ctx.shadowColor='#2244FF'; ctx.shadowBlur=28; }
+
+  // FIX: Blue bull on RIGHT side, faces RIGHT (away from red) — draw normally (no mirror)
+  ctx.save();
+  ctx.translate(bullState.blueX, gy);
+  if(blueIsLoser){ ctx.globalAlpha=0.6; ctx.rotate(0.3); ctx.translate(0, H*0.06); }
+  ctx.font=sz+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('🐂', 0, 0); // naturally faces right (away from red) ✓
+  ctx.restore();
+  if(blueIsWinner){ ctx.restore(); }
+
+  // Blue dot indicator (in world coords, no mirror needed)
+  ctx.save();
+  ctx.beginPath();ctx.arc(bullState.blueX, gy-sz*0.62, sz*0.1, 0, Math.PI*2);
+  ctx.fillStyle='#2255FF';ctx.fill();
+  ctx.restore();
+
+  // Winner crown for blue
+  if(blueIsWinner) drawBullWinnerCrown(ctx, bullState.blueX, gy, sz);
+
+  // VS label
+  if(bullState.tick<80){
+    const vsPulse=0.7+0.3*Math.abs(Math.sin(bullState.tick*0.15));
+    ctx.save();ctx.globalAlpha=vsPulse;
+    ctx.fillStyle='rgba(255,200,0,0.95)';ctx.font='bold 16px Orbitron,monospace';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.shadowColor='rgba(255,200,0,0.7)';ctx.shadowBlur=12;
+    ctx.fillText('VS',W/2,gy-sz*0.25);ctx.shadowBlur=0;ctx.restore();
+  }
+  // Progress bar
+  const prog=Math.min(bullState.tick/125,1);
+  ctx.fillStyle='rgba(0,0,0,0.6)';ctx.fillRect(W*0.15,8,W*0.7,8);
+  const barGrad=ctx.createLinearGradient(W*0.15,0,W*0.85,0);
+  barGrad.addColorStop(0,'#FF2222');barGrad.addColorStop(0.5,'#FFD700');barGrad.addColorStop(1,'#2255FF');
+  ctx.fillStyle=barGrad;ctx.fillRect(W*0.15,8,W*0.7*prog,8);
+  ctx.strokeStyle='rgba(255,255,255,0.15)';ctx.lineWidth=1;ctx.strokeRect(W*0.15,8,W*0.7,8);
+  ctx.restore();
+}
+
+function drawBullIdle(){
+  if(!bullCtx||!bullCanvas)return;
+  const ctx=bullCtx,W=bullCanvas.width,H=bullCanvas.height;
+  const bg=ctx.createLinearGradient(0,0,0,H);
+  bg.addColorStop(0,'#1a0500');bg.addColorStop(1,'#050100');
+  ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='#2a1200';ctx.fillRect(0,H*0.76,W,H*0.24);
+  const sz=Math.round(Math.min(W,H)*0.28);
+  const gy=H*0.52;
+
+  // FIX: Red bull LEFT side, faces LEFT (away from center) — mirror
+  ctx.save();
+  ctx.translate(W*0.22, gy);
+  ctx.scale(-1, 1); // Mirror so red bull faces LEFT (away)
+  ctx.font=sz+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('🐂', 0, 0);
+  ctx.restore();
+  // Red dot
+  ctx.save();ctx.fillStyle='#FF2222';ctx.beginPath();ctx.arc(W*0.22,gy-sz*0.62,sz*0.1,0,Math.PI*2);ctx.fill();ctx.restore();
+  ctx.fillStyle='rgba(255,50,50,0.85)';ctx.font='bold 10px Orbitron,sans-serif';
+  ctx.textAlign='center';ctx.fillText('🔴 RED',W*0.22,H*0.76+12);
+
+  // FIX: Blue bull RIGHT side, faces RIGHT (away from center) — draw normally (no mirror)
+  ctx.save();
+  ctx.translate(W*0.78, gy);
+  ctx.font=sz+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('🐂', 0, 0); // naturally faces right (away from center)
+  ctx.restore();
+  // Blue dot
+  ctx.save();ctx.fillStyle='#2255FF';ctx.beginPath();ctx.arc(W*0.78,gy-sz*0.62,sz*0.1,0,Math.PI*2);ctx.fill();ctx.restore();
+  ctx.fillStyle='rgba(0,150,255,0.85)';ctx.font='bold 10px Orbitron,sans-serif';
+  ctx.textAlign='center';ctx.fillText('🔵 BLUE',W*0.78,H*0.76+12);
+
+  // VS
+  ctx.fillStyle='rgba(255,200,0,0.7)';ctx.font='bold 22px Orbitron,monospace';
+  ctx.textAlign='center';ctx.fillText('VS',W/2,H*0.48);
+}
+
+function resolveBullFight(){
+  const w=bullState.winner,side=bullState.selectedSide;
+  document.getElementById('bullFightBtn').disabled=false;
+  document.getElementById('bullFightBtn').textContent='🐂 Fight Again!';
+  currentGame='bull';
+  if(w==='draw'){
+    addCoins(bullState.bet);
+    document.getElementById('bullStatus').textContent='🤝 Draw! Coins returned.';
+    state.games++;state.history.unshift({game:'bull',won:false,pts:0,time:new Date().toLocaleTimeString()});
+    saveState();toast('🤝 Draw! Full refund.');bullState.phase='idle';
+  } else if(w===side){
+    document.getElementById('bullStatus').textContent=`🏆 ${w==='red'?'🔴 Red':'🔵 Blue'} Bull WON! You win!`;
+    showResult(true,bullState.bet*2);
+  } else {
+    document.getElementById('bullStatus').textContent=`💥 ${w==='red'?'🔴 Red':'🔵 Blue'} Bull won. You lost.`;
+    showResult(false,0);
+  }
+}
+
+// ===================== ROTATING GAME =====================
+let rotatingGuess=null, rotatingSpinning=false;
+function openRotating(){
+  rotatingGuess=null; rotatingSpinning=false;
+  document.getElementById('guessBtnT').className='guess-btn';
+  document.getElementById('guessBtnS').className='guess-btn';
+  document.getElementById('rotatingStatus').textContent='Watch an ad to spin!';
+  document.getElementById('rotatingWatchAdBtn').disabled=false;
+  document.getElementById('rotatingWatchAdBtn').textContent='📺 Watch Ad to Spin';
+  updateDisplay();
+}
+function selectRotatingGuess(g){
+  if(rotatingSpinning) return;
+  rotatingGuess=g;
+  document.getElementById('guessBtnT').className='guess-btn'+(g==='T'?' selected-T':'');
+  document.getElementById('guessBtnS').className='guess-btn'+(g==='S'?' selected-S':'');
+  document.getElementById('rotatingStatus').textContent=`You chose: ${g}. Now watch an ad to spin!`;
+}
+function rotatingWatchAd(){
+  if(rotatingSpinning){toast('Already spinning!');return;}
+  if(!rotatingGuess){toast('⚠️ Choose T or S first!');return;}
+  document.getElementById('rotatingWatchAdBtn').disabled=true;
+  showAd(()=>{
+    state.rotatingAdsTotal=(state.rotatingAdsTotal||0)+1;
+    saveState();updateDisplay();
+    doRotatingSpin();
+  });
+}
+function doRotatingSpin(){
+  if(!rotatingGuess){toast('Choose T or S!');return;}
+  rotatingSpinning=true;
+  document.getElementById('rotatingStatus').textContent='🪙 Spinning...';
+  const coin=document.getElementById('rotatingCoin');
+  const result=Math.random()<0.5?'T':'S';
+  const targetFace=result==='T'?0:1;
+  const fullSpins=8+Math.floor(Math.random()*6);
+  const targetDeg=fullSpins*360+(targetFace===1?180:0);
+  coin.style.transition=`transform ${2.5+Math.random()*1}s cubic-bezier(0.2, 0.8, 0.3, 1)`;
+  coin.style.transform=`rotateY(${targetDeg}deg)`;
+  setTimeout(()=>{
+    rotatingSpinning=false;
+    const won=result===rotatingGuess;
+    if(won){ document.getElementById('rotatingStatus').textContent=`✅ ${result}! Correct! +10 Points!`; addPoints(10); toast('🎉 Correct! +10 Points!'); }
+    else { document.getElementById('rotatingStatus').textContent=`❌ ${result}! Wrong guess.`; toast(`😔 It was ${result}. Try again!`); }
+    state.games++;if(won)state.wins++;
+    state.history.unshift({game:'rotating',won,pts:won?10:0,time:new Date().toLocaleTimeString()});
+    saveState();
+    setTimeout(()=>{
+      rotatingGuess=null;
+      document.getElementById('guessBtnT').className='guess-btn';
+      document.getElementById('guessBtnS').className='guess-btn';
+      document.getElementById('rotatingWatchAdBtn').disabled=false;
+      document.getElementById('rotatingWatchAdBtn').textContent='📺 Watch Ad to Spin Again';
+      coin.style.transition='none'; coin.style.transform='rotateY(0deg)';
+    },2000);
+    updateDisplay();
+  },3500);
+}
+
+// ===================== TIC TAC TOE (HARD AI - hidden from user) =====================
+// FIX: "Hard" label removed from UI. AI still uses minimax internally (hard difficulty hidden).
+// FIX: O is blue color, X is red color.
+let tttBoard=Array(9).fill(null);
+let tttGameActive=false;
+let tttPlayerScoreSession=0;
+let tttAiScoreSession=0;
+
+function openTicTacToe(){
+  tttBoard=Array(9).fill(null);
+  tttGameActive=false;
+  tttPlayerScoreSession=state.tttPlayerScore||0;
+  tttAiScoreSession=state.tttAiScore||0;
+  renderTTTBoard();
+  document.getElementById('tttStatus').textContent='Watch an ad to play!';
+  document.getElementById('tttThinking').textContent='';
+  document.getElementById('tttWatchAdBtn').style.display='block';
+  document.getElementById('tttNewGameBtn').style.display='none';
+  document.getElementById('tttPlayerScore').textContent=tttPlayerScoreSession;
+  document.getElementById('tttAiScore').textContent=tttAiScoreSession;
+  updateDisplay();
+  for(let i=0;i<9;i++){
+    const c=document.getElementById('tc'+i);
+    if(c){c.onclick=null;c.classList.remove('x-cell','o-cell','win-cell');c.classList.add('empty');c.textContent='';}
+  }
+}
+
+function tttWatchAd(){
+  document.getElementById('tttWatchAdBtn').disabled=true;
+  showAd(()=>{
+    state.tttAdsTotal=(state.tttAdsTotal||0)+1;
+    saveState();updateDisplay();
+    tttStartGame();
+  });
+}
+
+function tttStartGame(){
+  tttBoard=Array(9).fill(null);
+  tttGameActive=true;
+  document.getElementById('tttStatus').textContent="Your turn! You are ❌";
+  document.getElementById('tttThinking').textContent='';
+  document.getElementById('tttWatchAdBtn').style.display='none';
+  document.getElementById('tttNewGameBtn').style.display='none';
+  renderTTTBoard();
+  enableTTTCells();
+}
+
+function renderTTTBoard(){
+  for(let i=0;i<9;i++){
+    const c=document.getElementById('tc'+i);
+    if(!c)continue;
+    c.classList.remove('x-cell','o-cell','win-cell','empty');
+    c.textContent='';
+    if(tttBoard[i]==='X'){
+      c.classList.add('x-cell');
+      // FIX: X shown in red color via span
+      c.innerHTML='<span style="color:#FF3A5C;">❌</span>';
+    }
+    else if(tttBoard[i]==='O'){
+      c.classList.add('o-cell');
+      // FIX: O shown in blue color via span
+      c.innerHTML='<span style="color:#00AAFF;">⭕</span>';
+    }
+    else {c.classList.add('empty');}
+  }
+}
+
+function enableTTTCells(){
+  for(let i=0;i<9;i++){
+    const c=document.getElementById('tc'+i);
+    if(c){
+      const idx=i;
+      c.onclick=()=>tttClick(idx);
+    }
+  }
+}
+function disableTTTCells(){
+  for(let i=0;i<9;i++){
+    const c=document.getElementById('tc'+i);
+    if(c) c.onclick=null;
+  }
+}
+
+function tttClick(idx){
+  if(!tttGameActive) return;
+  if(tttBoard[idx]) return;
+  tttBoard[idx]='X';
+  renderTTTBoard();
+  const win=tttCheckWinner(tttBoard);
+  if(win){
+    tttHighlightWin(win.line);
+    tttGameActive=false;
+    tttPlayerScoreSession++;
+    state.tttPlayerScore=tttPlayerScoreSession;
+    document.getElementById('tttPlayerScore').textContent=tttPlayerScoreSession;
+    document.getElementById('tttStatus').textContent='🏆 You Won! +50 Points!';
+    addPoints(50);
+    state.games++;state.wins++;
+    state.history.unshift({game:'tictactoe',won:true,pts:50,time:new Date().toLocaleTimeString()});
+    saveState();toast('🏆 You beat the AI! +50 Points!');
+    setTimeout(()=>tttShowNewGame(),1500);
+    return;
+  }
+  if(tttBoard.every(v=>v)){
+    tttGameActive=false;
+    document.getElementById('tttStatus').textContent="🤝 Draw!";
+    state.games++;
+    state.history.unshift({game:'tictactoe',won:false,pts:0,time:new Date().toLocaleTimeString()});
+    saveState();toast('🤝 Draw!');
+    setTimeout(()=>tttShowNewGame(),1500);
+    return;
+  }
+  disableTTTCells();
+  document.getElementById('tttStatus').textContent='🤖 AI is thinking...';
+  document.getElementById('tttThinking').textContent='Calculating best move...';
+  setTimeout(()=>tttAiMove(),600);
+}
+
+function tttAiMove(){
+  const best=tttMinimax(tttBoard,'O');
+  tttBoard[best.index]='O';
+  renderTTTBoard();
+  document.getElementById('tttThinking').textContent='';
+  const win=tttCheckWinner(tttBoard);
+  if(win){
+    tttHighlightWin(win.line);
+    tttGameActive=false;
+    tttAiScoreSession++;
+    state.tttAiScore=tttAiScoreSession;
+    document.getElementById('tttAiScore').textContent=tttAiScoreSession;
+    document.getElementById('tttStatus').textContent='🤖 AI Wins! Try again!';
+    state.games++;
+    state.history.unshift({game:'tictactoe',won:false,pts:0,time:new Date().toLocaleTimeString()});
+    saveState();toast('😔 AI wins! Watch an ad to try again.');
+    setTimeout(()=>tttShowNewGame(),1500);
+    return;
+  }
+  if(tttBoard.every(v=>v)){
+    tttGameActive=false;
+    document.getElementById('tttStatus').textContent="🤝 Draw!";
+    state.games++;
+    state.history.unshift({game:'tictactoe',won:false,pts:0,time:new Date().toLocaleTimeString()});
+    saveState();toast('🤝 Draw!');
+    setTimeout(()=>tttShowNewGame(),1500);
+    return;
+  }
+  document.getElementById('tttStatus').textContent="Your turn! ❌";
+  enableTTTCells();
+}
+
+function tttShowNewGame(){
+  document.getElementById('tttNewGameBtn').style.display='block';
+  document.getElementById('tttWatchAdBtn').style.display='none';
+}
+
+function tttNewGame(){
+  document.getElementById('tttNewGameBtn').style.display='none';
+  document.getElementById('tttWatchAdBtn').style.display='block';
+  document.getElementById('tttWatchAdBtn').disabled=false;
+  document.getElementById('tttWatchAdBtn').textContent='📺 Watch Ad to Play Again';
+  tttBoard=Array(9).fill(null);
+  tttGameActive=false;
+  renderTTTBoard();
+  document.getElementById('tttStatus').textContent='Watch an ad to play!';
+  document.getElementById('tttThinking').textContent='';
+  disableTTTCells();
+}
+
+function tttHighlightWin(line){
+  line.forEach(i=>{ document.getElementById('tc'+i)?.classList.add('win-cell'); });
+}
+
+const TTT_WINS=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+function tttCheckWinner(board){
+  for(const line of TTT_WINS){
+    const [a,b,c]=line;
+    if(board[a]&&board[a]===board[b]&&board[a]===board[c]) return {winner:board[a],line};
+  }
+  return null;
+}
+
+// Hard AI minimax with alpha-beta pruning (difficulty hidden from player)
+function tttMinimax(board, player, depth=0, alpha=-Infinity, beta=Infinity){
+  const win=tttCheckWinner(board);
+  if(win) return {score: win.winner==='O'?10-depth:depth-10};
+  const empty=board.map((v,i)=>v===null?i:null).filter(v=>v!==null);
+  if(!empty.length) return {score:0};
+  let bestMove={index:-1, score: player==='O'?-Infinity:Infinity};
+  for(const idx of empty){
+    board[idx]=player;
+    const result=tttMinimax(board, player==='O'?'X':'O', depth+1, alpha, beta);
+    board[idx]=null;
+    result.index=idx;
+    if(player==='O'){
+      if(result.score>bestMove.score) bestMove=result;
+      alpha=Math.max(alpha,result.score);
+    } else {
+      if(result.score<bestMove.score) bestMove=result;
+      beta=Math.min(beta,result.score);
+    }
+    if(beta<=alpha) break;
+  }
+  return bestMove;
+}
+
+// ===================== LEADERBOARD =====================
+function buildLeaderboard(){
+  const el=document.getElementById('lb-list');if(!el)return;
+  const all=[];
+  if(state.points>0||state.games>0){
+    all.push({name:state.username||'You',pts:state.points,avatar:state.selectedAvatar||'🎮',me:true});
+  }
+  all.sort((a,b)=>b.pts-a.pts);
+  if(all.length===0){
+    el.innerHTML='<div style="text-align:center;color:var(--text2);padding:30px;font-size:13px">📭 No players yet.<br>Play games to appear here!</div>';
+    return;
+  }
+  const medals=['🥇','🥈','🥉'];
+  el.innerHTML='';
+  all.slice(0,10).forEach((item,i)=>{
+    const div=document.createElement('div');
+    div.className='lb-item';
+    if(item.me) div.style.border='1px solid rgba(255,215,0,0.4)';
+    div.innerHTML=`<div class="lb-rank rank-${i+1}">${medals[i]||'#'+(i+1)}</div>
+      <div class="lb-avatar">${item.avatar}</div>
+      <div class="lb-info"><div class="lb-name">${item.name}${item.me?' (You)':''}</div><div class="lb-pts"><span>${item.pts.toLocaleString()}</span> pts</div></div>`;
+    el.appendChild(div);
+  });
+}
+
+// ===================== PROFILE =====================
+function updateProfile(){
+  const name=state.username||'GameZone Player';
+  document.getElementById('profileName').textContent=name;
+  document.getElementById('profileTag').textContent='@'+(name.replace(/\s/g,'').toLowerCase()||'user');
+  document.getElementById('profilePoints').textContent=state.points.toLocaleString()+' pts';
+  document.getElementById('profileCoins').textContent=state.coins.toLocaleString()+' 🥈';
+  document.getElementById('statGames').textContent=state.games;
+  document.getElementById('statWins').textContent=state.wins;
+  document.getElementById('statWinrate').textContent=(state.games>0?Math.round(state.wins/state.games*100):0)+'%';
+  const av=state.selectedAvatar||'🎮';
+  document.getElementById('profileAvatarDisplay').textContent=av;
+  document.getElementById('profileCircleBtn').textContent=av;
+  buildHistory();
+}
+function buildHistory(){
+  const el=document.getElementById('historyList');if(!el)return;
+  if(!state.history?.length){
+    el.innerHTML='<div style="text-align:center;color:var(--text2);padding:20px;font-size:13px">📭 No history yet</div>';return;
+  }
+  const icons={aviator:'✈️',wheel:'🌀',bull:'🐂',rotating:'🪙',tictactoe:'⭕'};
+  const names={aviator:'Aviator',wheel:'Lucky Spin',bull:'Red or Blue',rotating:'Rotating',tictactoe:'OX Game'};
+  el.innerHTML=state.history.slice(0,20).map(h=>`
+    <div class="h-item">
+      <div class="h-left">
+        <div class="h-icon">${icons[h.game]||'🎮'}</div>
+        <div><div class="h-name">${names[h.game]||h.game}</div><div class="h-time">${h.time}</div></div>
+      </div>
+      <div class="h-pts ${h.pts>=0?'win':'loss'}">${h.pts>=0?'+':''}${h.pts}${(h.game==='rotating'||h.game==='tictactoe')&&h.pts>0?' pts':'🥈'}</div>
+    </div>`).join('');
+}
+
+// ===================== INIT =====================
+init();
+
+const avObserver=new MutationObserver(()=>{
+  if(document.getElementById('screen-aviator').classList.contains('open')) resizeAvCanvas();
+});
+const avScreen=document.getElementById('screen-aviator');
+if(avScreen) avObserver.observe(avScreen,{attributes:true,attributeFilter:['class']});
+const wObserver=new MutationObserver(()=>{
+  if(document.getElementById('screen-wheel').classList.contains('open')) setTimeout(initWheelCanvas,50);
+});
+const wScreen=document.getElementById('screen-wheel');
+if(wScreen) wObserver.observe(wScreen,{attributes:true,attributeFilter:['class']});
+</script>
+</body>
+</html>

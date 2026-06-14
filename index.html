@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>GameZone Ethiopia</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&family=Noto+Sans+Ethiopic:wght@400;700&display=swap');
 :root {
@@ -111,7 +112,7 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
 .btn-green{background:linear-gradient(135deg,var(--green),#00a065);color:white;}
 .btn-red{background:linear-gradient(135deg,var(--red),#cc1a3a);color:white;}
 .btn-blue{background:linear-gradient(135deg,var(--blue),#0077cc);color:white;}
-  .ad-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.93);z-index:300;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:20px;}
+.ad-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.93);z-index:300;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:20px;}
 .ad-overlay.open{display:flex;}
 .ad-box{background:linear-gradient(135deg,#111122,#0d0d20);border:2px solid var(--gold);border-radius:20px;width:100%;max-width:340px;overflow:hidden;}
 .ad-header{background:linear-gradient(90deg,var(--gold),var(--gold2));padding:8px;text-align:center;font-size:11px;font-weight:700;color:#000;letter-spacing:2px;}
@@ -235,7 +236,7 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
 .rank-1{color:var(--gold)}.rank-2{color:#C0C0C0}.rank-3{color:#CD7F32}
 .lb-avatar{font-size:28px;}
 .lb-info{flex:1;}
-.lb-name{font-weight:700;font-size:13px;margin-bottom:1px;}
+ .lb-name{font-weight:700;font-size:13px;margin-bottom:1px;}
 .lb-pts{font-size:11px;color:var(--text2);}
 .lb-pts span{color:var(--gold);font-family:'Orbitron',monospace;font-weight:700;}
 .wallet-tabs{display:flex;gap:8px;margin-bottom:16px;}
@@ -286,7 +287,7 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
 .coin-face-back{background:radial-gradient(circle at 35% 30%,#ffe566,#d4a017 50%,#8a6500);border:5px solid #c8960a;color:#7a4d00;text-shadow:2px 2px 4px rgba(255,255,255,0.3),-1px -1px 3px rgba(0,0,0,0.4);transform:rotateY(180deg);}
 .coin-edge-ring{position:absolute;inset:0;border-radius:50%;border:3px solid rgba(255,220,80,0.3);box-shadow:inset 0 0 20px rgba(255,200,0,0.15),0 0 40px rgba(255,215,0,0.2);}
 .rotating-guess-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
-.guess-btn{border-radius:14px;padding:16px;text-align:center;cursor:pointer;transition:all .25s;border:2px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.03);}
+.guess-btn{border-radius:14px;padding:16px;text-align:center;cursor:pointer;transition:all .25px;border:2px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.03);}
 .guess-btn:active{transform:scale(0.95);}
 .guess-btn.selected-T{border-color:var(--gold);background:rgba(255,215,0,0.12);box-shadow:0 0 20px rgba(255,215,0,0.25);}
 .guess-btn.selected-S{border-color:var(--blue);background:rgba(0,170,255,0.12);box-shadow:0 0 20px rgba(0,170,255,0.25);}
@@ -331,7 +332,7 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
 <div class="nebula nebula2"></div>
 <div id="toast"></div>
 
-<!-- AD OVERLAY -->
+<!-- FALLBACK AD OVERLAY (only shown when Adsgram fails) -->
 <div class="ad-overlay" id="adOverlay">
   <div class="ad-box">
     <div class="ad-header">📢 ADVERTISEMENT</div>
@@ -500,8 +501,8 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
         <button class="btn btn-primary" style="margin-top:10px;margin-bottom:0" id="nightAdBtn" onclick="watchNightAd()" disabled>🌙 Watch Night Ad (+30 pts)</button>
       </div>
     </div>
-  </div>
-
+  </div> 
+  
   <!-- SHOP PAGE -->
   <div class="page" id="page-shop">
     <div class="shop-header">
@@ -635,6 +636,7 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
   <button class="nav-btn" onclick="showPage('tasks')" id="nav-tasks"><span class="icon">📋</span>Tasks</button>
   <button class="nav-btn" onclick="showPage('wallet')" id="nav-wallet"><span class="icon">💰</span>Wallet</button>
 </div>
+
 <!-- AVIATOR SCREEN -->
 <div class="game-screen" id="screen-aviator">
   <div class="game-header">
@@ -865,8 +867,9 @@ body{background:var(--dark);color:var(--text);font-family:'Rajdhani','Noto Sans 
     </div>
   </div>
 </div>
+
 <script>
-// STATE
+// ─── STATE ───────────────────────────────────────────────────────────────────
 let state = {
   points:0, coins:0, bonusClaimed:false, games:0, wins:0,
   history:[], username:null, adsWatched:0, adsWatchedDate:null,
@@ -877,6 +880,64 @@ let state = {
 function loadState(){try{const s=localStorage.getItem('gz_v9');if(s)state={...state,...JSON.parse(s)};}catch(e){}}
 function saveState(){try{localStorage.setItem('gz_v9',JSON.stringify(state));}catch(e){}}
 
+// ─── AD SYSTEM (Adsgram primary, fallback overlay) ────────────────────────────
+const adPool=[
+  {emoji:'🎮',title:'GameZone Premium',desc:'Unlimited games. All features. Extra Coins!'},
+  {emoji:'💰',title:'Easy Earnings',desc:'Daily chance. Win. Withdraw instantly!'},
+  {emoji:'📱',title:'Telebirr',desc:'Fast. Simple. Instant payments!'},
+  {emoji:'🛒',title:'Online Shop ET',desc:'Everything. Best prices. Fast delivery!'},
+];
+let adCallback=null, adTimer=null;
+
+async function showAd(callback) {
+  // ── Try Adsgram first ──
+  if (window.Adsgram) {
+    try {
+      const AdController = await window.Adsgram.init({ blockId: "35199" });
+      AdController.addEventListener('onReward', () => { if (callback) callback(); });
+      AdController.addEventListener('onError', () => showFallbackAd(callback));
+      AdController.addEventListener('onSkip', () => showFallbackAd(callback));
+      await AdController.show();
+      return;
+    } catch (e) {
+      // fall through to fallback
+    }
+  }
+  // ── Fallback overlay ad ──
+  showFallbackAd(callback);
+}
+
+function showFallbackAd(callback) {
+  adCallback = callback;
+  const ad = adPool[Math.floor(Math.random() * adPool.length)];
+  document.getElementById('adEmoji').textContent = ad.emoji;
+  document.getElementById('adTitle').textContent = ad.title;
+  document.getElementById('adDesc').textContent = ad.desc;
+  const skipBtn = document.getElementById('adSkipBtn');
+  skipBtn.textContent = 'Skip'; skipBtn.disabled = true;
+  document.getElementById('adOverlay').classList.add('open');
+  let secs = 5;
+  document.getElementById('adCountdown').textContent = `⏱ ${secs} seconds remaining...`;
+  clearInterval(adTimer);
+  adTimer = setInterval(() => {
+    secs--;
+    document.getElementById('adCountdown').textContent = `⏱ ${secs} seconds remaining...`;
+    if (secs <= 0) {
+      clearInterval(adTimer);
+      skipBtn.disabled = false;
+      skipBtn.textContent = 'Skip ✓';
+      document.getElementById('adCountdown').textContent = '✅ Ad complete!';
+    }
+  }, 1000);
+}
+
+function closeAd() {
+  document.getElementById('adOverlay').classList.remove('open');
+  clearInterval(adTimer);
+  if (adCallback) { adCallback(); adCallback = null; }
+}
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
 function init(){
   loadState(); createStars(); updateDisplay(); buildLeaderboard();
   updateProfile(); initAviator(); initBull(); initWheel();
@@ -1080,7 +1141,7 @@ function checkNightAds(){
     statusEl.style.color='var(--text2)';
   }
 }
-function watchDailyAd(){
+  function watchDailyAd(){
   if(state.adsWatched>=50){toast('📺 Daily limit reached!');return;}
   showAd(()=>{
     state.adsWatched=(state.adsWatched||0)+1;addPoints(20);
@@ -1099,33 +1160,7 @@ function watchNightAd(){
     updateAdsUI();checkNightAds();saveState();
   });
 }
-const adPool=[
-  {emoji:'🎮',title:'GameZone Premium',desc:'Unlimited games. All features. Extra Coins!'},
-  {emoji:'💰',title:'Easy Earnings',desc:'Daily chance. Win. Withdraw instantly!'},
-  {emoji:'📱',title:'Telebirr',desc:'Fast. Simple. Instant payments!'},
-  {emoji:'🛒',title:'Online Shop ET',desc:'Everything. Best prices. Fast delivery!'},
-];
-let adCallback=null,adTimer=null;
-function showAd(callback){
-  adCallback=callback;
-  const ad=adPool[Math.floor(Math.random()*adPool.length)];
-  document.getElementById('adEmoji').textContent=ad.emoji;
-  document.getElementById('adTitle').textContent=ad.title;
-  document.getElementById('adDesc').textContent=ad.desc;
-  const skipBtn=document.getElementById('adSkipBtn');
-  skipBtn.textContent='Skip';skipBtn.disabled=true;
-  document.getElementById('adOverlay').classList.add('open');
-  let secs=5;
-  document.getElementById('adCountdown').textContent=`⏱ ${secs} seconds remaining...`;
-  adTimer=setInterval(()=>{
-    secs--;document.getElementById('adCountdown').textContent=`⏱ ${secs} seconds remaining...`;
-    if(secs<=0){clearInterval(adTimer);skipBtn.disabled=false;skipBtn.textContent='Skip ✓';document.getElementById('adCountdown').textContent='✅ Ad complete!';}
-  },1000);
-}
-function closeAd(){
-  document.getElementById('adOverlay').classList.remove('open');
-  clearInterval(adTimer);if(adCallback){adCallback();adCallback=null;}
-}
+
 let currentGame=null;
 let currentBets={aviator:10,wheel:10,bull:10};
 function showResult(won,coinsWon){
@@ -1166,7 +1201,7 @@ function closeGameScreen(game){
   if(game==='aviator')stopAviator();
 }
 
-// LUCKY WHEEL
+// ─── LUCKY WHEEL ──────────────────────────────────────────────────────────────
 const WHEEL_SEGMENTS=[
   {label:'×5',color:'#FF3A5C',type:'multiply',val:5},
   {label:'+1',color:'#3A8CFF',type:'add_coin',val:1},
@@ -1272,7 +1307,7 @@ function evaluateWheel(segIdx){
   toast(msg);wheelSpinning=false;document.getElementById('wheelSpinBtn').disabled=false;document.getElementById('wheelSpinBtn').textContent='🌀 SPIN AGAIN!';
 }
 
-// AVIATOR
+// ─── AVIATOR ─────────────────────────────────────────────────────────────────
 let avState={running:false,betting:false,mult:1.0,speed:0.006,crashed:false,betPlaced:false,cashedOut:false,crashAt:1.5,cashoutMult:0,path:[],frameId:null,bet:10,history:[1.45,3.20,1.02,5.60,1.23,12.80,1.10,8.44,1.55,2.01]};
 let avCanvas,avCtx,avCdownTimer=null,avCdown=0;
 function initAviator(){avCanvas=document.getElementById('aviatorCanvas');if(!avCanvas)return;avCtx=avCanvas.getContext('2d');buildMultHistory();}
@@ -1404,9 +1439,9 @@ function avCashOut(){
   const overlay=document.getElementById('avCashoutOverlay');overlay.textContent=`✅ ${m.toFixed(2)}x — +${winCoins} Coins!`;overlay.classList.add('show');
   updateAvMultOverlay(m,true);addCoins(winCoins);toast(`💰 Cashed out at ${m.toFixed(2)}x → +${winCoins} Coins!`);
   state.games++;state.wins++;state.history.unshift({game:'aviator',won:true,pts:winCoins,time:new Date().toLocaleTimeString()});saveState();
-}
-
-// RED OR BLUE (BULL)
+  }
+ 
+// ─── RED OR BLUE (BULL) ───────────────────────────────────────────────────────
 let bullCanvas,bullCtx,bullState={phase:'idle',selectedSide:null,bet:10,timer:0,winner:null,animFrame:null,redX:0,blueX:0,redVX:0,blueVX:0,shake:0,tick:0,particles:[]};
 function initBull(){bullCanvas=document.getElementById('bullCanvas');if(!bullCanvas)return;bullCtx=bullCanvas.getContext('2d');resizeBullCanvas();drawBullIdle();}
 function resizeBullCanvas(){if(!bullCanvas)return;const W=bullCanvas.parentElement.clientWidth||360,H=Math.round(W*0.55);bullCanvas.width=W;bullCanvas.height=H;bullCanvas.style.height=H+'px';}
@@ -1503,7 +1538,7 @@ function resolveBullFight(){
   else{document.getElementById('bullStatus').textContent=`💥 ${w==='red'?'🔴 Red':'🔵 Blue'} Bull won. You lost.`;showResult(false,0);}
 }
 
-// ROTATING GAME
+// ─── ROTATING GAME ────────────────────────────────────────────────────────────
 let rotatingGuess=null,rotatingSpinning=false;
 function openRotating(){rotatingGuess=null;rotatingSpinning=false;document.getElementById('guessBtnT').className='guess-btn';document.getElementById('guessBtnS').className='guess-btn';document.getElementById('rotatingStatus').textContent='Watch an ad to spin!';document.getElementById('rotatingWatchAdBtn').disabled=false;document.getElementById('rotatingWatchAdBtn').textContent='📺 Watch Ad to Spin';updateDisplay();}
 function selectRotatingGuess(g){if(rotatingSpinning)return;rotatingGuess=g;document.getElementById('guessBtnT').className='guess-btn'+(g==='T'?' selected-T':'');document.getElementById('guessBtnS').className='guess-btn'+(g==='S'?' selected-S':'');document.getElementById('rotatingStatus').textContent=`You chose: ${g}. Now watch an ad to spin!`;}
@@ -1523,7 +1558,7 @@ function doRotatingSpin(){
   },3500);
 }
 
-// TIC TAC TOE
+// ─── TIC TAC TOE ─────────────────────────────────────────────────────────────
 let tttBoard=Array(9).fill(null),tttGameActive=false,tttPlayerScoreSession=0,tttAiScoreSession=0;
 function openTicTacToe(){
   tttBoard=Array(9).fill(null);tttGameActive=false;tttPlayerScoreSession=state.tttPlayerScore||0;tttAiScoreSession=state.tttAiScore||0;
@@ -1564,7 +1599,7 @@ function tttMinimax(board,player,depth=0,alpha=-Infinity,beta=Infinity){
   return bestMove;
 }
 
-// LEADERBOARD
+// ─── LEADERBOARD ─────────────────────────────────────────────────────────────
 function buildLeaderboard(){
   const el=document.getElementById('lb-list');if(!el)return;const all=[];
   if(state.points>0||state.games>0){all.push({name:state.username||'You',pts:state.points,avatar:state.selectedAvatar||'🎮',me:true});}
@@ -1574,7 +1609,7 @@ function buildLeaderboard(){
   all.slice(0,10).forEach((item,i)=>{const div=document.createElement('div');div.className='lb-item';if(item.me)div.style.border='1px solid rgba(255,215,0,0.4)';div.innerHTML=`<div class="lb-rank rank-${i+1}">${medals[i]||'#'+(i+1)}</div><div class="lb-avatar">${item.avatar}</div><div class="lb-info"><div class="lb-name">${item.name}${item.me?' (You)':''}</div><div class="lb-pts"><span>${item.pts.toLocaleString()}</span> pts</div></div>`;el.appendChild(div);});
 }
 
-// PROFILE
+// ─── PROFILE ─────────────────────────────────────────────────────────────────
 function updateProfile(){
   const name=state.username||'GameZone Player';
   document.getElementById('profileName').textContent=name;document.getElementById('profileTag').textContent='@'+(name.replace(/\s/g,'').toLowerCase()||'user');
@@ -1599,4 +1634,4 @@ const wObserver=new MutationObserver(()=>{if(document.getElementById('screen-whe
 const wScreen=document.getElementById('screen-wheel');if(wScreen)wObserver.observe(wScreen,{attributes:true,attributeFilter:['class']});
 </script>
 </body>
-</html>
+</html> 

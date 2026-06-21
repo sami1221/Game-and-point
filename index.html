@@ -6,27 +6,12 @@
 <title>WatchEarn</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-<!-- ══ MONETAG ADS ══
-  Replace YOUR_MONETAG_ZONE_ID with your actual zone IDs from monetag.com
-  Zone types to create in Monetag dashboard:
-    1. In-Page Push  → best for mini apps
-    2. Social Bar    → sticky bottom bar
-    3. Interstitial  → full screen (use sparingly)
--->
-<script src="//thubanoa.com/1?z=YOUR_MONETAG_ZONE_ID" async></script>
+<!-- ══ MONETAG ADS — Zone 11182066 (pointandgame_bot) ══ -->
+<script src='//libtl.com/sdk.js' data-zone='11182066' data-sdk='show_11182066'></script>
 
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
-/* ══ DESIGN TOKENS ══
-   Palette: Deep Navy #080D1A · Card #0E1628 · Blue #3B82F6 · 
-            Cyan #06B6D4 · Electric #818CF8 · White #F1F5FF · Muted #64748B
-   Display: Outfit (heavy, wide tracking)
-   Body: Inter (clean, readable)
-   Signature: Animated "signal wave" behind the main earn button — 
-              pulse rings that look like a broadcast tower signal
-*/
-
 :root {
   --bg:        #080D1A;
   --card:      #0E1628;
@@ -56,7 +41,6 @@ body {
   overflow-x: hidden;
 }
 
-/* ── BG GRID ── */
 body::before {
   content: '';
   position: fixed; inset: 0;
@@ -75,7 +59,6 @@ body::before {
   padding: 0 16px 110px;
 }
 
-/* ── HEADER ── */
 .hdr {
   display: flex; align-items: center; justify-content: space-between;
   padding: 18px 0 10px;
@@ -114,12 +97,10 @@ body::before {
 }
 @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
 
-/* ── PAGES ── */
 .page { display: none; }
 .page.active { display: block; animation: slideIn .22s ease; }
 @keyframes slideIn { from{opacity:0;transform:translateY(8px);} to{opacity:1;transform:translateY(0);} }
 
-/* ── BALANCE HERO ── */
 .hero {
   background: var(--card);
   border: 1px solid var(--border);
@@ -168,7 +149,6 @@ body::before {
 .mini-stat .ms-v.blue { color: var(--blue); }
 .mini-stat .ms-v.cyan { color: var(--cyan); }
 
-/* ── SIGNAL BUTTON (signature element) ── */
 .signal-wrap {
   position: relative;
   margin: 24px 0 6px;
@@ -229,25 +209,6 @@ body::before {
 }
 .btn-hint { text-align: center; font-size: 11px; color: var(--muted); margin-top: 6px; }
 
-/* ── AD SLOT ── */
-.ad-slot {
-  background: var(--card);
-  border: 1px dashed rgba(59,130,246,0.2);
-  border-radius: var(--r);
-  padding: 14px;
-  margin: 16px 0;
-  min-height: 80px;
-  display: flex; align-items: center; justify-content: center;
-  position: relative;
-  overflow: hidden;
-}
-.ad-slot-label {
-  position: absolute; top: 7px; left: 10px;
-  font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
-  color: rgba(100,116,139,0.5);
-}
-
-/* ── SECTION LABEL ── */
 .sec-label {
   font-family: 'Outfit', sans-serif;
   font-size: 11px; font-weight: 600;
@@ -255,7 +216,6 @@ body::before {
   color: var(--muted); margin: 24px 0 12px;
 }
 
-/* ── PROGRESS ── */
 .prog-card {
   background: var(--card);
   border: 1px solid var(--border);
@@ -276,7 +236,6 @@ body::before {
 .prog-foot { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); }
 .prog-foot .bonus { color: var(--success); font-weight: 600; }
 
-/* ── FEED ── */
 .feed { display: flex; flex-direction: column; gap: 8px; }
 .feed-item {
   background: var(--card);
@@ -300,7 +259,6 @@ body::before {
 .fi-d { font-size: 11px; color: var(--muted); margin-top: 1px; }
 .fi-amt { font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 700; color: var(--success); }
 
-/* ── LEADERBOARD ── */
 .seg {
   display: grid; grid-template-columns: 1fr 1fr 1fr;
   background: var(--card);
@@ -343,7 +301,6 @@ body::before {
 .lb-sc { font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 700; }
 .lb-sc small { font-size: 9.5px; color: var(--muted); font-weight: 400; display: block; text-align: right; }
 
-/* ── TASKS ── */
 .task-c {
   background: var(--card); border: 1px solid var(--border);
   border-radius: var(--r); padding: 14px;
@@ -367,7 +324,6 @@ body::before {
 .tk-btn:active { transform: scale(0.95); }
 .tk-btn.done { background: rgba(16,185,129,0.12); color: var(--success); border: 1px solid rgba(16,185,129,0.3); cursor: default; }
 
-/* ── WALLET ── */
 .w-hero { text-align: center; padding: 12px 0 8px; }
 .w-hero .wl { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
 .w-hero .wa { font-family: 'Outfit', sans-serif; font-size: 48px; font-weight: 900; color: var(--white); margin: 4px 0; letter-spacing: -2px; }
@@ -410,7 +366,6 @@ body::before {
 .w-note { font-size: 11px; color: var(--muted); text-align: center; margin-top: 8px; }
 .h-empty { text-align: center; padding: 20px 0; color: var(--muted); font-size: 12px; }
 
-/* ── ADMIN ── */
 .admin-wrap {
   background: linear-gradient(145deg, #130A1A, #0E1628);
   border: 1px solid rgba(244,63,94,0.2);
@@ -434,7 +389,6 @@ body::before {
 .pi-ok { flex:1; background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.25); border-radius: 7px; padding: 7px; font-size: 11.5px; font-weight: 700; color: var(--success); cursor: pointer; }
 .pi-no { flex:1; background: rgba(244,63,94,0.08); border: 1px solid rgba(244,63,94,0.2); border-radius: 7px; padding: 7px; font-size: 11.5px; font-weight: 700; color: var(--danger); cursor: pointer; }
 
-/* ── TOAST ── */
 .toast {
   position: fixed; bottom: 88px; left: 50%;
   transform: translateX(-50%) translateY(16px);
@@ -445,30 +399,8 @@ body::before {
   white-space: nowrap; max-width: 90%;
 }
 .toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast.err { background: #2A0E12; border-color: rgba(244,63,94,0.35); color: var(--danger); }
 
-/* ── AD OVERLAY ── */
-.ad-ov {
-  display: none; position: fixed; inset: 0;
-  background: rgba(0,0,0,0.88); backdrop-filter: blur(10px);
-  z-index: 300;
-  align-items: center; justify-content: center;
-}
-.ad-ov.show { display: flex; }
-.ad-box {
-  background: var(--card); border: 1px solid rgba(59,130,246,0.25);
-  border-radius: 22px; padding: 28px 22px;
-  max-width: 310px; width: 90%; text-align: center;
-}
-.ad-icon { font-size: 50px; animation: bob .9s ease-in-out infinite alternate; }
-@keyframes bob { to { transform: translateY(-7px); } }
-.ad-title { font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 800; color: var(--blue); margin: 12px 0 5px; }
-.ad-sub { font-size: 12.5px; color: var(--muted); line-height: 1.6; }
-.ad-bar { background: rgba(255,255,255,0.07); border-radius: 100px; height: 5px; margin: 15px 0 7px; overflow: hidden; }
-.ad-fill { height: 100%; background: linear-gradient(90deg, var(--blue), var(--cyan)); border-radius: 100px; width: 0%; transition: width .18s linear; }
-.ad-tmr { font-size: 11.5px; color: var(--muted); }
-.ad-tmr b { color: var(--cyan); }
-
-/* ── NAV ── */
 .nav {
   position: fixed; bottom: 0; left: 0; right: 0;
   background: rgba(8,13,26,0.94); backdrop-filter: blur(20px);
@@ -494,7 +426,6 @@ body::before {
 
 <div class="wrap">
 
-  <!-- HEADER -->
   <div class="hdr">
     <div class="brand">
       <div class="brand-mark">📡</div>
@@ -506,10 +437,8 @@ body::before {
     </div>
   </div>
 
-  <!-- ═══ HOME ═══ -->
   <section class="page active" id="pg-home">
 
-    <!-- Balance hero -->
     <div class="hero">
       <div class="hero-label">Total Earned</div>
       <div class="hero-amount"><span class="dollar">$</span><span id="bal">0.000</span></div>
@@ -529,13 +458,6 @@ body::before {
       </div>
     </div>
 
-    <!-- Monetag In-Page Push ad slot -->
-    <div class="ad-slot" id="monetag-slot-1">
-      <div class="ad-slot-label">Advertisement</div>
-      <!-- Monetag In-Page Push will inject here automatically -->
-    </div>
-
-    <!-- Signal button -->
     <div class="signal-wrap">
       <div class="signal-rings">
         <div class="ring"></div>
@@ -550,7 +472,6 @@ body::before {
     </div>
     <div class="btn-hint">Powered by Monetag · Instant credit</div>
 
-    <!-- Daily progress -->
     <div class="sec-label">Daily Goal</div>
     <div class="prog-card">
       <div class="prog-top">
@@ -564,16 +485,10 @@ body::before {
       </div>
     </div>
 
-    <!-- Second Monetag ad slot (Social Bar / native) -->
-    <div class="ad-slot" style="margin-top:16px;" id="monetag-slot-2">
-      <div class="ad-slot-label">Advertisement</div>
-    </div>
-
     <div class="sec-label">Recent Earnings</div>
     <div class="feed" id="feedList"></div>
   </section>
 
-  <!-- ═══ LEADERBOARD ═══ -->
   <section class="page" id="pg-lb">
     <div style="margin:8px 0 16px;">
       <div style="font-family:'Outfit',sans-serif;font-size:22px;font-weight:800;">🏆 Leaderboard</div>
@@ -597,7 +512,6 @@ body::before {
     <div class="lb" id="lbList"></div>
   </section>
 
-  <!-- ═══ TASKS ═══ -->
   <section class="page" id="pg-task">
     <div style="margin:8px 0 16px;">
       <div style="font-family:'Outfit',sans-serif;font-size:22px;font-weight:800;">📋 Tasks</div>
@@ -629,7 +543,6 @@ body::before {
     </div>
   </section>
 
-  <!-- ═══ WALLET ═══ -->
   <section class="page" id="pg-wallet">
     <div style="margin:8px 0 16px;">
       <div style="font-family:'Outfit',sans-serif;font-size:22px;font-weight:800;">💳 Wallet</div>
@@ -660,7 +573,6 @@ body::before {
     </div>
     <div class="w-note">Minimum $20.00 · Paid via TON blockchain</div>
 
-    <!-- ADMIN PANEL (visible only to admin) -->
     <div id="adminWrap" style="display:none;">
       <div class="sec-label" style="margin-top:24px;">🔐 Admin</div>
       <div class="admin-wrap">
@@ -684,21 +596,8 @@ body::before {
 
 </div>
 
-<!-- AD OVERLAY (demo fallback) -->
-<div class="ad-ov" id="adOv">
-  <div class="ad-box">
-    <div class="ad-icon">📡</div>
-    <div class="ad-title">Ad Playing...</div>
-    <div class="ad-sub">Watch the full ad to earn your reward. Do not close this screen.</div>
-    <div class="ad-bar"><div class="ad-fill" id="adFill"></div></div>
-    <div class="ad-tmr">Completing in <b id="adCnt">5</b>s</div>
-  </div>
-</div>
-
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<!-- NAV -->
 <div class="nav">
   <button class="ni on" data-pg="home" onclick="go('home')">
     <div class="ico">🏠</div><div class="lbl">Home</div>
@@ -715,33 +614,21 @@ body::before {
 </div>
 
 <script>
-// ══ MONETAG SETUP ══════════════════════════════════════
-// 1. Go to monetag.com → create publisher account
-// 2. Add your site/mini-app URL
-// 3. Create zones:
-//    - "In-Page Push" zone → copy zone ID → replace YOUR_MONETAG_ZONE_ID in script src above
-//    - "Social Bar" zone  → add second script tag with that zone ID
-//    - "Interstitial"     → load programmatically on button click (see watchAd below)
-//
-// Monetag Interstitial zone ID for programmatic trigger:
-const MONETAG_INTERSTITIAL_ZONE = 'YOUR_INTERSTITIAL_ZONE_ID';
-
-// Show Monetag interstitial ad (if SDK loaded)
-function showMonetagInterstitial() {
-  return new Promise((resolve) => {
-    if (window.show_9087664) {
-      // Monetag interstitial call — replace show_XXXXXXX with your actual function name
-      // from the Monetag dashboard script snippet
-      try {
-        window.show_9087664();
-        // Monetag doesn't give a callback, so we wait estimated ad duration
-        setTimeout(resolve, 5000);
-      } catch(e) {
+// ══ MONETAG — REAL ZONE INSTALLED ══════════════════════
+// Zone 11182066 / function show_11182066 (from the SDK tag in <head>)
+function showMonetagAd() {
+  return new Promise((resolve, reject) => {
+    if (typeof window.show_11182066 === 'function') {
+      window.show_11182066().then(() => {
+        // Ad was watched fully (rewarded) -> resolve
         resolve();
-      }
+      }).catch((e) => {
+        // User closed early / ad failed to load -> reject (no reward)
+        reject(e);
+      });
     } else {
-      // fallback demo overlay
-      showDemoOverlay().then(resolve);
+      // SDK not loaded yet (slow network, ad-blocker, etc.)
+      reject(new Error('Monetag SDK not ready'));
     }
   });
 }
@@ -757,17 +644,14 @@ if (tg) {
 }
 document.getElementById('uname').textContent = tgName;
 
-// Admin IDs — replace with your Telegram user ID
-const ADMINS = [123456789];
+const ADMINS = [123456789]; // replace with your own Telegram numeric ID
 
-// ══ CONSTANTS ════════════════════════════════════════════
 const PER_AD     = 0.001;
 const DAILY_LIM  = 50;
 const TASK_BONUS = 20;
 const MIN_WD     = 20;
 const DAY_BONUS  = 0.01;
 
-// ══ STATE ════════════════════════════════════════════════
 let S = {
   bal:      parseFloat(localStorage.getItem('we_bal') || '0'),
   total:    parseInt(localStorage.getItem('we_total') || '0'),
@@ -808,7 +692,6 @@ function save() {
   localStorage.setItem('we_admin', JSON.stringify(aStats));
 }
 
-// ══ NAV ══════════════════════════════════════════════════
 function go(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('pg-' + name).classList.add('active');
@@ -818,7 +701,6 @@ function go(name) {
   if (name === 'task')   renderTasks();
 }
 
-// ══ HOME UI ══════════════════════════════════════════════
 function ui() {
   dayReset();
   document.getElementById('bal').textContent      = S.bal.toFixed(3);
@@ -858,7 +740,7 @@ function renderFeed() {
     </div>`).join('');
 }
 
-// ══ WATCH AD ═════════════════════════════════════════════
+// ══ WATCH AD (real Monetag call, reward only on success) ══
 async function watchAd() {
   if (S.busy) return;
   dayReset();
@@ -866,33 +748,17 @@ async function watchAd() {
 
   S.busy = true;
   const btn = document.getElementById('earnBtn');
-  btn.innerHTML = '<div class="spin"></div><span>Loading...</span>';
+  btn.innerHTML = '<div class="spin"></div><span>Loading ad...</span>';
   btn.disabled = true;
 
-  // Show Monetag interstitial (or demo overlay as fallback)
-  await showMonetagInterstitial();
-
-  completeAd();
-}
-
-function showDemoOverlay() {
-  return new Promise(resolve => {
-    const ov = document.getElementById('adOv');
-    ov.classList.add('show');
-    let t = 5;
-    document.getElementById('adCnt').textContent = t;
-    document.getElementById('adFill').style.width = '0%';
-    const iv = setInterval(() => {
-      t--;
-      document.getElementById('adCnt').textContent = t;
-      document.getElementById('adFill').style.width = ((5-t)/5*100) + '%';
-      if (t <= 0) {
-        clearInterval(iv);
-        ov.classList.remove('show');
-        resolve();
-      }
-    }, 1000);
-  });
+  try {
+    await showMonetagAd();
+    completeAd();
+  } catch (e) {
+    S.busy = false;
+    ui();
+    toast('⚠️ Ad not completed — no reward', true);
+  }
 }
 
 function completeAd() {
@@ -925,13 +791,14 @@ function completeAd() {
   tg?.HapticFeedback?.notificationOccurred('success');
 }
 
-function toast(msg) {
+function toast(msg, isErr) {
   const el = document.getElementById('toast');
-  el.textContent = msg; el.classList.add('on');
+  el.textContent = msg;
+  el.classList.toggle('err', !!isErr);
+  el.classList.add('on');
   setTimeout(() => el.classList.remove('on'), 2800);
 }
 
-// ══ TASKS ════════════════════════════════════════════════
 function renderTasks() {
   const btt = document.getElementById('btn-tt');
   const btg = document.getElementById('btn-tg');
@@ -952,7 +819,6 @@ function doTask(id, url, isTg) {
   }, 2500);
 }
 
-// ══ LEADERBOARD ══════════════════════════════════════════
 let period = 'daily';
 
 const NAMES = ['Alex_99','Mira K.','CryptoFox','Sam_TG','Lena B.','RoboNick','AnaStar','VikTOR','Dasha_W','OmarX','PixelJoy','Yuki_M','TonWizard','CoinHunter','FastEarner','NightOwl88','StarDust','CryptoKing','AdsMaster','LuckyDraw','FastClick','EarnPro','GoldRush','MoneyMind','TopUser','EliteAds','DailyGrind','AdHero','SpeedRun','CoinDrop','WatchPro','TokenFan','AdAddict','ProfitMax','QuickEarn','GemSeeker','AdsNinja','WealthBot','DailyAds','SatoshiK','TronFan','EtherEarn','Web3Pro','DeFiKing','BlockAds','ChainUser','TokenMine','CryptoDen','AdVault','SilverBull'];
@@ -999,7 +865,6 @@ function renderLB() {
     </div>`).join('');
 }
 
-// ══ WALLET ═══════════════════════════════════════════════
 function renderWallet() {
   document.getElementById('wBal').textContent = S.bal.toFixed(3);
   const pct = Math.min(S.bal/MIN_WD*100,100);
@@ -1052,7 +917,6 @@ function renderHist() {
     </div>`).join('');
 }
 
-// ══ ADMIN ════════════════════════════════════════════════
 function renderAdmin() {
   document.getElementById('aUsers').textContent = aStats.users;
   document.getElementById('aPend').textContent  = S.pending.filter(p=>p.status==='pending').length;
@@ -1102,7 +966,6 @@ function adminReset() {
   S.today=0; S.todayEarn=0; S.bonusPaid=false; save(); ui(); toast('⚠️ Daily counters reset');
 }
 
-// ══ INIT ═════════════════════════════════════════════════
 dayReset(); ui(); renderTasks();
 </script>
 </body>

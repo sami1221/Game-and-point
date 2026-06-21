@@ -6,9 +6,6 @@
 <title>WatchEarn</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-<!-- ══ MONETAG ADS — Zone 11182066 (pointandgame_bot) ══ -->
-<script src='//libtl.com/sdk.js' data-zone='11182066' data-sdk='show_11182066'></script>
-
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
@@ -148,6 +145,16 @@ body::before {
 .mini-stat .ms-v { font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 700; }
 .mini-stat .ms-v.blue { color: var(--blue); }
 .mini-stat .ms-v.cyan { color: var(--cyan); }
+
+.sdk-status {
+  text-align: center;
+  font-size: 11px;
+  padding: 5px 0;
+  margin-top: 4px;
+}
+.sdk-status.loading { color: var(--muted); }
+.sdk-status.ready   { color: var(--success); }
+.sdk-status.error   { color: var(--danger); }
 
 .signal-wrap {
   position: relative;
@@ -458,6 +465,9 @@ body::before {
       </div>
     </div>
 
+    <!-- SDK status indicator -->
+    <div class="sdk-status loading" id="sdkStatus">⏳ Loading ad network...</div>
+
     <div class="signal-wrap">
       <div class="signal-rings">
         <div class="ring"></div>
@@ -613,26 +623,94 @@ body::before {
   </button>
 </div>
 
+<!-- ══ MONETAG SDK — Zone 11182066 ══ -->
 <script>
-// ══ MONETAG — REAL ZONE INSTALLED ══════════════════════
-// Zone 11182066 / function show_11182066 (from the SDK tag in <head>)
-function showMonetagAd() {
-  return new Promise((resolve, reject) => {
-    if (typeof window.show_11182066 === 'function') {
-      window.show_11182066().then(() => {
-        // Ad was watched fully (rewarded) -> resolve
-        resolve();
-      }).catch((e) => {
-        // User closed early / ad failed to load -> reject (no reward)
-        reject(e);
-      });
-    } else {
-      // SDK not loaded yet (slow network, ad-blocker, etc.)
-      reject(new Error('Monetag SDK not ready'));
-    }
-  });
-}
+// SDK ከ libtl.com ጭኖ ይጠብቃል
+(function() {
+  var sdkReady = false;
+  var sdkFailed = false;
 
+  // SDK script ይጫናል
+  var script = document.createElement('script');
+  script.src = '//libtl.com/sdk.js';
+  script.setAttribute('data-zone', '11182066');
+  script.setAttribute('data-sdk', 'show_11182066');
+  script.async = true;
+
+  script.onload = function() {
+    // script ተጫኗል — ግን function ሊዘገይ ይችላል
+    // ስለዚህ ትንሽ ጠብቀን እናረጋግጣለን
+    checkSDK(0);
+  };
+
+  script.onerror = function() {
+    sdkFailed = true;
+    updateSDKStatus('error', '❌ Ad network unavailable');
+    console.warn('WatchEarn: Monetag SDK failed to load');
+  };
+
+  document.head.appendChild(script);
+
+  // SDK function እስኪዘጋጅ ድረስ ደጋግሞ ይፈትናል
+  function checkSDK(attempts) {
+    if (typeof window.show_11182066 === 'function') {
+      sdkReady = true;
+      updateSDKStatus('ready', '✅ Ad network ready');
+      console.log('WatchEarn: Monetag SDK ready after', attempts, 'attempts');
+    } else if (attempts < 30) {
+      // ከ 15 ሰከንድ ድረስ ይፈትናል (30 × 500ms)
+      setTimeout(function() { checkSDK(attempts + 1); }, 500);
+    } else {
+      sdkFailed = true;
+      updateSDKStatus('error', '⚠️ Ad network slow — try again');
+      console.warn('WatchEarn: Monetag SDK not ready after 15s');
+    }
+  }
+
+  function updateSDKStatus(type, msg) {
+    var el = document.getElementById('sdkStatus');
+    if (!el) return;
+    el.className = 'sdk-status ' + type;
+    el.textContent = msg;
+    // ready ከሆነ በኋላ 3 ሰከንድ ቆይቶ ይደብቃል
+    if (type === 'ready') {
+      setTimeout(function() {
+        el.style.display = 'none';
+      }, 3000);
+    }
+  }
+
+  // showMonetagAd — Retry logic ያለው
+  window.showMonetagAd = function() {
+    return new Promise(function(resolve, reject) {
+      var attempts = 0;
+      var maxAttempts = 20; // 10 ሰከንድ ድረስ ይጠብቃል
+
+      function tryShow() {
+        if (typeof window.show_11182066 === 'function') {
+          // SDK ዝግጁ ነው — ad አሳይ
+          window.show_11182066()
+            .then(function() {
+              resolve(); // Ad ሙሉ ሆኗል → reward
+            })
+            .catch(function(err) {
+              reject(err); // User ዘጋ ወይም ad አልተጫነም
+            });
+        } else if (attempts < maxAttempts) {
+          attempts++;
+          setTimeout(tryShow, 500); // 500ms ጠብቅ ደጋግም
+        } else {
+          reject(new Error('Monetag SDK not ready after waiting'));
+        }
+      }
+
+      tryShow();
+    });
+  };
+})();
+</script>
+
+<script>
 // ══ TELEGRAM ════════════════════════════════════════════
 const tg = window.Telegram?.WebApp;
 let tgId = null, tgName = 'Demo User';
@@ -644,7 +722,7 @@ if (tg) {
 }
 document.getElementById('uname').textContent = tgName;
 
-const ADMINS = [123456789]; // replace with your own Telegram numeric ID
+const ADMINS = [123456789]; // ← የራስህን Telegram ID ቀይር
 
 const PER_AD     = 0.001;
 const DAILY_LIM  = 50;
@@ -740,7 +818,7 @@ function renderFeed() {
     </div>`).join('');
 }
 
-// ══ WATCH AD (real Monetag call, reward only on success) ══
+// ══ WATCH AD — Retry logic ያለው Monetag call ══
 async function watchAd() {
   if (S.busy) return;
   dayReset();
@@ -752,11 +830,12 @@ async function watchAd() {
   btn.disabled = true;
 
   try {
-    await showMonetagAd();
+    await window.showMonetagAd();
     completeAd();
   } catch (e) {
     S.busy = false;
     ui();
+    console.warn('Ad error:', e);
     toast('⚠️ Ad not completed — no reward', true);
   }
 }

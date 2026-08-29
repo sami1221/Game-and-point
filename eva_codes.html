@@ -1,0 +1,1686 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>EVA CODES — የኮድ መምህርህ</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-database-compat.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Noto+Sans+Ethiopic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0F1A2B;
+    --ink-2:#182742;
+    --parchment:#EAF1F5;
+    --parchment-dim:#C9D6E0;
+    --mint:#5CE0B8;
+    --mint-dark:#2FBF97;
+    --violet:#8E7CF0;
+    --coral:#F0715C;
+    --line: rgba(234,241,245,0.14);
+    --shadow: 0 10px 30px rgba(5,8,20,0.4);
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    margin:0; background: var(--ink); color: var(--parchment);
+    font-family:'Inter', 'Noto Sans Ethiopic', sans-serif; overflow:hidden;
+  }
+  .am{ font-family:'Noto Sans Ethiopic','Inter',sans-serif; }
+  .code{ font-family:'JetBrains Mono', monospace; }
+  h1,h2,h3,.display{ font-family:'Fraunces','Noto Sans Ethiopic', serif; font-weight:600; letter-spacing:-0.01em; }
+  #app{ height:100dvh; display:flex; flex-direction:column; }
+
+  /* ---------- Onboarding ---------- */
+  #onboarding{
+    height:100%; display:flex; flex-direction:column; justify-content:center; padding:28px 24px;
+    background: radial-gradient(circle at 85% -10%, rgba(92,224,184,0.16), transparent 45%), var(--ink);
+  }
+  .brand-mark{ display:flex; align-items:center; gap:12px; margin-bottom:8px; }
+  .stamp{
+    width:46px;height:46px; border-radius:14px; border:2px solid var(--mint);
+    display:flex;align-items:center;justify-content:center; font-family:'JetBrains Mono',monospace; font-weight:700;
+    font-size:16px; color:var(--mint); flex-shrink:0;
+  }
+  .brand-mark .title{ font-size:22px; line-height:1.1; }
+  .brand-mark .sub{ font-size:12.5px; opacity:0.6; margin-top:2px; }
+  .lead{ font-size:14.5px; line-height:1.6; opacity:0.75; margin:18px 0 26px; }
+  .field-label{ font-size:12.5px; text-transform:uppercase; letter-spacing:0.08em; opacity:0.55; margin:18px 0 10px; }
+  .level-grid{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
+  .level-card{
+    background:var(--ink-2); border:1px solid var(--line); border-radius:14px; padding:14px 8px;
+    text-align:center; cursor:pointer; transition:transform .15s ease, border-color .15s ease, background .15s ease;
+  }
+  .level-card .em{ font-size:20px; display:block; margin-bottom:6px;}
+  .level-card .lbl{ font-size:12.5px; font-weight:600; }
+  .level-card.selected{ border-color:var(--mint); background: rgba(92,224,184,0.12); transform:translateY(-2px); }
+  input.key-input{
+    width:100%; background:var(--ink-2); border:1px solid var(--line); border-radius:12px; padding:14px 14px;
+    color:var(--parchment); font-size:14px; font-family:'Inter',monospace;
+  }
+  input.key-input::placeholder{ color:rgba(234,241,245,0.35); }
+  .hint{ font-size:12px; opacity:0.5; margin-top:8px; line-height:1.5; }
+  .hint a{ color:var(--mint); text-decoration:none; }
+  .cta{
+    margin-top:26px; background:var(--mint); color:var(--ink); border:none; border-radius:14px; padding:16px;
+    font-size:15px; font-weight:700; font-family:'Inter',sans-serif; cursor:pointer; box-shadow: var(--shadow);
+  }
+  .cta:disabled{ opacity:0.4; }
+  .cta:active{ transform:scale(0.98); }
+
+  /* ---------- Main shell ---------- */
+  #main{ display:none; height:100%; flex-direction:column; }
+  header.topbar{
+    display:flex; align-items:center; justify-content:space-between; padding:16px 18px 12px;
+    border-bottom:1px solid var(--line); flex-shrink:0;
+  }
+  header.topbar .who{ display:flex; align-items:center; gap:10px; }
+  header.topbar .stamp{ width:34px; height:34px; font-size:12px; border-radius:10px; }
+  header.topbar .lvl-name{ font-size:14px; font-weight:600; }
+  header.topbar .lvl-sub{ font-size:11px; opacity:0.5; }
+  .gear{ background:none; border:none; color:var(--parchment); opacity:0.6; font-size:19px; cursor:pointer; padding:6px; }
+
+  main.view{ flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; display:none; flex-direction:column; }
+  main.view.active{ display:flex; }
+
+  /* ---- Chat ---- */
+  #chatMessages{ flex:1; padding:16px 16px 8px; display:flex; flex-direction:column; gap:10px; }
+  .msg{ max-width:82%; padding:11px 14px; border-radius:16px; font-size:14px; line-height:1.5; white-space:pre-wrap; }
+  .msg.user{ align-self:flex-end; background:var(--mint); color:var(--ink); border-bottom-right-radius:5px; }
+  .msg.bot{ align-self:flex-start; background:var(--ink-2); border:1px solid var(--line); border-bottom-left-radius:5px; }
+  .msg.system{ align-self:center; font-size:12px; opacity:0.5; text-align:center; }
+  .typing{ align-self:flex-start; display:flex; gap:4px; padding:12px 14px; }
+  .typing span{ width:6px; height:6px; border-radius:50%; background:var(--parchment); opacity:0.4; animation:blink 1.2s infinite; }
+  .typing span:nth-child(2){ animation-delay:.2s; }
+  .typing span:nth-child(3){ animation-delay:.4s; }
+  @keyframes blink{ 0%,80%,100%{opacity:.25} 40%{opacity:.8} }
+  .composer{
+    display:flex; gap:8px; padding:12px 14px calc(env(safe-area-inset-bottom,0px) + 12px);
+    border-top:1px solid var(--line); flex-shrink:0; background:var(--ink);
+  }
+  .composer textarea{
+    flex:1; resize:none; background:var(--ink-2); border:1px solid var(--line); border-radius:14px;
+    color:var(--parchment); padding:11px 14px; font-size:14px; font-family:'Inter',sans-serif; max-height:90px;
+  }
+  .send-btn{
+    width:44px; height:44px; border-radius:50%; border:none; background:var(--mint);
+    color:var(--ink); font-size:18px; cursor:pointer; flex-shrink:0;
+  }
+  .send-btn:disabled{ opacity:0.35; }
+
+  /* ---- Snippets cards ---- */
+  #cardsView .pad{ padding:16px; }
+  .topic-row{ display:flex; gap:8px; }
+  .topic-row input{
+    flex:1; background:var(--ink-2); border:1px solid var(--line); border-radius:12px; padding:12px 14px;
+    color:var(--parchment); font-size:14px;
+  }
+  .btn-solid{
+    background:var(--mint); color:var(--ink); border:none; border-radius:12px; padding:12px 16px;
+    font-weight:700; font-size:13.5px; cursor:pointer; white-space:nowrap;
+  }
+  .btn-solid:disabled{ opacity:0.4; }
+  .card-stack{ margin-top:18px; display:flex; flex-direction:column; gap:12px; }
+  .flash{
+    background:var(--ink-2); border:1px solid var(--line); border-radius:16px; padding:18px;
+    cursor:pointer; position:relative; overflow:hidden;
+  }
+  .flash::before{ content:''; position:absolute; top:0; left:0; width:4px; height:100%; background:var(--violet); }
+  .flash .word{ font-family:'Fraunces',serif; font-size:19px; font-weight:600; }
+  .flash .pos{ font-size:11px; opacity:0.5; text-transform:uppercase; letter-spacing:0.05em; margin-top:2px;}
+  .flash .back{ margin-top:12px; padding-top:12px; border-top:1px dashed var(--line); display:none; }
+  .flash.flipped .back{ display:block; }
+  .flash pre{
+    background:var(--ink); border-radius:10px; padding:12px; font-size:12.5px; overflow-x:auto;
+    border:1px solid var(--line); margin:8px 0;
+  }
+  .flash .am-word{ font-size:14.5px; color:var(--mint); font-weight:600; line-height:1.6; }
+  .flash .example{ font-size:13px; opacity:0.85; margin-top:8px; line-height:1.6; }
+  .flash .tap-hint{ font-size:11px; opacity:0.4; margin-top:10px; }
+  .empty-note{ text-align:center; opacity:0.45; font-size:13px; margin-top:40px; line-height:1.6; }
+
+  /* ---- Fix (code fix) ---- */
+  #fixView .pad{ padding:16px; display:flex; flex-direction:column; gap:12px; }
+  textarea.fix-input{
+    background:var(--ink-2); border:1px solid var(--line); border-radius:14px; padding:14px;
+    color:var(--parchment); font-size:13.5px; font-family:'JetBrains Mono',monospace; min-height:130px; resize:vertical;
+  }
+  .result-card{
+    background:var(--ink-2); border:1px solid var(--line); border-radius:16px; padding:16px;
+    display:none; flex-direction:column; gap:12px;
+  }
+  .result-card.show{ display:flex; }
+  .result-label{ font-size:11px; text-transform:uppercase; letter-spacing:0.06em; opacity:0.5; }
+  .corrected{
+    font-size:13.5px; line-height:1.6; padding:12px; background:rgba(92,224,184,0.1);
+    border-left:3px solid var(--mint); border-radius:8px; font-family:'JetBrains Mono',monospace; white-space:pre-wrap; overflow-x:auto;
+  }
+  .explain{ font-size:13.5px; line-height:1.65; opacity:0.9; white-space:pre-wrap; }
+
+  /* ---- Live ---- */
+  #liveMessages .msg{ max-width:88%; }
+  .live-mic-btn{
+    width:76px; height:76px; border-radius:50%; border:none; background:var(--mint); color:var(--ink);
+    font-size:30px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+    box-shadow:var(--shadow); transition:transform .15s ease, background .2s ease;
+  }
+  .live-mic-btn.connecting{ background:var(--parchment-dim); opacity:0.7; }
+  .live-mic-btn.live{ background:var(--coral); animation:pulseMic 1.4s infinite; }
+  @keyframes pulseMic{
+    0%{ box-shadow:0 0 0 0 rgba(240,113,92,0.55); } 70%{ box-shadow:0 0 0 18px rgba(240,113,92,0); }
+    100%{ box-shadow:0 0 0 0 rgba(240,113,92,0); }
+  }
+  .live-status{ font-size:13px; opacity:0.65; }
+  .live-status.speaking{ color:var(--mint); opacity:1; font-weight:600; }
+
+  /* ---- bottom nav ---- */
+  nav.tabbar{ display:flex; border-top:1px solid var(--line); flex-shrink:0; padding-bottom:env(safe-area-inset-bottom,0px); background:var(--ink); }
+  nav.tabbar button{
+    flex:1; background:none; border:none; color:var(--parchment); opacity:0.45; padding:10px 4px 8px;
+    display:flex; flex-direction:column; align-items:center; gap:4px; font-size:10.5px;
+    font-family:'Noto Sans Ethiopic','Inter',sans-serif; cursor:pointer;
+  }
+  nav.tabbar button .ic{ font-size:19px; }
+  nav.tabbar button.active{ opacity:1; color:var(--mint); }
+  ::-webkit-scrollbar{ width:0; height:0; }
+
+  /* ---------- Home ---------- */
+  #homeView .home-pad{ padding:20px 18px 16px; text-align:center; flex:1; display:flex; flex-direction:column; min-height:100%; position:relative; }
+  .hero-wrap{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .welcome-title{
+    font-family:'Fraunces','Noto Sans Ethiopic',serif; font-style:italic; font-weight:500; font-size:8.5vw;
+    opacity:0.65; margin:0 0 2px; letter-spacing:0.01em;
+  }
+  .brand-title{
+    font-family:'JetBrains Mono',monospace; font-weight:700; font-size:13vw; line-height:1.12; margin:0;
+    color:var(--mint); text-shadow:0 6px 30px rgba(92,224,184,0.22);
+  }
+  .brand-sub-line{ font-family:'Noto Sans Ethiopic',serif; font-size:4.2vw; opacity:0.6; margin-top:8px; }
+  .home-grid{ margin-top:16px; display:grid; grid-template-columns:repeat(4,1fr); gap:8px; text-align:center; flex-shrink:0; }
+
+  .home-banner{
+    width:100%; border-radius:16px; overflow:hidden; background:var(--ink-2); border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center; cursor:default; flex-shrink:0;
+  }
+  .home-banner img{ width:100%; display:block; }
+  .home-banner.empty{ padding:20px 14px; font-size:11.5px; opacity:0.35; text-align:center; line-height:1.5; }
+  #homeBannerTop{ min-height:96px; margin-bottom:14px; }
+  #homeBannerBottom{ min-height:70px; margin-top:14px; margin-bottom:4px; }
+  .home-btn{
+    background:var(--ink-2); border:1px solid var(--line); border-radius:12px; padding:10px 4px; cursor:pointer;
+    display:flex; flex-direction:column; gap:4px; min-height:auto; justify-content:center; align-items:center;
+    transition:transform .15s ease, border-color .15s ease;
+  }
+  .home-btn:active{ transform:scale(0.97); }
+  .home-btn .ic{ font-size:16px; display:flex; align-items:center; justify-content:center; }
+  .home-btn .lbl{ font-size:10.5px; font-weight:700; font-family:'Inter',sans-serif; }
+  .sub-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:4px; }
+  .sub-btn{
+    background:var(--ink-2); border:1px solid var(--line); border-radius:12px; padding:14px 10px;
+    text-align:center; cursor:pointer; font-size:13.5px; font-weight:600;
+  }
+  .sub-btn:active{ transform:scale(0.97); }
+  .discovery-loading{ text-align:center; opacity:0.5; font-size:13px; padding:20px 0; }
+
+  .snip-list{ display:flex; flex-direction:column; gap:12px; }
+  .snip-item{ background:var(--ink-2); border:1px solid var(--line); border-radius:14px; padding:14px; }
+  .snip-item pre{ background:var(--ink); border-radius:10px; padding:12px; font-size:12.5px; overflow-x:auto; border:1px solid var(--line); margin:6px 0; }
+  .snip-item .am-word{ font-size:13px; opacity:0.85; line-height:1.6; }
+  .snip-item .alt-label{ font-size:10.5px; text-transform:uppercase; letter-spacing:0.06em; opacity:0.5; margin-top:10px; padding-top:10px; border-top:1px dashed var(--line); }
+
+  .vocab-list{ display:flex; flex-direction:column; gap:0; width:100%; }
+  .vocab-item{ display:flex; flex-direction:column; gap:3px; padding:13px 4px; border-bottom:1px solid var(--line); }
+  .vocab-item .vword{ font-weight:700; font-family:'JetBrains Mono',monospace; font-size:16px; line-height:1.2; color:var(--mint); }
+  .vocab-item .vmean{ font-size:13.5px; opacity:0.85; line-height:1.5; }
+
+  /* ---- Practice box ---- */
+  .practice-box{ margin-top:14px; padding-top:14px; border-top:1px dashed var(--line); }
+  .practice-label{ font-size:11px; text-transform:uppercase; letter-spacing:0.06em; opacity:0.5; margin-bottom:8px; }
+  .practice-input{
+    width:100%; background:var(--ink); border:1px solid var(--line); border-radius:10px; padding:10px 12px;
+    color:var(--parchment); font-size:13px; font-family:'JetBrains Mono',monospace; min-height:70px; resize:vertical;
+  }
+  .practice-btn{
+    margin-top:8px; background:var(--violet); color:#fff; border:none; border-radius:10px; padding:9px 14px;
+    font-size:12.5px; font-weight:700; cursor:pointer;
+  }
+  .practice-btn:disabled{ opacity:0.4; }
+  .practice-feedback{
+    margin-top:10px; padding:10px 12px; border-radius:10px; font-size:13px; line-height:1.6;
+    background:rgba(92,224,184,0.1); border-left:3px solid var(--mint); display:none; white-space:pre-wrap;
+  }
+  .practice-feedback.show{ display:block; }
+
+  .gen-controls{ display:flex; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap; }
+  .gen-progress{ font-size:12.5px; opacity:0.65; }
+
+  /* ---------- Floating live button ---------- */
+  .floating-live-btn{
+    position:fixed; left:calc(100% - 76px); top:calc(100% - 220px); width:60px; height:60px; border-radius:50%;
+    border:none; background:var(--coral); color:#fff; cursor:grab; z-index:40; box-shadow:var(--shadow);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; touch-action:none; user-select:none;
+  }
+  .floating-live-btn .ic{ font-size:19px; line-height:1; }
+  .floating-live-btn .lbl{ font-size:9px; font-weight:700; font-family:'Inter',sans-serif; line-height:1; letter-spacing:0.02em; }
+  .floating-live-btn.dragging{ cursor:grabbing; opacity:0.85; transition:none; }
+  .floating-live-btn.active{ background:var(--mint); color:var(--ink); }
+
+  /* ---------- Layout edit mode (admin) ---------- */
+  .layout-editable.layout-edit-on{ outline:2px dashed var(--mint); outline-offset:3px; cursor:grab; }
+  .layout-editable.layout-edit-on:active{ cursor:grabbing; }
+  .layout-edit-banner{
+    position:fixed; left:50%; top:8px; transform:translateX(-50%); background:var(--mint); color:var(--ink);
+    font-weight:700; font-size:12px; padding:8px 14px; border-radius:999px; z-index:80; box-shadow:var(--shadow);
+    display:none; white-space:nowrap;
+  }
+  .layout-edit-banner.show{ display:block; }
+
+  /* ---------- Settings modal ---------- */
+  .modal-overlay{ position:fixed; inset:0; background:rgba(5,8,20,0.72); z-index:60; display:none; align-items:flex-end; justify-content:center; }
+  .modal-overlay.show{ display:flex; }
+  .modal-panel{
+    width:100%; max-width:480px; background:var(--ink); border-top-left-radius:22px; border-top-right-radius:22px;
+    padding:22px 20px calc(env(safe-area-inset-bottom,0px) + 22px); box-shadow:var(--shadow);
+  }
+  .modal-title{ font-size:17px; margin-bottom:16px; }
+  .modal-close{
+    margin-top:20px; width:100%; background:var(--ink-2); color:var(--parchment); border:1px solid var(--line);
+    border-radius:12px; padding:13px; font-size:14px; font-weight:600; cursor:pointer;
+  }
+  .lang-grid{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:16px; }
+
+  /* ---------- Live header/mute ---------- */
+  .live-header{ display:flex; align-items:center; justify-content:space-between; padding:14px 16px 0; }
+  .live-back{ background:none; border:none; color:var(--parchment); font-size:30px; cursor:pointer; opacity:0.8; line-height:1; padding:4px 8px 4px 0; position:relative; top:-3px; }
+  .mute-btn{ background:var(--ink-2); border:1px solid var(--line); color:var(--parchment); width:44px; height:44px; border-radius:50%; font-size:19px; cursor:pointer; }
+  .live-controls-row{ display:flex; align-items:center; gap:16px; }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ONBOARDING -->
+  <div id="onboarding">
+    <div class="brand-mark">
+      <div class="stamp">&lt;/&gt;</div>
+      <div>
+        <div class="title display">EVA CODES</div>
+        <div class="sub am">በአማርኛ የሚያግባባ የኮድ መምህርህ</div>
+      </div>
+    </div>
+    <p class="lead am">ኮድ መጻፍን በቀላሉ ተማር — ፅንሰ ሀሳቦችን (concepts)፣ የኮድ ቃላትን (terms)፣ ናሙና ኮዶችን፣ እና ኮድህን የማረም ክህሎትህን በደረጃህ ልክ አሻሽል — ሁሉም በአማርኛ ተብራርቶ።</p>
+
+    <div class="field-label am">የደረጃህ ምረጥ</div>
+    <div class="level-grid" id="levelGrid">
+      <div class="level-card" data-level="beginner"><span class="em">🌱</span><div class="lbl">Beginner</div></div>
+      <div class="level-card" data-level="intermediate"><span class="em">🌿</span><div class="lbl">Intermediate</div></div>
+      <div class="level-card" data-level="advanced"><span class="em">🌳</span><div class="lbl">Advanced</div></div>
+    </div>
+
+    <div class="field-label am">የፕሮግራሚንግ ቋንቋ</div>
+    <div class="level-grid" id="langGrid">
+      <div class="level-card" data-lang="python"><span class="em">🐍</span><div class="lbl">Python</div></div>
+      <div class="level-card" data-lang="javascript"><span class="em">🟨</span><div class="lbl">JavaScript</div></div>
+      <div class="level-card" data-lang="general"><span class="em">🧠</span><div class="lbl">General</div></div>
+    </div>
+
+    <div class="field-label am">የGemini API Key</div>
+    <input type="password" class="key-input" id="apiKeyInput" placeholder="AIza...">
+    <div class="hint am">Key ከሌለህ <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com</a> ላይ በነፃ ማግኘት ትችላለህ። Key ያለው በዚህ መሳሪያ ላይ ብቻ ተቀምጦ ይቆያል።</div>
+
+    <button class="cta am" id="startBtn" disabled>ጀምር</button>
+    <div style="text-align:center; font-size:10.5px; opacity:0.35; margin-top:14px;">EVA CODES · v1</div>
+  </div>
+
+  <!-- MAIN APP -->
+  <div id="main">
+    <header class="topbar">
+      <div class="who">
+        <div class="stamp" id="topStamp">🌱</div>
+        <div>
+          <div class="lvl-name" id="topLevelName">Beginner</div>
+          <div class="lvl-sub am" id="topLangName">የኮድ ጉዞህ</div>
+        </div>
+      </div>
+      <button class="gear" id="settingsBtn">⚙</button>
+    </header>
+
+    <!-- HOME -->
+    <main class="view active" id="homeView">
+      <div class="home-pad">
+        <div id="homeBannerTop" class="home-banner empty am">ምስል/GIF የለም</div>
+        <div id="quizBtn" class="layout-editable" style="position:absolute; top:0; left:0; width:60px; background:var(--ink-2); border:1px solid var(--line); border-radius:14px; padding:10px 4px; cursor:pointer; display:flex; flex-direction:column; gap:4px; align-items:center; z-index:2;">
+          <span style="font-size:18px;">📝</span>
+          <span style="font-size:9.5px; font-weight:700; font-family:'Inter',sans-serif;">Quiz</span>
+        </div>
+        <div class="hero-wrap">
+          <div class="welcome-title display">Welcome to</div>
+          <div class="brand-title">EVA_CODES</div>
+          <div class="brand-sub-line am">የኮድ ቋንቋ ትምህርት ቤት</div>
+        </div>
+        <div class="home-grid" id="homeGrid" style="margin-top:26px;">
+          <div class="home-btn layout-editable" id="homeBtn-concepts" data-topic="concepts">
+            <span class="ic">📘</span><span class="lbl">Concepts</span>
+          </div>
+          <div class="home-btn layout-editable" id="homeBtn-terms" data-topic="terms">
+            <span class="ic">🔤</span><span class="lbl">Terms</span>
+          </div>
+          <div class="home-btn layout-editable" id="homeBtn-snippets" data-topic="snippets">
+            <span class="ic">💻</span><span class="lbl">Snippets</span>
+          </div>
+          <div class="home-btn layout-editable" id="homeBtn-interview" data-topic="interview">
+            <span class="ic">🎯</span><span class="lbl">Interview</span>
+          </div>
+        </div>
+        <div id="homeBannerBottom" class="home-banner empty am">ምስል/GIF የለም</div>
+      </div>
+    </main>
+
+    <!-- CHAT -->
+    <main class="view" id="chatView">
+      <div id="chatMessages"></div>
+      <div class="composer">
+        <textarea id="chatInput" rows="1" placeholder="ስለ ኮድ ጠይቅ ወይም ኮድ ለጥፍ..."></textarea>
+        <button class="send-btn" id="chatSend">➤</button>
+      </div>
+    </main>
+
+    <!-- SNIPPETS CARDS -->
+    <main class="view" id="cardsView">
+      <div class="pad">
+        <div class="topic-row">
+          <input type="text" id="topicInput" placeholder="ርዕስ (ለምሳሌ: loops, functions, sorting)">
+          <button class="btn-solid" id="genCardsBtn">Generate</button>
+        </div>
+        <div class="card-stack" id="cardStack"></div>
+      </div>
+    </main>
+
+    <!-- FIX (code fix) -->
+    <main class="view" id="fixView">
+      <div class="pad">
+        <div class="field-label am">ኮድህን እዚህ ለጥፍ</div>
+        <p class="lead am" style="margin:0 0 4px;">ኮድ (snippet ወይም ሙሉ function) ለጥፍ — ስህተቶች (syntax, logic bugs) በራስ-ሰር ይታረሙልሃል፣ እያንዳንዱ ስህተት ለምን እንደተስተካከለ ማብራሪያ በአማርኛ ታገኛለህ።</p>
+        <textarea class="fix-input code" id="fixInput" placeholder="Paste your code here..."></textarea>
+        <button class="btn-solid am" id="fixBtn" style="align-self:flex-start;">አርም</button>
+        <div class="result-card" id="fixResult">
+          <div><div class="result-label am">የተስተካከለ ኮድ</div><div class="corrected" id="fixCorrected"></div></div>
+          <div><div class="result-label am">ማብራሪያ</div><div class="explain am" id="fixExplain"></div></div>
+        </div>
+      </div>
+    </main>
+
+    <!-- LIVE VOICE -->
+    <main class="view" id="liveView">
+      <div class="live-header">
+        <button class="live-back" id="liveBackBtn">←</button>
+        <div class="live-status am" id="liveStatus" style="margin:0;">ለመጀመር ንካ</div>
+        <span style="width:20px;"></span>
+      </div>
+      <div id="liveMessages" style="flex:1; padding:16px 16px 8px; display:flex; flex-direction:column; gap:10px; overflow-y:auto;"></div>
+      <div style="padding:14px 16px calc(env(safe-area-inset-bottom,0px) + 16px); display:flex; flex-direction:column; align-items:center; gap:12px; border-top:1px solid var(--line);">
+        <div class="live-controls-row">
+          <button class="mute-btn" id="muteBtn">🔊</button>
+          <button class="live-mic-btn" id="liveMicBtn">🎙️</button>
+          <span style="width:44px;"></span>
+        </div>
+      </div>
+    </main>
+
+    <!-- DISCOVERY (Concepts / Terms / Snippets / Interview / Quiz) -->
+    <main class="view" id="discoveryView">
+      <div class="live-header">
+        <button class="live-back" id="discoveryBackBtn">←</button>
+        <div class="lvl-name" id="discoveryTitle" style="margin:0;">Discovery</div>
+        <span style="width:20px;"></span>
+      </div>
+      <div class="pad" id="discoveryBody" style="flex:1; overflow-y:auto;"></div>
+    </main>
+
+    <nav class="tabbar">
+      <button class="tab-btn active" data-view="homeView"><span class="ic">🏠</span> Home</button>
+      <button class="tab-btn" data-view="chatView"><span class="ic">💬</span> Chat</button>
+      <button class="tab-btn" data-view="cardsView"><span class="ic">💻</span> Snippets</button>
+      <button class="tab-btn" data-view="fixView"><span class="ic">✏️</span> Fix</button>
+    </nav>
+
+    <button class="floating-live-btn" id="floatingLiveBtn"><span class="ic">🎙️</span><span class="lbl" id="floatingLiveLabel">Live</span></button>
+    <div class="layout-edit-banner am" id="layoutEditBanner">🔓 ማስተካከያ ሁነታ በርቷል — አዝራሮቹን ጎትተህ ቦታቸውን ቀይር</div>
+  </div>
+
+  <!-- SETTINGS MODAL -->
+  <div class="modal-overlay" id="settingsModal">
+    <div class="modal-panel">
+      <div class="modal-title display">Level</div>
+      <div class="level-grid" id="settingsLevelGrid">
+        <div class="level-card" data-level="beginner"><span class="em">🌱</span><div class="lbl">Beginner</div></div>
+        <div class="level-card" data-level="intermediate"><span class="em">🌿</span><div class="lbl">Intermediate</div></div>
+        <div class="level-card" data-level="advanced"><span class="em">🌳</span><div class="lbl">Advanced</div></div>
+      </div>
+      <div class="modal-title display" style="margin-top:20px;">Language</div>
+      <div class="lang-grid" id="settingsLangGrid">
+        <div class="level-card" data-lang="python"><span class="em">🐍</span><div class="lbl">Python</div></div>
+        <div class="level-card" data-lang="javascript"><span class="em">🟨</span><div class="lbl">JS</div></div>
+        <div class="level-card" data-lang="general"><span class="em">🧠</span><div class="lbl">General</div></div>
+      </div>
+      <button class="modal-close am" id="settingsCloseBtn">ዝጋ</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const tg = window.Telegram && window.Telegram.WebApp;
+  if (tg) { tg.ready(); tg.expand(); }
+
+  // ---------- Firebase (shared home-banner data; own namespace so it never
+  // collides with any other app sharing this same Firebase project) ----------
+  const FIREBASE_CONFIG = {
+    apiKey: "AIzaSyDdVl9Fwtwh-CN8a79YjszB-10AD63uuEg",
+    authDomain: "english-journal-5480d.firebaseapp.com",
+    databaseURL: "https://english-journal-5480d-default-rtdb.firebaseio.com",
+    projectId: "english-journal-5480d",
+    storageBucket: "english-journal-5480d.firebasestorage.app",
+    messagingSenderId: "951083642",
+    appId: "1:951083642:web:273b7bb9c7e026e6d351c3"
+  };
+  const FB_NAMESPACE = 'evacodes'; // <-- keeps this app's data separate from any sibling app on the same project
+  let fbDb = null;
+  try{
+    if (window.firebase && firebase.initializeApp){
+      // use a named app instance so it can coexist if this page is ever embedded alongside another firebase init
+      const fbApp = firebase.apps.length ? firebase.app() : firebase.initializeApp(FIREBASE_CONFIG);
+      fbDb = firebase.database(fbApp);
+    }
+  }catch(e){ console.error('Firebase init failed', e); }
+
+  // ---------- Cloudinary (banner photo/gif hosting) ----------
+  const CLOUDINARY_CLOUD_NAME = 'cxj5yqpb';
+  const CLOUDINARY_UPLOAD_PRESET = 'english_journal_teachers';
+  const CLOUDINARY_AUTO_UPLOAD_URL = 'https://api.cloudinary.com/v1_1/' + CLOUDINARY_CLOUD_NAME + '/auto/upload';
+
+  const state = {
+    apiKey: '', level: 'beginner', lang: 'python',
+    chatHistory: [],
+    conceptsData: null,
+    termsData: [], termsRunning:false, termsCancel:false, termsLastBatch:[],
+    snippetsData: [], snipRunning:false, snipCancel:false, snipLastBatch:[],
+    interviewData: null,
+    quizData: null, quizIndex:0, quizScore:0
+  };
+
+  const LEVEL_META = {
+    beginner:     { emoji:'🌱', label:'Beginner',     desc:'complete beginner, short simple code, very basic concepts explained step by step' },
+    intermediate: { emoji:'🌿', label:'Intermediate', desc:'comfortable with basics, ready for real-world patterns, data structures, and cleaner code style' },
+    advanced:     { emoji:'🌳', label:'Advanced',      desc:'confident coder, ready for algorithms, design patterns, performance, and nuanced edge cases' }
+  };
+  const LANG_META = {
+    python:     { label:'Python', name:'Python' },
+    javascript: { label:'JavaScript', name:'JavaScript' },
+    general:    { label:'General', name:'language-agnostic pseudocode, but showing real Python or JavaScript for concrete examples' }
+  };
+
+  const MODEL = 'gemini-3.1-flash-lite';
+  const API_BASE = 'https://generativelanguage.googleapis.com/v1beta/models/';
+
+  function cloudSet(key, value){ try{ if (tg && tg.CloudStorage) tg.CloudStorage.setItem(key, value, ()=>{}); }catch(e){} }
+  function cloudGet(key, cb){
+    try{ if (tg && tg.CloudStorage) { tg.CloudStorage.getItem(key, (err, val)=> cb(val||'')); return; } }catch(e){}
+    cb('');
+  }
+  function saveChunk(chunkPrefix, chunkIndex, items){ cloudSet(chunkPrefix + '_' + chunkIndex, JSON.stringify(items)); }
+  function saveMeta(metaKey, count, chunkSize){ cloudSet(metaKey, JSON.stringify({ count, chunkSize })); }
+  function loadChunkedCache(metaKey, chunkPrefix, cb){
+    cloudGet(metaKey, (metaVal)=>{
+      let meta = null;
+      if (metaVal){ try{ meta = JSON.parse(metaVal); }catch(e){} }
+      if (!meta || !meta.count){ cb([]); return; }
+      const chunkCount = Math.ceil(meta.count / meta.chunkSize);
+      if (chunkCount <= 0){ cb([]); return; }
+      const results = new Array(chunkCount);
+      let remaining = chunkCount;
+      for (let i=0;i<chunkCount;i++){
+        cloudGet(chunkPrefix + '_' + i, (val)=>{
+          try{ results[i] = val ? JSON.parse(val) : []; }catch(e){ results[i] = []; }
+          remaining--;
+          if (remaining === 0) cb([].concat(...results));
+        });
+      }
+    });
+  }
+
+  // ---------- Onboarding ----------
+  const levelGrid = document.getElementById('levelGrid');
+  const langGrid = document.getElementById('langGrid');
+  const apiKeyInput = document.getElementById('apiKeyInput');
+  const startBtn = document.getElementById('startBtn');
+
+  levelGrid.querySelectorAll('.level-card').forEach(card=>{
+    card.addEventListener('click', ()=>{
+      levelGrid.querySelectorAll('.level-card').forEach(c=>c.classList.remove('selected'));
+      card.classList.add('selected'); state.level = card.dataset.level;
+    });
+  });
+  levelGrid.querySelector('[data-level="beginner"]').classList.add('selected');
+
+  langGrid.querySelectorAll('.level-card').forEach(card=>{
+    card.addEventListener('click', ()=>{
+      langGrid.querySelectorAll('.level-card').forEach(c=>c.classList.remove('selected'));
+      card.classList.add('selected'); state.lang = card.dataset.lang;
+    });
+  });
+  langGrid.querySelector('[data-lang="python"]').classList.add('selected');
+
+  function refreshStartBtn(){ startBtn.disabled = apiKeyInput.value.trim().length < 10; }
+  apiKeyInput.addEventListener('input', refreshStartBtn);
+
+  startBtn.addEventListener('click', ()=>{
+    state.apiKey = apiKeyInput.value.trim();
+    cloudSet('gemini_key', state.apiKey);
+    cloudSet('level', state.level);
+    cloudSet('lang', state.lang);
+    launchApp();
+  });
+
+  let restoredLevel=false, restoredLang=false, restoredKey=false, savedKey='';
+  function tryAutoLaunch(){
+    if (!restoredLevel || !restoredLang || !restoredKey) return;
+    if (savedKey && savedKey.trim().length >= 10){ state.apiKey = savedKey.trim(); launchApp(); }
+  }
+  function initRestore(){
+    cloudGet('level', (lvl)=>{
+      if (lvl && LEVEL_META[lvl]){
+        state.level = lvl;
+        levelGrid.querySelectorAll('.level-card').forEach(c=>c.classList.toggle('selected', c.dataset.level===lvl));
+      }
+      restoredLevel = true; tryAutoLaunch();
+    });
+    cloudGet('lang', (lg)=>{
+      if (lg && LANG_META[lg]){
+        state.lang = lg;
+        langGrid.querySelectorAll('.level-card').forEach(c=>c.classList.toggle('selected', c.dataset.lang===lg));
+      }
+      restoredLang = true; tryAutoLaunch();
+    });
+    cloudGet('gemini_key', (key)=>{
+      savedKey = key || ''; restoredKey = true;
+      if (savedKey){ apiKeyInput.value = savedKey; refreshStartBtn(); }
+      tryAutoLaunch();
+    });
+  }
+
+  function langLine(){ return LANG_META[state.lang].name; }
+
+  function launchApp(){
+    document.getElementById('onboarding').style.display = 'none';
+    document.getElementById('main').style.display = 'flex';
+    document.getElementById('topStamp').textContent = LEVEL_META[state.level].emoji;
+    document.getElementById('topLevelName').textContent = LEVEL_META[state.level].label;
+    document.getElementById('topLangName').textContent = (LANG_META[state.lang].label) + ' · የኮድ ጉዞህ';
+    if (state.chatHistory.length === 0){ addMsg('bot', greetingFor()); }
+    loadHomeBanners();
+  }
+
+  function greetingFor(){
+    return "ሰላም! 👋 እኔ የኮድ መምህርህ ነኝ። በ" + LANG_META[state.lang].label + " እንማማራለን፣ በ" + LEVEL_META[state.level].label + " ደረጃ። ስለ ራስህ ወይም ስለ ኮድ ልምድህ ንገረኝ — ወይም በቀጥታ ጥያቄ ጠይቅ።";
+  }
+
+  function invalidateKeyAndReopen(){
+    state.apiKey=''; savedKey=''; cloudSet('gemini_key','');
+    document.getElementById('main').style.display='none';
+    document.getElementById('onboarding').style.display='flex';
+    apiKeyInput.value=''; refreshStartBtn();
+    const hint = document.querySelector('#onboarding .hint');
+    if (hint) hint.innerHTML = '⚠️ Key ልክ ያልሆነ ይመስላል፣ እባክህ ትክክለኛ Gemini API Key እንደገና አስገባ። <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com</a>';
+  }
+  function isKeyError(message){ return /API_KEY_INVALID|API key not valid|400|401|403/i.test(message||''); }
+
+  // ---------- Admin PIN (home-banner uploads + layout editing) ----------
+  const ADMIN_PIN = '3839'; // <-- ይህን ቁጥር ወደ ፈለከው ቀይረው
+  let isAdminUnlocked = false;
+  function promptAdminUnlock(onResult){
+    const entered = prompt('የአድሚን PIN አስገባ');
+    if (entered === null) { onResult(false); return; }
+    if (entered === ADMIN_PIN){ isAdminUnlocked = true; onResult(true); }
+    else { alert('የተሳሳተ PIN'); onResult(false); }
+  }
+
+  // ---------- Layout editing (admin-only, shared to all students via Firebase) ----------
+  const LAYOUT_KEYS = ['quizBtn', 'homeBtn-concepts', 'homeBtn-terms', 'homeBtn-snippets', 'homeBtn-interview'];
+  let layoutEditMode = false;
+  let layoutPositions = {};
+  const layoutEditBanner = document.getElementById('layoutEditBanner');
+  function layoutRef(){ return fbDb ? fbDb.ref(FB_NAMESPACE + '/layout/positions') : null; }
+  function applyLayoutPosition(key, pos){
+    const el = document.getElementById(key);
+    if (!el || !pos) return;
+    el.style.position='fixed'; el.style.left=pos.left+'px'; el.style.top=pos.top+'px'; el.style.margin='0';
+  }
+  function loadLayoutPositions(){
+    const ref = layoutRef(); if (!ref) return;
+    ref.once('value').then(snap=>{
+      const val = snap.val() || {};
+      layoutPositions = val;
+      LAYOUT_KEYS.forEach(key=>{ if (val[key]) applyLayoutPosition(key, val[key]); });
+    }).catch(()=>{});
+  }
+  function saveLayoutPosition(key, pos){
+    layoutPositions[key] = pos;
+    const ref = layoutRef(); if (ref) ref.child(key).set(pos).catch(()=>{});
+  }
+  function setLayoutEditMode(on){
+    layoutEditMode = on;
+    document.querySelectorAll('.layout-editable').forEach(el=> el.classList.toggle('layout-edit-on', on));
+    layoutEditBanner.classList.toggle('show', on);
+  }
+  function makeLayoutDraggable(el, key, onTapAction){
+    let dragging=false, moved=false, startX=0, startY=0, startLeft=0, startTop=0, justDragged=false;
+    function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
+    function onPointerDown(e){
+      if (!layoutEditMode) return;
+      dragging=true; moved=false;
+      const rect = el.getBoundingClientRect();
+      startLeft=rect.left; startTop=rect.top; startX=e.clientX; startY=e.clientY;
+      el.classList.add('dragging');
+      try{ el.setPointerCapture(e.pointerId); }catch(err){}
+      e.preventDefault();
+    }
+    function onPointerMove(e){
+      if (!dragging) return;
+      const dx=e.clientX-startX, dy=e.clientY-startY;
+      if (Math.abs(dx)>5 || Math.abs(dy)>5) moved=true;
+      let newLeft = clamp(startLeft+dx, 4, window.innerWidth-el.offsetWidth-4);
+      let newTop = clamp(startTop+dy, 4, window.innerHeight-el.offsetHeight-4);
+      el.style.position='fixed'; el.style.left=newLeft+'px'; el.style.top=newTop+'px'; el.style.margin='0';
+    }
+    function onPointerUp(e){
+      if (!dragging) return;
+      dragging=false; el.classList.remove('dragging');
+      try{ el.releasePointerCapture(e.pointerId); }catch(err){}
+      if (moved){
+        justDragged=true; setTimeout(()=>{ justDragged=false; }, 80);
+        const rect = el.getBoundingClientRect();
+        saveLayoutPosition(key, { left:rect.left, top:rect.top });
+      }
+    }
+    el.addEventListener('pointerdown', onPointerDown);
+    el.addEventListener('pointermove', onPointerMove);
+    el.addEventListener('pointerup', onPointerUp);
+    el.addEventListener('pointercancel', onPointerUp);
+    el.addEventListener('click', (e)=>{ if (justDragged){ e.preventDefault(); return; } if (onTapAction) onTapAction(); });
+  }
+
+  // ---------- Home banners (admin-only photo/GIF, shared via Firebase) ----------
+  const HOME_BANNER_ELS = { top: document.getElementById('homeBannerTop'), bottom: document.getElementById('homeBannerBottom') };
+  function homeBannerRef(slotKey){ return fbDb ? fbDb.ref(FB_NAMESPACE + '/home/banner_' + slotKey) : null; }
+  function renderHomeBanner(el, url){
+    if (!el) return;
+    el.innerHTML = '';
+    if (!url){ el.classList.add('empty'); el.textContent = 'ምስል/GIF የለም'; return; }
+    el.classList.remove('empty');
+    const img = document.createElement('img'); img.src = url; img.alt = ''; el.appendChild(img);
+  }
+  function loadHomeBanners(){
+    Object.keys(HOME_BANNER_ELS).forEach(slotKey=>{
+      const el = HOME_BANNER_ELS[slotKey]; const ref = homeBannerRef(slotKey);
+      if (!el || !ref) return;
+      ref.once('value').then(snap=>{ const val = snap.val(); renderHomeBanner(el, val && val.url); }).catch(()=>{});
+    });
+    loadLayoutPositions();
+  }
+  function openBannerAdminControls(slotKey, el){
+    el.classList.remove('empty'); el.innerHTML = '';
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'display:flex; flex-direction:column; gap:8px; align-items:center; padding:16px; width:100%;';
+    const btn = document.createElement('button'); btn.className = 'btn-solid am'; btn.textContent = '+ ፎቶ/GIF ጨምር';
+    const status = document.createElement('div'); status.className = 'am';
+    status.style.cssText = 'font-size:11.5px; opacity:0.6; text-align:center;';
+    wrap.appendChild(btn); wrap.appendChild(status); el.appendChild(wrap);
+    btn.addEventListener('click', ()=>{
+      const fileInput = document.createElement('input');
+      fileInput.type = 'file'; fileInput.accept = 'image/*'; fileInput.style.display = 'none';
+      document.body.appendChild(fileInput);
+      fileInput.addEventListener('change', async ()=>{
+        const file = fileInput.files && fileInput.files[0];
+        if (fileInput.parentNode) document.body.removeChild(fileInput);
+        if (!file) return;
+        btn.disabled = true; status.textContent = 'እየተጫነ ነው...';
+        try{
+          const form = new FormData();
+          form.append('file', file); form.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+          const res = await fetch(CLOUDINARY_AUTO_UPLOAD_URL, { method:'POST', body: form });
+          if (!res.ok) throw new Error('Upload failed: ' + res.status);
+          const data = await res.json(); const url = data.secure_url;
+          const ref = homeBannerRef(slotKey);
+          if (ref) await ref.set({ url, ts: Date.now() });
+          renderHomeBanner(el, url);
+        }catch(err){ status.textContent = '⚠️ ' + (err.message || 'ስህተት ተፈጥሯል'); btn.disabled = false; }
+      });
+      fileInput.click();
+    });
+  }
+  function setupBannerAdmin(slotKey){
+    const el = HOME_BANNER_ELS[slotKey]; if (!el) return;
+    let tapCount = 0, tapTimer = null;
+    el.addEventListener('click', ()=>{
+      tapCount++;
+      if (tapTimer) clearTimeout(tapTimer);
+      tapTimer = setTimeout(()=>{ tapCount = 0; }, 2000);
+      if (tapCount >= 5){
+        tapCount = 0; clearTimeout(tapTimer);
+        promptAdminUnlock((ok)=>{ if (ok) openBannerAdminControls(slotKey, el); });
+      }
+    });
+  }
+  setupBannerAdmin('top'); setupBannerAdmin('bottom');
+
+  // ---------- Settings modal ----------
+  const settingsModal = document.getElementById('settingsModal');
+  const settingsLevelGrid = document.getElementById('settingsLevelGrid');
+  const settingsLangGrid = document.getElementById('settingsLangGrid');
+  let gearTapCount = 0, gearTapTimer = null;
+  document.getElementById('settingsBtn').addEventListener('click', ()=>{
+    gearTapCount++;
+    if (gearTapTimer) clearTimeout(gearTapTimer);
+    gearTapTimer = setTimeout(()=>{ gearTapCount = 0; }, 2000);
+    if (gearTapCount >= 5){
+      gearTapCount = 0; clearTimeout(gearTapTimer);
+      settingsModal.classList.remove('show');
+      promptAdminUnlock((ok)=>{ if (ok) setLayoutEditMode(!layoutEditMode); });
+      return;
+    }
+    settingsLevelGrid.querySelectorAll('.level-card').forEach(c=>c.classList.toggle('selected', c.dataset.level===state.level));
+    settingsLangGrid.querySelectorAll('.level-card').forEach(c=>c.classList.toggle('selected', c.dataset.lang===state.lang));
+    settingsModal.classList.add('show');
+  });
+  document.getElementById('settingsCloseBtn').addEventListener('click', ()=> settingsModal.classList.remove('show'));
+  settingsModal.addEventListener('click', (e)=>{ if (e.target === settingsModal) settingsModal.classList.remove('show'); });
+  settingsLevelGrid.querySelectorAll('.level-card').forEach(card=>{
+    card.addEventListener('click', ()=>{
+      settingsLevelGrid.querySelectorAll('.level-card').forEach(c=>c.classList.remove('selected'));
+      card.classList.add('selected'); state.level = card.dataset.level; cloudSet('level', state.level);
+      document.getElementById('topStamp').textContent = LEVEL_META[state.level].emoji;
+      document.getElementById('topLevelName').textContent = LEVEL_META[state.level].label;
+    });
+  });
+  settingsLangGrid.querySelectorAll('.level-card').forEach(card=>{
+    card.addEventListener('click', ()=>{
+      settingsLangGrid.querySelectorAll('.level-card').forEach(c=>c.classList.remove('selected'));
+      card.classList.add('selected'); state.lang = card.dataset.lang; cloudSet('lang', state.lang);
+      document.getElementById('topLangName').textContent = LANG_META[state.lang].label + ' · የኮድ ጉዞህ';
+    });
+  });
+
+  // ---------- Tabs ----------
+  let lastTabView = 'homeView';
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('main.view').forEach(v=>v.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.view).classList.add('active');
+      lastTabView = btn.dataset.view;
+      document.getElementById('floatingLiveBtn').classList.remove('active');
+    });
+  });
+
+  // ---------- Floating live button ----------
+  const floatingLiveBtn = document.getElementById('floatingLiveBtn');
+  const floatingLiveLabel = document.getElementById('floatingLiveLabel');
+  function openLiveView(){
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('main.view').forEach(v=>v.classList.remove('active'));
+    document.getElementById('liveView').classList.add('active');
+    floatingLiveBtn.classList.add('active');
+  }
+  (function makeDraggable(el){
+    let dragging=false, moved=false, startX=0, startY=0, startLeft=0, startTop=0;
+    function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
+    function onPointerDown(e){
+      dragging=true; moved=false;
+      const rect = el.getBoundingClientRect();
+      startLeft=rect.left; startTop=rect.top; startX=e.clientX; startY=e.clientY;
+      el.classList.add('dragging'); el.setPointerCapture(e.pointerId);
+    }
+    function onPointerMove(e){
+      if (!dragging) return;
+      const dx=e.clientX-startX, dy=e.clientY-startY;
+      if (Math.abs(dx)>5 || Math.abs(dy)>5) moved=true;
+      let newLeft = clamp(startLeft+dx, 4, window.innerWidth-el.offsetWidth-4);
+      let newTop = clamp(startTop+dy, 4, window.innerHeight-el.offsetHeight-4);
+      el.style.left = newLeft+'px'; el.style.top = newTop+'px';
+    }
+    function onPointerUp(e){
+      if (!dragging) return;
+      dragging=false; el.classList.remove('dragging');
+      try{ el.releasePointerCapture(e.pointerId); }catch(err){}
+      if (!moved) openLiveView();
+    }
+    el.addEventListener('pointerdown', onPointerDown);
+    el.addEventListener('pointermove', onPointerMove);
+    el.addEventListener('pointerup', onPointerUp);
+    el.addEventListener('pointercancel', onPointerUp);
+  })(floatingLiveBtn);
+  document.getElementById('liveBackBtn').addEventListener('click', ()=>{
+    document.querySelectorAll('main.view').forEach(v=>v.classList.remove('active'));
+    document.getElementById(lastTabView).classList.add('active');
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.view===lastTabView));
+    floatingLiveBtn.classList.remove('active');
+  });
+
+  // ---------- Gemini call helper ----------
+  async function callGemini(payload){
+    const url = API_BASE + MODEL + ':generateContent?key=' + encodeURIComponent(state.apiKey);
+    const res = await fetch(url, { method:'POST', headers:{ 'Content-Type':'application/json' }, body: JSON.stringify(payload) });
+    if (!res.ok){ const errText = await res.text(); const err = new Error('API error ' + res.status + ': ' + errText); err.status = res.status; throw err; }
+    const data = await res.json();
+    const cand = data.candidates && data.candidates[0];
+    if (!cand || !cand.content || !cand.content.parts) throw new Error('Empty response');
+    return cand.content.parts.map(p=>p.text||'').join('');
+  }
+
+  function escapeHtml(s){ const d = document.createElement('div'); d.textContent = s == null ? '' : s; return d.innerHTML; }
+  function friendlyErrorText(message){
+    if (/429|RESOURCE_EXHAUSTED|exceeded your current quota/i.test(message||'')){
+      return '⚠️ በጣም ብዙ ጥያቄ ስለተላከ ለጊዜው ገደብ ላይ ደርሰሃል (quota)። እባክህ ጥቂት ደቂቃ ቆይተህ እንደገና ሞክር።';
+    }
+    return '⚠️ ' + message;
+  }
+
+  // ---------- CHAT ----------
+  const chatMessages = document.getElementById('chatMessages');
+  const chatInput = document.getElementById('chatInput');
+  const chatSend = document.getElementById('chatSend');
+  function addMsg(role, text){
+    const div = document.createElement('div'); div.className = 'msg ' + role; div.textContent = text;
+    chatMessages.appendChild(div); chatMessages.scrollTop = chatMessages.scrollHeight; return div;
+  }
+  function addTyping(){
+    const div = document.createElement('div'); div.className = 'typing';
+    div.innerHTML = '<span></span><span></span><span></span>';
+    chatMessages.appendChild(div); chatMessages.scrollTop = chatMessages.scrollHeight; return div;
+  }
+  async function sendChat(){
+    const text = chatInput.value.trim();
+    if (!text || !state.apiKey) return;
+    addMsg('user', text); state.chatHistory.push({role:'user', text});
+    chatInput.value=''; chatSend.disabled = true;
+    const typingEl = addTyping();
+
+    const sys = `You are a friendly, patient coding tutor for a native Amharic speaker at ${state.level.toUpperCase()} level (${LEVEL_META[state.level].desc}), teaching them ${langLine()}.
+Rules:
+- Explain everything in Amharic (a little English is fine for technical terms), but always show any actual code in properly formatted markdown code blocks written correctly in ${LANG_META[state.lang].label === 'General' ? 'Python or JavaScript, whichever fits best' : LANG_META[state.lang].label}.
+- Keep explanations clear, encouraging, and matched to the learner's level.
+- If the learner's own code or idea has a mistake, gently point it out and show the fix.
+- Occasionally ask a short follow-up question or suggest a next step to keep them practicing.
+- Keep replies focused (a few short paragraphs plus code, not overwhelming).`;
+
+    const contents = state.chatHistory.slice(-12).map(m=>({ role: m.role === 'user' ? 'user' : 'model', parts:[{text:m.text}] }));
+    try{
+      const replyText = await callGemini({
+        systemInstruction:{ parts:[{text:sys}] }, contents,
+        generationConfig:{ temperature:0.7, maxOutputTokens:600 }
+      });
+      typingEl.remove();
+      addMsg('bot', replyText.trim());
+      state.chatHistory.push({role:'model', text: replyText.trim()});
+    }catch(err){
+      typingEl.remove();
+      if (isKeyError(err.message)){ invalidateKeyAndReopen(); return; }
+      addMsg('system', friendlyErrorText(err.message));
+    }finally{ chatSend.disabled = false; }
+  }
+  chatSend.addEventListener('click', sendChat);
+  chatInput.addEventListener('keydown', (e)=>{ if (e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); sendChat(); } });
+  chatInput.addEventListener('input', ()=>{ chatInput.style.height='auto'; chatInput.style.height = Math.min(chatInput.scrollHeight, 90) + 'px'; });
+
+  // ---------- SNIPPETS CARDS (topic-driven generator) ----------
+  const topicInput = document.getElementById('topicInput');
+  const genCardsBtn = document.getElementById('genCardsBtn');
+  const cardStack = document.getElementById('cardStack');
+  const snippetCardSchema = {
+    type:'ARRAY', items:{ type:'OBJECT',
+      properties:{ title:{type:'STRING'}, tag:{type:'STRING'}, code:{type:'STRING'}, explanation_am:{type:'STRING'} },
+      required:['title','tag','code','explanation_am'] }
+  };
+  async function generateCards(){
+    if (!state.apiKey) return;
+    const topic = topicInput.value.trim() || 'basics';
+    genCardsBtn.disabled = true; genCardsBtn.textContent = '...';
+    const sys = `You create ${langLine()} code snippet flashcards for a ${state.level} Amharic-speaking learner (${LEVEL_META[state.level].desc}).
+Generate exactly 5 short, useful code snippets related to the topic "${topic}".
+For each: give a short title, a one-word tag (e.g. "loop", "function"), the code itself (properly formatted, working, in ${LANG_META[state.lang].label === 'General' ? 'Python' : LANG_META[state.lang].label}), and a clear explanation of what it does and why, written in Amharic (light English fine for keywords).
+Return ONLY the JSON array matching the schema.`;
+    try{
+      const raw = await callGemini({
+        systemInstruction:{ parts:[{text:sys}] },
+        contents:[{ role:'user', parts:[{text:`Topic: ${topic}`}] }],
+        generationConfig:{ temperature:0.85, responseMimeType:'application/json', responseSchema: snippetCardSchema }
+      });
+      renderCards(JSON.parse(raw));
+    }catch(err){
+      if (isKeyError(err.message)){ invalidateKeyAndReopen(); return; }
+      cardStack.innerHTML = '<div class="empty-note am">' + escapeHtml(friendlyErrorText(err.message)) + '</div>';
+    }finally{ genCardsBtn.disabled = false; genCardsBtn.textContent = 'Generate'; }
+  }
+  function renderCards(cards){
+    cardStack.innerHTML = '';
+    if (!cards || !cards.length) return;
+    cards.forEach(c=>{
+      const el = document.createElement('div'); el.className = 'flash';
+      el.innerHTML = `
+        <div class="word">${escapeHtml(c.title)}</div>
+        <div class="pos">${escapeHtml(c.tag||'')}</div>
+        <div class="back">
+          <pre class="code">${escapeHtml(c.code)}</pre>
+          <div class="am-word">${escapeHtml(c.explanation_am)}</div>
+        </div>
+        <div class="tap-hint am">ለመመልከት ንካ</div>`;
+      el.addEventListener('click', ()=> el.classList.toggle('flipped'));
+      cardStack.appendChild(el);
+    });
+  }
+  genCardsBtn.addEventListener('click', generateCards);
+
+  // ---------- FIX (code fix) ----------
+  const fixInput = document.getElementById('fixInput');
+  const fixBtn = document.getElementById('fixBtn');
+  const fixResult = document.getElementById('fixResult');
+  const fixCorrected = document.getElementById('fixCorrected');
+  const fixExplain = document.getElementById('fixExplain');
+  async function runFix(){
+    const text = fixInput.value.trim();
+    if (!text || !state.apiKey) return;
+    fixBtn.disabled = true; fixBtn.textContent = '...';
+    const sys = `You are a coding mentor for an Amharic-speaking learner at ${state.level} level, working in ${langLine()}.
+Given the learner's code:
+1. Fix any syntax errors, logic bugs, and unclear parts while preserving their intent. The corrected code must be valid, working code only (no markdown fences, just the raw code).
+2. Then write an explanation IN AMHARIC (light English fine when quoting exact code) that:
+   a. Starts by restating in Amharic what you understood the code was trying to do, in the form "ማለት የፈለከው: '...' የሚል ኮድ ነው" (state your interpretation before explaining anything).
+   b. Then, for EACH individual issue found (syntax error, logic bug, naming, style, etc — go through them one by one, do not skip any), clearly state: exactly what was wrong (quote it), what the correct form is (quote it), and briefly why in Amharic.
+   c. Be thorough — if there are multiple separate issues, explain every one of them separately, not just the main one. If the code was already correct, say so warmly and mention one possible improvement.
+Return ONLY valid JSON: {"corrected": "...", "explanation": "..."} with no markdown formatting.`;
+    try{
+      const raw = await callGemini({
+        systemInstruction:{ parts:[{text:sys}] },
+        contents:[{ role:'user', parts:[{text}] }],
+        generationConfig:{ temperature:0.3, responseMimeType:'application/json',
+          responseSchema:{ type:'OBJECT', properties:{ corrected:{type:'STRING'}, explanation:{type:'STRING'} }, required:['corrected','explanation'] } }
+      });
+      const parsed = JSON.parse(raw);
+      fixCorrected.textContent = parsed.corrected;
+      fixExplain.textContent = parsed.explanation;
+      fixResult.classList.add('show');
+    }catch(err){
+      if (isKeyError(err.message)){ invalidateKeyAndReopen(); return; }
+      fixCorrected.textContent = '';
+      fixExplain.textContent = friendlyErrorText(err.message);
+      fixResult.classList.add('show');
+    }finally{ fixBtn.disabled = false; fixBtn.textContent = 'አርም'; }
+  }
+  fixBtn.addEventListener('click', runFix);
+
+  // ---------- HOME DISCOVERY ROUTER ----------
+  const homeGrid = document.getElementById('homeGrid');
+  const discoveryView = document.getElementById('discoveryView');
+  const discoveryTitle = document.getElementById('discoveryTitle');
+  const discoveryBody = document.getElementById('discoveryBody');
+  const discoveryBackBtn = document.getElementById('discoveryBackBtn');
+  const TOPIC_TITLES = { concepts:'Concepts', terms:'Terms', snippets:'Snippets', interview:'Interview Prep', quiz:'Quiz' };
+
+  function openDiscoveryView(){
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('main.view').forEach(v=>v.classList.remove('active'));
+    discoveryView.classList.add('active');
+  }
+  function closeDiscoveryView(){
+    document.querySelectorAll('main.view').forEach(v=>v.classList.remove('active'));
+    document.getElementById('homeView').classList.add('active');
+    document.querySelector('.tab-btn[data-view="homeView"]').classList.add('active');
+  }
+  discoveryBackBtn.addEventListener('click', closeDiscoveryView);
+
+  makeLayoutDraggable(document.getElementById('quizBtn'), 'quizBtn', ()=>{
+    discoveryTitle.textContent = TOPIC_TITLES.quiz; openDiscoveryView(); renderQuizIntro();
+  });
+  homeGrid.querySelectorAll('.home-btn').forEach(btn=>{
+    const topic = btn.dataset.topic;
+    makeLayoutDraggable(btn, 'homeBtn-' + topic, ()=>{
+      discoveryTitle.textContent = TOPIC_TITLES[topic] || topic;
+      openDiscoveryView();
+      if (topic === 'concepts') runConceptsView();
+      else if (topic === 'terms') renderTermsBody();
+      else if (topic === 'snippets') renderSnippetsBody();
+      else if (topic === 'interview') runInterviewView();
+    });
+  });
+
+  // ============ CONCEPTS ============
+  const CONCEPT_LIST = [
+    'Variables and Data Types','If / Else Conditionals','For and While Loops','Functions',
+    'Lists / Arrays','Dictionaries / Objects','String Operations','Error Handling (try/except)',
+    'Classes and Objects (OOP)','File Handling','Recursion','Comments and Code Style'
+  ];
+  const CONCEPTS_SCHEMA = {
+    type:'ARRAY', items:{ type:'OBJECT',
+      properties:{
+        concept:{type:'STRING'}, syntax:{type:'STRING'}, explanation_am:{type:'STRING'},
+        example_code:{type:'STRING'}, example_explanation_am:{type:'STRING'}
+      },
+      required:['concept','syntax','explanation_am','example_code','example_explanation_am'] }
+  };
+  function conceptsPrompt(){
+    return `List these exact ${CONCEPT_LIST.length} programming concepts in this exact order: ${CONCEPT_LIST.join(', ')}.
+For each concept, working in ${langLine()}, give:
+- syntax: the general syntax pattern/formula (short, in ${LANG_META[state.lang].label === 'General' ? 'Python' : LANG_META[state.lang].label})
+- explanation_am: a clear explanation of what the concept is and when to use it, written in Amharic (light English ok for keywords)
+- example_code: one short, working example demonstrating it
+- example_explanation_am: a short walkthrough in Amharic of what the example code does, line by line if useful
+Make everything appropriate for a ${state.level} level learner (${LEVEL_META[state.level].desc}).
+Return ONLY the JSON array matching the schema, in the exact order listed above, no extra text.`;
+  }
+  async function runConceptsView(){
+    if (state.conceptsData){ renderConceptsList(state.conceptsData); return; }
+    discoveryBody.innerHTML = '<div class="discovery-loading am">እየተጫነ ነው...</div>';
+    cloudGet('concepts_data_' + state.lang, async (cachedVal)=>{
+      if (cachedVal){
+        try{ const cached = JSON.parse(cachedVal); if (cached && cached.length){ state.conceptsData = cached; renderConceptsList(cached); return; } }catch(e){}
+      }
+      if (!state.apiKey) return;
+      discoveryBody.innerHTML = '<div class="discovery-loading am">እየተዘጋጀ ነው...</div>';
+      try{
+        const raw = await callGemini({
+          contents:[{ role:'user', parts:[{ text: conceptsPrompt() }] }],
+          generationConfig:{ temperature:0.6, maxOutputTokens:4000, responseMimeType:'application/json', responseSchema: CONCEPTS_SCHEMA }
+        });
+        const data = JSON.parse(raw);
+        state.conceptsData = data;
+        cloudSet('concepts_data_' + state.lang, JSON.stringify(data));
+        renderConceptsList(data);
+      }catch(err){
+        if (isKeyError(err.message)){ invalidateKeyAndReopen(); return; }
+        discoveryBody.innerHTML = '<div class="discovery-loading am">' + escapeHtml(friendlyErrorText(err.message)) + '</div>';
+      }
+    });
+  }
+  async function checkConceptPractice(conceptObj, userCode){
+    const sys = `You are a coding mentor for an Amharic-speaking learner at ${state.level} level, working in ${langLine()}.
+The learner is practicing the concept "${conceptObj.concept}".
+They wrote this code attempting to use it:
+${userCode}
+Check it carefully — correct syntax, correct use of the concept, working logic.
+Respond in AMHARIC (light English fine when quoting exact code).
+If correct: praise them briefly and confirm why it correctly demonstrates "${conceptObj.concept}".
+If it has mistake(s): for EACH mistake, quote the wrong part, give the correct form, and explain briefly in Amharic why it's wrong specifically for this concept. Then show the fully corrected code.
+Keep the whole response concise but do not skip any mistake found. Return plain text only, no markdown, no JSON.`;
+    return await callGemini({
+      systemInstruction:{ parts:[{text:sys}] },
+      contents:[{ role:'user', parts:[{text:userCode}] }],
+      generationConfig:{ temperature:0.3, maxOutputTokens:500 }
+    });
+  }
+  function renderConceptsList(data){
+    discoveryBody.innerHTML = '';
+    const wrap = document.createElement('div'); wrap.className = 'card-stack';
+    data.forEach(t=>{
+      const el = document.createElement('div'); el.className = 'flash';
+      el.innerHTML = `
+        <div class="word">${escapeHtml(t.concept)}</div>
+        <div class="pos code">${escapeHtml(t.syntax)}</div>
+        <div class="back">
+          <div class="am-word">${escapeHtml(t.explanation_am)}</div>
+          <pre class="code">${escapeHtml(t.example_code)}</pre>
+          <div class="example am">${escapeHtml(t.example_explanation_am)}</div>
+          <div class="practice-box" onclick="event.stopPropagation()">
+            <div class="practice-label am">የራስህን ኮድ ሞክር</div>
+            <textarea class="practice-input code" placeholder="Write code using this concept..."></textarea>
+            <button class="practice-btn am">አረጋግጥ</button>
+            <div class="practice-feedback am"></div>
+          </div>
+        </div>`;
+      const practiceBox = el.querySelector('.practice-box');
+      const practiceInput = el.querySelector('.practice-input');
+      const practiceBtn = el.querySelector('.practice-btn');
+      const practiceFeedback = el.querySelector('.practice-feedback');
+      practiceBox.addEventListener('click', (e)=> e.stopPropagation());
+      practiceInput.addEventListener('click', (e)=> e.stopPropagation());
+      practiceBtn.addEventListener('click', async (e)=>{
+        e.stopPropagation();
+        const code = practiceInput.value.trim();
+        if (!code || !state.apiKey) return;
+        practiceBtn.disabled = true; practiceBtn.textContent = '...';
+        practiceFeedback.classList.add('show'); practiceFeedback.textContent = 'እየተመረመረ ነው...';
+        try{
+          const feedback = await checkConceptPractice(t, code);
+          practiceFeedback.textContent = feedback.trim();
+        }catch(err){
+          if (isKeyError(err.message)){ invalidateKeyAndReopen(); return; }
+          practiceFeedback.textContent = friendlyErrorText(err.message);
+        }finally{ practiceBtn.disabled = false; practiceBtn.textContent = 'አረጋግጥ'; }
+      });
+      el.addEventListener('click', ()=> el.classList.toggle('flipped'));
+      wrap.appendChild(el);
+    });
+    discoveryBody.appendChild(wrap);
+  }
+
+  // ============ TERMS ============
+  const TERMS_SCHEMA = {
+    type:'ARRAY', items:{ type:'OBJECT', properties:{ term:{type:'STRING'}, meaning_am:{type:'STRING'} }, required:['term','meaning_am'] }
+  };
+  const TERMS_TARGET = 600;
+  const TERMS_BATCH = 20;
+  const TERM_CATEGORIES = [
+    'basic syntax keywords','data structures','algorithms and complexity','object-oriented programming',
+    'functions and scope','error handling and debugging','version control (git)','web development basics',
+    'databases and SQL','APIs and networking','testing','software design patterns','operating systems basics',
+    'command line and tools','functional programming','memory and performance','security basics',
+    'general computer science terms'
+  ];
+  function termsPrompt(batchIndex, avoidList){
+    const cat = TERM_CATEGORIES[batchIndex % TERM_CATEGORIES.length];
+    return `Generate exactly ${TERMS_BATCH} important programming/computer-science terms on the topic "${cat}", appropriate for a ${state.level} Amharic-speaking learner focused on ${langLine()}.
+For each term provide: term (the English word/phrase, as normally written in code or CS docs) and meaning_am (its accurate, clear meaning in Amharic).
+Do not repeat any of these terms already used: ${avoidList && avoidList.length ? avoidList.join(', ') : 'none'}.
+Return ONLY the JSON array matching the schema, no extra text.`;
+  }
+  function renderTermsBody(){
+    if (state.termsData.length){ renderTermsControls(); return; }
+    discoveryBody.innerHTML = '<div class="discovery-loading am">እየተጫነ ነው...</div>';
+    loadChunkedCache('terms_meta_' + state.lang, 'terms_chunk_' + state.lang, (cached)=>{ state.termsData = cached || []; renderTermsControls(); });
+  }
+  function renderTermsControls(){
+    discoveryBody.innerHTML = '';
+    const controls = document.createElement('div'); controls.className = 'gen-controls';
+    const btn = document.createElement('button'); btn.className = 'btn-solid am';
+    btn.textContent = state.termsData.length ? 'ቀጥል' : 'ጀምር';
+    if (state.termsData.length >= TERMS_TARGET) btn.disabled = true;
+    const progress = document.createElement('div'); progress.className = 'gen-progress am';
+    progress.textContent = state.termsData.length + ' / ' + TERMS_TARGET;
+    controls.appendChild(btn); controls.appendChild(progress); discoveryBody.appendChild(controls);
+    const list = document.createElement('div'); list.className = 'vocab-list'; discoveryBody.appendChild(list);
+    renderTermsItems(list, state.termsData, 0);
+    btn.addEventListener('click', ()=>{
+      if (state.termsRunning){ state.termsCancel = true; state.termsRunning = false; btn.textContent = 'ቀጥል'; return; }
+      if (!state.apiKey) return;
+      state.termsCancel = false; state.termsRunning = true; btn.textContent = 'አቁም';
+      runTermsLoop(btn, progress, list);
+    });
+  }
+  function renderTermsItems(list, items, startIdx){
+    for (let i=startIdx; i<items.length; i++){
+      const it = items[i];
+      const div = document.createElement('div'); div.className = 'vocab-item';
+      div.innerHTML = `<span class="vword">${escapeHtml(it.term)}</span><span class="vmean">${escapeHtml(it.meaning_am)}</span>`;
+      list.appendChild(div);
+    }
+  }
+  async function runTermsLoop(btn, progressEl, list){
+    while (state.termsData.length < TERMS_TARGET && !state.termsCancel){
+      const batchIdx = Math.floor(state.termsData.length / TERMS_BATCH);
+      try{
+        const raw = await callGemini({
+          contents:[{ role:'user', parts:[{ text: termsPrompt(batchIdx, state.termsLastBatch) }] }],
+          generationConfig:{ temperature:0.9, maxOutputTokens:2400, responseMimeType:'application/json', responseSchema: TERMS_SCHEMA }
+        });
+        const batch = JSON.parse(raw);
+        const startIdx = state.termsData.length;
+        state.termsData = state.termsData.concat(batch);
+        state.termsLastBatch = batch.map(b=>b.term).slice(0, TERMS_BATCH);
+        saveChunk('terms_chunk_' + state.lang, batchIdx, batch);
+        saveMeta('terms_meta_' + state.lang, state.termsData.length, TERMS_BATCH);
+        renderTermsItems(list, state.termsData, startIdx);
+        progressEl.textContent = state.termsData.length + ' / ' + TERMS_TARGET;
+      }catch(err){
+        if (isKeyError(err.message)){ invalidateKeyAndReopen(); return; }
+        progressEl.textContent = friendlyErrorText(err.message); break;
+      }
+    }
+    state.termsRunning = false;
+    if (state.termsData.length >= TERMS_TARGET){ btn.textContent = 'ተጠናቋል'; btn.disabled = true; } else { btn.textContent = 'ቀጥል'; }
+  }
+
+  // ============ SNIPPETS (continuous library) ============
+  const SNIP_SCHEMA = {
+    type:'ARRAY', items:{ type:'OBJECT',
+      properties:{ title:{type:'STRING'}, code:{type:'STRING'}, explanation_am:{type:'STRING'}, alt_code:{type:'STRING'}, alt_explanation_am:{type:'STRING'} },
+      required:['title','code','explanation_am','alt_code','alt_explanation_am'] }
+  };
+  const SNIP_TARGET = 400;
+  const SNIP_BATCH = 8;
+  const SNIP_CATEGORIES = [
+    'loops','string manipulation','list/array operations','dictionary/object operations','functions',
+    'file handling','error handling','classes and objects','sorting and searching algorithms','recursion',
+    'working with numbers','regular expressions','date and time','simple API/HTTP requests','common interview mini-problems'
+  ];
+  function snippetPrompt(batchIndex, avoidList){
+    const cat = SNIP_CATEGORIES[batchIndex % SNIP_CATEGORIES.length];
+    return `Generate exactly ${SNIP_BATCH} short, common, practical ${langLine()} code snippets on the topic "${cat}", appropriate for a ${state.level} Amharic-speaking learner.
+For each snippet provide:
+- title: a short descriptive title
+- code: the working code snippet
+- explanation_am: a clear explanation in Amharic of what it does and how (light English ok for keywords)
+- alt_code: an alternative way to write the same thing (a different approach/style)
+- alt_explanation_am: a short Amharic explanation of how the alternative differs and when you might prefer it
+Do not repeat any of these titles already used: ${avoidList && avoidList.length ? avoidList.join(' | ') : 'none'}.
+Return ONLY the JSON array matching the schema, no extra text.`;
+  }
+  function renderSnippetsBody(){
+    if (state.snippetsData.length){ renderSnippetsControls(); return; }
+    discoveryBody.innerHTML = '<div class="discovery-loading am">እየተጫነ ነው...</div>';
+    loadChunkedCache('snip_meta_' + state.lang, 'snip_chunk_' + state.lang, (cached)=>{ state.snippetsData = cached || []; renderSnippetsControls(); });
+  }
+  function renderSnippetsControls(){
+    discoveryBody.innerHTML = '';
+    const controls = document.createElement('div'); controls.className = 'gen-controls';
+    const btn = document.createElement('button'); btn.className = 'btn-solid am';
+    btn.textContent = state.snippetsData.length ? 'ቀጥል' : 'ጀምር';
+    if (state.snippetsData.length >= SNIP_TARGET) btn.disabled = true;
+    const progress = document.createElement('div'); progress.className = 'gen-progress am';
+    progress.textContent = state.snippetsData.length + ' / ' + SNIP_TARGET;
+    controls.appendChild(btn); controls.appendChild(progress); discoveryBody.appendChild(controls);
+    const list = document.createElement('div'); list.className = 'snip-list'; discoveryBody.appendChild(list);
+    renderSnippetItems(list, state.snippetsData, 0);
+    btn.addEventListener('click', ()=>{
+      if (state.snipRunning){ state.snipCancel = true; state.snipRunning = false; btn.textContent = 'ቀጥል'; return; }
+      if (!state.apiKey) return;
+      state.snipCancel = false; state.snipRunning = true; btn.textContent = 'አቁም';
+      runSnippetsLoop(btn, progress, list);
+    });
+  }
+  function renderSnippetItems(list, items, startIdx){
+    for (let i=startIdx; i<items.length; i++){
+      const it = items[i];
+      const div = document.createElement('div'); div.className = 'snip-item';
+      div.innerHTML = `
+        <div class="word" style="font-size:15px;">${escapeHtml(it.title)}</div>
+        <pre class="code">${escapeHtml(it.code)}</pre>
+        <div class="am-word">${escapeHtml(it.explanation_am)}</div>
+        <div class="alt-label am">አማራጭ አካሄድ</div>
+        <pre class="code">${escapeHtml(it.alt_code)}</pre>
+        <div class="am-word">${escapeHtml(it.alt_explanation_am)}</div>`;
+      list.appendChild(div);
+    }
+  }
+  async function runSnippetsLoop(btn, progressEl, list){
+    while (state.snippetsData.length < SNIP_TARGET && !state.snipCancel){
+      const batchIdx = Math.floor(state.snippetsData.length / SNIP_BATCH);
+      try{
+        const raw = await callGemini({
+          contents:[{ role:'user', parts:[{ text: snippetPrompt(batchIdx, state.snipLastBatch) }] }],
+          generationConfig:{ temperature:0.9, maxOutputTokens:3000, responseMimeType:'application/json', responseSchema: SNIP_SCHEMA }
+        });
+        const batch = JSON.parse(raw);
+        const startIdx = state.snippetsData.length;
+        state.snippetsData = state.snippetsData.concat(batch);
+        state.snipLastBatch = batch.map(b=>b.title).slice(0, SNIP_BATCH);
+        saveChunk('snip_chunk_' + state.lang, batchIdx, batch);
+        saveMeta('snip_meta_' + state.lang, state.snippetsData.length, SNIP_BATCH);
+        renderSnippetItems(list, state.snippetsData, startIdx);
+        progressEl.textContent = state.snippetsData.length + ' / ' + SNIP_TARGET;
+      }catch(err){
+        if (isKeyError(err.message)){ invalidateKeyAndReopen(); return; }
+        progressEl.textContent = friendlyErrorText(err.message); break;
+      }
+    }
+    state.snipRunning = false;
+    if (state.snippetsData.length >= SNIP_TARGET){ btn.textContent = 'ተጠናቋል'; btn.disabled = true; } else { btn.textContent = 'ቀጥል'; }
+  }
+
+  // ============ INTERVIEW PREP ============
+  const INTERVIEW_SCHEMA = {
+    type:'ARRAY', items:{ type:'OBJECT',
+      properties:{ question_en:{type:'STRING'}, answer_en:{type:'STRING'}, explanation_am:{type:'STRING'} },
+      required:['question_en','answer_en','explanation_am'] }
+  };
+  function runInterviewView(){
+    discoveryBody.innerHTML = `
+      <div style="text-align:center; padding:20px 0 10px;">
+        <button class="btn-solid am" id="interviewGenBtn">${state.interviewData ? 'እንደገና ፍጠር' : 'ጥያቄዎችን አዘጋጅ'}</button>
+      </div>
+      <div id="interviewList" class="card-stack"></div>`;
+    document.getElementById('interviewGenBtn').addEventListener('click', generateInterview);
+    if (state.interviewData) renderInterviewList(state.interviewData);
+  }
+  async function generateInterview(){
+    if (!state.apiKey) return;
+    const listEl = document.getElementById('interviewList');
+    const btn = document.getElementById('interviewGenBtn');
+    btn.disabled = true; btn.textContent = '...';
+    listEl.innerHTML = '<div class="discovery-loading am">እየተዘጋጀ ነው...</div>';
+    const sys = `Generate exactly 12 common coding-interview questions for a ${state.level} Amharic-speaking candidate focused on ${langLine()}.
+Mix conceptual questions and small coding-problem questions.
+For each: question_en (the interview question in English), answer_en (a clear, correct model answer, with a short code example if it's a coding problem), and explanation_am (an Amharic walkthrough of the answer and why it's a good response, plus any tips).
+Return ONLY the JSON array matching the schema.`;
+    try{
+      const raw = await callGemini({
+        contents:[{ role:'user', parts:[{ text: sys }] }],
+        generationConfig:{ temperature:0.8, maxOutputTokens:3500, responseMimeType:'application/json', responseSchema: INTERVIEW_SCHEMA }
+      });
+      const data = JSON.parse(raw);
+      state.interviewData = data;
+      btn.textContent = 'እንደገና ፍጠር';
+      renderInterviewList(data);
+    }catch(err){
+      if (isKeyError(err.message)){ invalidateKeyAndReopen(); return; }
+      listEl.innerHTML = '<div class="empty-note am">⚠️ ' + escapeHtml(friendlyErrorText(err.message)) + '</div>';
+    }finally{ btn.disabled = false; }
+  }
+  function renderInterviewList(data){
+    const listEl = document.getElementById('interviewList');
+    listEl.innerHTML = '';
+    data.forEach(q=>{
+      const el = document.createElement('div'); el.className = 'flash';
+      el.innerHTML = `
+        <div class="word" style="font-size:16px;">${escapeHtml(q.question_en)}</div>
+        <div class="back">
+          <pre class="code">${escapeHtml(q.answer_en)}</pre>
+          <div class="am-word">${escapeHtml(q.explanation_am)}</div>
+        </div>
+        <div class="tap-hint am">መልስ ለማየት ንካ</div>`;
+      el.addEventListener('click', ()=> el.classList.toggle('flipped'));
+      listEl.appendChild(el);
+    });
+  }
+
+  // ============ QUIZ ============
+  const QUIZ_SCHEMA = {
+    type:'ARRAY', items:{ type:'OBJECT',
+      properties:{ question:{type:'STRING'}, options:{ type:'ARRAY', items:{type:'STRING'} }, correct_index:{type:'INTEGER'}, explanation_am:{type:'STRING'} },
+      required:['question','options','correct_index','explanation_am'] }
+  };
+  function renderQuizIntro(){
+    discoveryBody.innerHTML = `
+      <div style="text-align:center; padding:36px 16px;">
+        <div style="font-size:44px; margin-bottom:14px;">📝</div>
+        <div class="lead am" style="margin-bottom:22px;">የ${escapeHtml(LEVEL_META[state.level].label)} ደረጃ 10 የኮድ ፈተና ጥያቄዎች (${escapeHtml(LANG_META[state.lang].label)}) ተዘጋጅተውልሃል። ዝግጁ ስትሆን ጀምር።</div>
+        <button class="btn-solid am" id="quizStartBtn">ጀምር</button>
+      </div>`;
+    document.getElementById('quizStartBtn').addEventListener('click', startQuiz);
+  }
+  async function startQuiz(){
+    if (!state.apiKey) return;
+    discoveryBody.innerHTML = '<div class="discovery-loading am">ጥያቄዎች እየተዘጋጁ ነው...</div>';
+    const sys = `Create exactly 10 multiple-choice coding quiz questions for a ${state.level} Amharic-speaking learner (${LEVEL_META[state.level].desc}), focused on ${langLine()}, mixing syntax, concepts, and short code-output questions.
+For each question: question (English, can include a short code block inline as text), options (exactly 4 English choices), correct_index (0-3), explanation_am (short Amharic explanation of the correct answer).
+Return ONLY the JSON array matching the schema.`;
+    try{
+      const raw = await callGemini({
+        contents:[{ role:'user', parts:[{text:'Generate the quiz now.'}] }],
+        generationConfig:{ temperature:0.8, maxOutputTokens:3000, responseMimeType:'application/json', responseSchema: QUIZ_SCHEMA }
+      });
+      state.quizData = JSON.parse(raw); state.quizIndex = 0; state.quizScore = 0;
+      renderQuizQuestion();
+    }catch(err){
+      if (isKeyError(err.message)){ invalidateKeyAndReopen(); return; }
+      discoveryBody.innerHTML = '<div class="empty-note am">⚠️ ' + escapeHtml(friendlyErrorText(err.message)) + '</div>';
+    }
+  }
+  function renderQuizQuestion(){
+    const q = state.quizData[state.quizIndex];
+    discoveryTitle.textContent = 'Quiz (' + (state.quizIndex+1) + '/' + state.quizData.length + ')';
+    discoveryBody.innerHTML = '';
+    const wrap = document.createElement('div'); wrap.style.padding = '4px';
+    wrap.innerHTML = `
+      <div class="flash" style="cursor:default;"><pre class="code" style="white-space:pre-wrap;"></pre></div>
+      <div id="quizOptions" style="display:flex; flex-direction:column; gap:10px; margin-top:14px;"></div>
+      <div id="quizFeedback" class="practice-feedback am" style="margin-top:14px;"></div>
+      <button class="btn-solid am" id="quizNextBtn" style="margin-top:14px; display:none;">ቀጣይ</button>`;
+    wrap.querySelector('pre').textContent = q.question;
+    discoveryBody.appendChild(wrap);
+    const optsWrap = document.getElementById('quizOptions');
+    const feedback = document.getElementById('quizFeedback');
+    const nextBtn = document.getElementById('quizNextBtn');
+    let answered = false;
+    q.options.forEach((opt, idx)=>{
+      const b = document.createElement('div'); b.className = 'sub-btn'; b.style.textAlign='left'; b.textContent = opt;
+      b.addEventListener('click', ()=>{
+        if (answered) return; answered = true;
+        const correct = idx === q.correct_index;
+        if (correct){ b.style.borderColor='var(--mint)'; b.style.background='rgba(92,224,184,0.2)'; state.quizScore++; }
+        else{
+          b.style.borderColor='var(--coral)'; b.style.background='rgba(240,113,92,0.15)';
+          const correctBtn = optsWrap.children[q.correct_index];
+          correctBtn.style.borderColor='var(--mint)'; correctBtn.style.background='rgba(92,224,184,0.2)';
+        }
+        feedback.textContent = (correct ? '✅ ትክክል! ' : '❌ ትክክል አይደለም። ') + q.explanation_am;
+        feedback.classList.add('show'); nextBtn.style.display='block';
+      });
+      optsWrap.appendChild(b);
+    });
+    nextBtn.addEventListener('click', ()=>{
+      state.quizIndex++;
+      if (state.quizIndex >= state.quizData.length) renderQuizResult(); else renderQuizQuestion();
+    });
+  }
+  function renderQuizResult(){
+    discoveryTitle.textContent = 'Quiz Result';
+    const total = state.quizData.length, score = state.quizScore;
+    discoveryBody.innerHTML = `
+      <div style="text-align:center; padding:36px 16px;">
+        <div style="font-size:44px; margin-bottom:14px;">🏆</div>
+        <div class="word" style="font-size:28px; margin-bottom:8px;">${score} / ${total}</div>
+        <div class="lead am" style="margin-bottom:22px;">${escapeHtml(quizResultMessage(score, total))}</div>
+        <button class="btn-solid am" id="quizRetryBtn">እንደገና ሞክር</button>
+      </div>`;
+    document.getElementById('quizRetryBtn').addEventListener('click', ()=>{ discoveryTitle.textContent = TOPIC_TITLES.quiz; renderQuizIntro(); });
+  }
+  function quizResultMessage(score, total){
+    const pct = score / total;
+    if (pct >= 0.8) return 'በጣም ጥሩ! እጅግ ጥሩ ውጤት አስመዝግበሃል።';
+    if (pct >= 0.5) return 'ጥሩ ስራ! ትንሽ ተጨማሪ ልምምድ ብታደርግ የተሻለ ትሆናለህ።';
+    return 'ችግር የለውም፣ ተጨማሪ ልምምድ አድርግ እና እንደገና ሞክር።';
+  }
+
+  // ---------- LIVE VOICE ----------
+  const LIVE_MODEL = 'models/gemini-3.1-flash-live-preview';
+  const liveMessages = document.getElementById('liveMessages');
+  const liveMicBtn = document.getElementById('liveMicBtn');
+  const liveStatus = document.getElementById('liveStatus');
+  const muteBtn = document.getElementById('muteBtn');
+  const live = {
+    ws:null, active:false, stream:null, processor:null, source:null, silentGain:null, inputCtx:null,
+    playCtx:null, nextPlayTime:0, pendingSources:[], currentUserBubble:null, currentBotBubble:null,
+    outputMuted:false, timerInterval:null, startTime:null, aiSpeaking:false, failed:false,
+    connectTimeout:null, progressInterval:null
+  };
+  muteBtn.addEventListener('click', ()=>{
+    live.outputMuted = !live.outputMuted;
+    muteBtn.textContent = live.outputMuted ? '🔈' : '🔊';
+    if (live.outputMuted) clearPendingAudio();
+  });
+  function isSecureEnoughForMic(){ return location.protocol === 'https:' || location.hostname === 'localhost'; }
+  function addLiveMsg(role, text){
+    const div = document.createElement('div'); div.className = 'msg ' + role; div.textContent = text;
+    liveMessages.appendChild(div); liveMessages.scrollTop = liveMessages.scrollHeight; return div;
+  }
+  function b64ToInt16(b64){
+    const bin = atob(b64); const len = bin.length; const bytes = new Uint8Array(len);
+    for (let i=0;i<len;i++) bytes[i] = bin.charCodeAt(i);
+    return new Int16Array(bytes.buffer);
+  }
+  function floatTo16BitB64(float32Arr){
+    const int16 = new Int16Array(float32Arr.length);
+    for (let i=0;i<float32Arr.length;i++){ let s = Math.max(-1, Math.min(1, float32Arr[i])); int16[i] = s < 0 ? s * 0x8000 : s * 0x7FFF; }
+    const bytes = new Uint8Array(int16.buffer);
+    let binary = ''; for (let i=0;i<bytes.length;i++) binary += String.fromCharCode(bytes[i]);
+    return btoa(binary);
+  }
+  function downsampleTo16k(buffer, inRate){
+    if (inRate === 16000) return buffer;
+    const ratio = inRate / 16000; const newLen = Math.round(buffer.length / ratio); const result = new Float32Array(newLen);
+    for (let i=0;i<newLen;i++) result[i] = buffer[Math.floor(i * ratio)];
+    return result;
+  }
+  function playPcmChunk(b64, sampleRate){
+    if (live.outputMuted) return;
+    if (!live.playCtx){ live.playCtx = new (window.AudioContext || window.webkitAudioContext)(); live.nextPlayTime = live.playCtx.currentTime; }
+    const int16 = b64ToInt16(b64); const float32 = new Float32Array(int16.length);
+    for (let i=0;i<int16.length;i++) float32[i] = int16[i] / 32768;
+    const buffer = live.playCtx.createBuffer(1, float32.length, sampleRate);
+    buffer.getChannelData(0).set(float32);
+    const src = live.playCtx.createBufferSource(); src.buffer = buffer; src.connect(live.playCtx.destination);
+    const startAt = Math.max(live.nextPlayTime, live.playCtx.currentTime + 0.02);
+    src.start(startAt); live.nextPlayTime = startAt + buffer.duration; live.pendingSources.push(src);
+    live.aiSpeaking = true; liveStatus.textContent = 'እየተናገረ...'; liveStatus.classList.add('speaking');
+    src.onended = ()=>{
+      live.pendingSources = live.pendingSources.filter(s=>s!==src);
+      if (live.pendingSources.length === 0){ live.aiSpeaking = false; liveStatus.textContent = 'እያዳመጠ...'; liveStatus.classList.remove('speaking'); }
+    };
+  }
+  function clearPendingAudio(){
+    live.pendingSources.forEach(s=>{ try{ s.stop(); }catch(e){} });
+    live.pendingSources = []; live.aiSpeaking = false;
+    if (live.playCtx) live.nextPlayTime = live.playCtx.currentTime;
+  }
+  function formatElapsed(ms){
+    const totalSec = Math.floor(ms/1000); const m = Math.floor(totalSec/60); const s = totalSec % 60;
+    return m + ':' + String(s).padStart(2,'0');
+  }
+  function startLiveTimer(){
+    live.startTime = Date.now(); floatingLiveLabel.textContent = '0:00';
+    if (live.timerInterval) clearInterval(live.timerInterval);
+    live.timerInterval = setInterval(()=>{ floatingLiveLabel.textContent = formatElapsed(Date.now() - live.startTime); }, 1000);
+  }
+  function stopLiveTimer(){ if (live.timerInterval){ clearInterval(live.timerInterval); live.timerInterval = null; } floatingLiveLabel.textContent = 'Live'; }
+  function buildLiveSystemPrompt(){
+    return `You are a friendly, spoken coding tutor for a native Amharic speaker at ${state.level.toUpperCase()} level (${LEVEL_META[state.level].desc}), teaching ${langLine()}.
+Have a natural spoken conversation in English only, but keep it simple and encouraging so an Amharic speaker learning to code can follow along. When describing code out loud, spell out symbols clearly (e.g. "open paren", "colon") since this is audio only.
+If the learner makes a mistake in something they describe, kindly correct it and explain briefly.
+Keep your turns fairly short so the conversation stays interactive.
+Start by warmly greeting the learner and asking an easy coding-related question to begin (e.g. what they'd like to build or practice today).`;
+  }
+  function failLive(text){
+    live.failed = true;
+    if (isKeyError(text)){ stopLive(); invalidateKeyAndReopen(); return; }
+    liveStatus.textContent = '⚠️ ' + text; liveStatus.classList.remove('speaking');
+    liveMicBtn.classList.remove('connecting','live'); live.active = false; stopLiveTimer();
+    if (live.connectTimeout){ clearTimeout(live.connectTimeout); live.connectTimeout=null; }
+    if (live.progressInterval){ clearInterval(live.progressInterval); live.progressInterval=null; }
+    if (live.processor){ try{ live.processor.disconnect(); }catch(e){} live.processor=null; }
+    if (live.source){ try{ live.source.disconnect(); }catch(e){} live.source=null; }
+    if (live.silentGain){ try{ live.silentGain.disconnect(); }catch(e){} live.silentGain=null; }
+    if (live.inputCtx){ try{ live.inputCtx.close(); }catch(e){} live.inputCtx=null; }
+    if (live.stream){ live.stream.getTracks().forEach(t=>t.stop()); live.stream=null; }
+    if (live.ws){ try{ live.ws.close(); }catch(e){} live.ws=null; }
+  }
+  async function startLive(){
+    if (!state.apiKey){ liveStatus.textContent = 'መጀመሪያ API key አስገባ'; return; }
+    if (!isSecureEnoughForMic()){ liveStatus.textContent = '⚠️ HTTPS ላይ መከፈት አለበት'; return; }
+    liveMicBtn.classList.add('connecting'); liveStatus.textContent = 'እየተገናኘ...'; live.failed = false;
+    try{
+      if (!live.playCtx) live.playCtx = new (window.AudioContext || window.webkitAudioContext)();
+      try{ await live.playCtx.resume(); }catch(e){}
+      live.nextPlayTime = live.playCtx.currentTime;
+      try{
+        live.stream = await navigator.mediaDevices.getUserMedia({ audio: { channelCount:1, echoCancellation:true, noiseSuppression:true } });
+      }catch(err){ failLive('የማይክ ፍቃድ ተከልክሏል'); return; }
+
+      const wsUrl = 'wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=' + encodeURIComponent(state.apiKey);
+      live.ws = new WebSocket(wsUrl);
+      live.connectTimeout = setTimeout(()=>{
+        if (!live.active){
+          const rs = live.ws ? live.ws.readyState : -1;
+          const rsNames = {0:'CONNECTING',1:'OPEN',2:'CLOSING',3:'CLOSED'};
+          failLive('ጊዜው አለፈ (timeout) — readyState: ' + (rsNames[rs]||rs) + '. ኔትወርክህን አረጋግጥ ወይም እንደገና ሞክር');
+        }
+      }, 10000);
+
+      let elapsed = 0;
+      live.progressInterval = setInterval(()=>{
+        if (live.active){ clearInterval(live.progressInterval); return; }
+        elapsed += 1;
+        const rs = live.ws ? live.ws.readyState : -1;
+        const rsNames = {0:'CONNECTING',1:'OPEN(no setupComplete yet)',2:'CLOSING',3:'CLOSED'};
+        liveStatus.textContent = 'እየተገናኘ... ' + elapsed + 's — ' + (rsNames[rs]||rs);
+      }, 1000);
+
+      live.ws.onopen = ()=>{
+        live.ws.send(JSON.stringify({
+          setup:{
+            model: LIVE_MODEL,
+            generationConfig:{ responseModalities:['AUDIO'], speechConfig:{ voiceConfig:{ prebuiltVoiceConfig:{ voiceName:'Puck' } } } },
+            systemInstruction:{ parts:[{ text: buildLiveSystemPrompt() }] },
+            inputAudioTranscription:{}, outputAudioTranscription:{},
+            realtimeInputConfig:{ automaticActivityDetection:{ disabled:false } }
+          }
+        }));
+      };
+      live.ws.onmessage = async (event)=>{
+        let raw = event.data;
+        if (raw instanceof Blob){ try{ raw = await raw.text(); }catch(e){ return; } }
+        let msg; try{ msg = JSON.parse(raw); }catch(e){ return; }
+        if (msg.setupComplete){
+          if (live.connectTimeout){ clearTimeout(live.connectTimeout); live.connectTimeout=null; }
+          liveMicBtn.classList.remove('connecting'); liveMicBtn.classList.add('live');
+          liveStatus.textContent = 'እያዳመጠ...'; live.active = true; startLiveTimer(); beginMicStreaming();
+          return;
+        }
+        if (msg.error){ failLive(msg.error.message || 'API error'); return; }
+        const sc = msg.serverContent; if (!sc) return;
+        if (sc.interrupted) clearPendingAudio();
+        if (sc.modelTurn && sc.modelTurn.parts){
+          sc.modelTurn.parts.forEach(part=>{
+            if (part.inlineData && part.inlineData.data){
+              const rate = /rate=(\d+)/.exec(part.inlineData.mimeType||'');
+              playPcmChunk(part.inlineData.data, rate ? parseInt(rate[1]) : 24000);
+            }
+          });
+        }
+        if (sc.inputTranscription && sc.inputTranscription.text){
+          if (!live.currentUserBubble) live.currentUserBubble = addLiveMsg('user', '');
+          live.currentUserBubble.textContent += sc.inputTranscription.text;
+        }
+        if (sc.outputTranscription && sc.outputTranscription.text){
+          if (!live.currentBotBubble) live.currentBotBubble = addLiveMsg('bot', '');
+          live.currentBotBubble.textContent += sc.outputTranscription.text;
+        }
+        if (sc.turnComplete){ live.currentUserBubble = null; live.currentBotBubble = null; }
+      };
+      live.ws.onerror = ()=>{ if (!live.active) failLive('የግንኙነት ስህተት (WebSocket)'); };
+      live.ws.onclose = (ev)=>{
+        if (!live.active && !live.failed){ failLive('ግንኙነት ተዘግቷል (code ' + ev.code + (ev.reason ? ': ' + ev.reason : '') + ')'); }
+        else if (live.active){ stopLive(); }
+      };
+    }catch(err){ failLive(err.message || 'ያልታወቀ ስህተት'); }
+  }
+  function beginMicStreaming(){
+    live.inputCtx = new (window.AudioContext || window.webkitAudioContext)();
+    live.inputCtx.resume().catch(()=>{});
+    live.source = live.inputCtx.createMediaStreamSource(live.stream);
+    live.processor = live.inputCtx.createScriptProcessor(4096, 1, 1);
+    live.silentGain = live.inputCtx.createGain(); live.silentGain.gain.value = 0;
+    live.processor.onaudioprocess = (e)=>{
+      if (!live.active || !live.ws || live.ws.readyState !== 1) return;
+      if (live.aiSpeaking) return;
+      const input = e.inputBuffer.getChannelData(0);
+      const down = downsampleTo16k(input, live.inputCtx.sampleRate);
+      const b64 = floatTo16BitB64(down);
+      live.ws.send(JSON.stringify({ realtimeInput:{ audio:{ data: b64, mimeType:'audio/pcm;rate=16000' } } }));
+    };
+    live.source.connect(live.processor); live.processor.connect(live.silentGain); live.silentGain.connect(live.inputCtx.destination);
+  }
+  function stopLive(){
+    live.active = false; stopLiveTimer();
+    liveMicBtn.classList.remove('live','connecting'); liveStatus.textContent = 'ለመጀመር ንካ'; liveStatus.classList.remove('speaking');
+    clearPendingAudio();
+    if (live.processor){ try{ live.processor.disconnect(); }catch(e){} live.processor=null; }
+    if (live.source){ try{ live.source.disconnect(); }catch(e){} live.source=null; }
+    if (live.silentGain){ try{ live.silentGain.disconnect(); }catch(e){} live.silentGain=null; }
+    if (live.inputCtx){ try{ live.inputCtx.close(); }catch(e){} live.inputCtx=null; }
+    if (live.stream){ live.stream.getTracks().forEach(t=>t.stop()); live.stream=null; }
+    if (live.ws){ try{ live.ws.close(); }catch(e){} live.ws=null; }
+  }
+  liveMicBtn.addEventListener('click', ()=>{
+    if (live.active || live.ws){ stopLive(); }
+    else { startLive().catch(err=> failLive(err.message || 'ያልታወቀ ስህተት')); }
+  });
+
+  // Start the app
+  initRestore();
+})();
+</script>
+</body>
+</html>

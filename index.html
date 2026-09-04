@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-gray-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eva English Language - Professional AI Learning Platform</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Alpine.js CDN -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        eva: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="h-full font-sans antialiased text-gray-900" x-data="evaApp()">
+
+    <!-- Main Container -->
+    <div class="flex h-screen overflow-hidden bg-gray-100">
+
+        <!-- Sidebar for Desktop -->
+        <aside class="hidden md:flex md:flex-shrink-0">
+            <div class="flex flex-col w-64 border-r border-gray-200 bg-white">
+                <!-- Logo Area -->
+                <div class="flex items-center h-16 flex-shrink-0 px-6 bg-gradient-to-r from-eva-900 to-eva-700 text-white shadow-sm">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center border border-white/20 shadow-inner">
+                            <i class="fa-solid fa-graduation-cap text-xl text-eva-100"></i>
+                        </div>
+                        <div>
+                            <span class="font-bold text-lg tracking-wide block leading-tight">Eva English</span>
+                            <span class="text-xs text-eva-200 font-medium tracking-wider uppercase">AI Learning Hub</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation Links -->
+                <div class="flex-1 flex flex-col overflow-y-auto pt-5 pb-4">
+                    <nav class="flex-1 px-3 space-y-1">
+                        <a href="#" @click.prevent="activeTab = 'dashboard'" :class="activeTab === 'dashboard' ? 'bg-eva-50 text-eva-700 font-semibold' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-150">
+                            <i :class="activeTab === 'dashboard' ? 'text-eva-600' : 'text-gray-400 group-hover:text-gray-500'" class="fa-solid fa-house-chimney w-6 mr-3 text-base"></i> Dashboard
+                        </a>
+                        <a href="#" @click.prevent="activeTab = 'live-chat'" :class="activeTab === 'live-chat' ? 'bg-eva-50 text-eva-700 font-semibold' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-150">
+                            <i :class="activeTab === 'live-chat' ? 'text-eva-600' : 'text-gray-400 group-hover:text-gray-500'" class="fa-solid fa-robot w-6 mr-3 text-base"></i> Live Chat AI
+                            <span class="ml-auto bg-eva-100 text-eva-700 text-xs px-2 py-0.5 rounded-full font-semibold">Gemini</span>
+                        </a>
+                        <a href="#" @click.prevent="activeTab = 'vocabulary'" :class="activeTab === 'vocabulary' ? 'bg-eva-50 text-eva-700 font-semibold' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-150">
+                            <i :class="activeTab === 'vocabulary' ? 'text-eva-600' : 'text-gray-400 group-hover:text-gray-500'" class="fa-solid fa-book-open w-6 mr-3 text-base"></i> Vocabulary
+                        </a>
+                        <a href="#" @click.prevent="activeTab = 'grammar'" :class="activeTab === 'grammar' ? 'bg-eva-50 text-eva-700 font-semibold' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-150">
+                            <i :class="activeTab === 'grammar' ? 'text-eva-600' : 'text-gray-400 group-hover:text-gray-500'" class="fa-solid fa-pen-nib w-6 mr-3 text-base"></i> Grammar
+                        </a>
+                        <a href="#" @click.prevent="activeTab = 'tenses'" :class="activeTab === 'tenses' ? 'bg-eva-50 text-eva-700 font-semibold' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-150">
+                            <i :class="activeTab === 'tenses' ? 'text-eva-600' : 'text-gray-400 group-hover:text-gray-500'" class="fa-solid fa-clock-rotate-left w-6 mr-3 text-base"></i> Tenses
+                        </a>
+                        <a href="#" @click.prevent="activeTab = 'pronunciation'" :class="activeTab === 'pronunciation' ? 'bg-eva-50 text-eva-700 font-semibold' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-150">
+                            <i :class="activeTab === 'pronunciation' ? 'text-eva-600' : 'text-gray-400 group-hover:text-gray-500'" class="fa-solid fa-microphone-lines w-6 mr-3 text-base"></i> Pronunciation
+                        </a>
+                        <a href="#" @click.prevent="activeTab = 'speaking'" :class="activeTab === 'speaking' ? 'bg-eva-50 text-eva-700 font-semibold' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-150">
+                            <i :class="activeTab === 'speaking' ? 'text-eva-600' : 'text-gray-400 group-hover:text-gray-500'" class="fa-solid fa-comments w-6 mr-3 text-base"></i> Speaking
+                        </a>
+                        <a href="#" @click.prevent="activeTab = 'listening'" :class="activeTab === 'listening' ? 'bg-eva-50 text-eva-700 font-semibold' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-150">
+                            <i :class="activeTab === 'listening' ? 'text-eva-600' : 'text-gray-400 group-hover:text-gray-500'" class="fa-solid fa-headphones w-6 mr-3 text-base"></i> Listening
+                        </a>
+                        <a href="#" @click.prevent="activeTab = 'reading'" :class="activeTab === 'reading' ? 'bg-eva-50 text-eva-700 font-semibold' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-150">
+                            <i :class="activeTab === 'reading' ? 'text-eva-600' : 'text-gray-400 group-hover:text-gray-500'" class="fa-solid fa-book-reader w-6 mr-3 text-base"></i> Reading
+                        </a>
+                        <a href="#" @click.prevent="activeTab = 'writing'" :class="activeTab === 'writing' ? 'bg-eva-50 text-eva-700 font-semibold' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-150">
+                            <i :class="activeTab === 'writing' ? 'text-eva-600' : 'text-gray-400 group-hover:text-gray-500'" class="fa-solid fa-file-pen w-6 mr-3 text-base"></i> Writing
+                        </a>
+                        <a href="#" @click.prevent="activeTab = 'idioms'" :class="activeTab === 'idioms' ? 'bg-eva-50 text-eva-700 font-semibold' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-150">
+                            <i :class="activeTab === 'idioms' ? 'text-eva-600' : 'text-gray-400 group-hover:text-gray-500'" class="fa-solid fa-face-smile-wink w-6 mr-3 text-base"></i> Idioms & Phrases
+                        </a>
+                        <a href="#" @click.prevent="activeTab = 'quizzes'" :class="activeTab === 'quizzes' ? 'bg-eva-50 text-eva-700 font-semibold' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-150">
+                            <i :class="activeTab === 'quizzes' ? 'text-eva-600' : 'text-gray-400 group-hover:text-gray-500'" class="fa-solid fa-brain w-6 mr-3 text-base"></i> Quizzes
+                        </a>
+                        <a href="#" @click.prevent="activeTab = 'progress'" :class="activeTab === 'progress' ? 'bg-eva-50 text-eva-700 font-semibold' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-150">
+                            <i :class="activeTab === 'progress' ? 'text-eva-600' : 'text-gray-400 group-hover:text-gray-500'" class="fa-solid fa-chart-line w-6 mr-3 text-base"></i> Progress
+                        </a>
+                        <a href="#" @click.prevent="activeTab = 'settings'" :class="activeTab === 'settings' ? 'bg-eva-50 text-eva-700 font-semibold' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-150">
+                            <i :class="activeTab === 'settings' ? 'text-eva-600' : 'text-gray-400 group-hover:text-gray-500'" class="fa-solid fa-gear w-6 mr-3 text-base"></i> Settings
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Content Area -->
+        <div class="flex flex-col flex-1 overflow-hidden">
+            <!-- Header -->
+            <header class="w-full bg-white border-b border-gray-200 z-10">
+                <div class="px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden text-gray-500 hover:text-gray-700 focus:outline-none">
+                            <i class="fa-solid fa-bars text-xl"></i>
+                        </button>
+                        <h1 class="text-xl font-bold text-gray-800 capitalize tracking-tight" x-text="formatTitle(activeTab)"></h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button @click="activeTab = 'settings'" class="hidden sm:flex items-center space-x-2 bg-eva-50 hover:bg-eva-100 text-eva-700 px-3 py-1.5 rounded-lg text-xs font-semibold transition border border-eva-200">
+                            <i class="fa-solid fa-key"></i>
+                            <span x-text="apiKey ? 'API Key Configured' : 'Set Gemini API Key'"></span>
+                        </button>
+                        <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-eva-600 to-eva-400 text-white flex items-center justify-center font-bold text-sm shadow-sm border border-white">
+                            <span>EV</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Scrollable View Area -->
+            <main class="flex-1 overflow-y-auto bg-gray-50 p-4 sm:p-6 lg:p-8">
+
+                <!-- DASHBOARD VIEW -->
+                <div x-show="activeTab === 'dashboard'" class="space-y-6">
+                    <div class="rounded-2xl bg-gradient-to-r from-eva-900 via-eva-700 to-eva-500 text-white p-6 sm:p-8 shadow-xl">
+                        <h2 class="text-2xl sm:text-3xl font-bold">Master English Fluency with AI</h2>
+                        <p class="text-eva-100 mt-2 text-sm sm:text-base">Eva English leverages Google's Gemini API to give you personalized lessons and interactive live conversation.</p>
+                        <div class="mt-6 flex space-x-3">
+                            <button @click="activeTab = 'live-chat'" class="bg-white text-eva-900 hover:bg-eva-50 px-5 py-2.5 rounded-xl font-semibold text-sm shadow transition">Start Live Chat AI</button>
+                            <button @click="activeTab = 'vocabulary'" class="bg-eva-600 text-white border border-white/20 px-5 py-2.5 rounded-xl font-semibold text-sm transition">Explore Vocabulary</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LIVE CHAT AI VIEW -->
+                <div x-show="activeTab === 'live-chat'" class="flex flex-col h-[calc(100vh-8rem)] bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+                    <!-- Chat Header -->
+                    <div class="bg-gradient-to-r from-eva-900 to-eva-700 text-white px-6 py-4 flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center"><i class="fa-solid fa-robot"></i></div>
+                            <div>
+                                <h3 class="font-bold text-sm">Eva - AI English Tutor</h3>
+                                <p class="text-xs text-eva-200">Powered by Gemini API</p>
+                            </div>
+                        </div>
+                        <button @click="chatMessages = [{role: 'ai', text: 'Hello! I am Eva. Let us practice English conversation.'}]" class="text-xs bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg transition">Clear Chat</button>
+                    </div>
+
+                    <!-- Chat Messages Box -->
+                    <div class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 bg-gray-50">
+                        <template x-for="msg in chatMessages">
+                            <div :class="msg.role === 'user' ? 'flex justify-end' : 'flex justify-start'">
+                                <div :class="msg.role === 'user' ? 'bg-eva-600 text-white rounded-2xl rounded-tr-none' : 'bg-white text-gray-800 border border-gray-200 rounded-2xl rounded-tl-none shadow-sm'" class="max-w-md px-4 py-3 text-sm leading-relaxed">
+                                    <p x-text="msg.text"></p>
+                                </div>
+                            </div>
+                        </template>
+                        <div x-show="isChatLoading" class="flex justify-start">
+                            <div class="bg-white text-gray-500 border border-gray-200 px-4 py-3 rounded-2xl rounded-tl-none text-sm shadow-sm flex items-center space-x-2">
+                                <i class="fa-solid fa-circle-notch animate-spin text-eva-600"></i>
+                                <span>Eva is typing...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chat Input Bar -->
+                    <div class="p-4 bg-white border-t border-gray-200">
+                        <form @submit.prevent="sendChatMessage" class="flex space-x-2">
+                            <input type="text" x-model="chatInput" placeholder="Type your message in English..." class="flex-1 bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-eva-500">
+                            <button type="submit" class="bg-eva-600 hover:bg-eva-700 text-white px-6 py-3 rounded-xl font-semibold text-sm transition flex items-center space-x-2">
+                                <i class="fa-solid fa-paper-plane"></i>
+                                <span class="hidden sm:inline">Send</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- VOCABULARY VIEW -->
+                <div x-show="activeTab === 'vocabulary'" class="space-y-6">
+                    <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
+                        <h3 class="text-xl font-bold text-gray-800">Advanced Vocabulary Builder</h3>
+                        <p class="text-sm text-gray-500 mt-1">Enhance your professional lexicon with AI-curated words and definitions.</p>
+                        <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="p-5 rounded-xl border border-gray-200 bg-gray-50">
+                                <span class="text-xs bg-eva-100 text-eva-700 font-semibold px-2.5 py-1 rounded-full">C1 Level</span>
+                                <h4 class="font-bold text-lg text-gray-800 mt-3">Meticulous</h4>
+                                <p class="text-xs text-gray-500 mt-1">Showing great attention to detail; very careful and precise.</p>
+                                <p class="text-xs italic text-gray-600 mt-3 bg-white p-2.5 rounded-lg border">"He was meticulous about keeping his records."</p>
+                            </div>
+                            <div class="p-5 rounded-xl border border-gray-200 bg-gray-50">
+                                <span class="text-xs bg-eva-100 text-eva-700 font-semibold px-2.5 py-1 rounded-full">B2 Level</span>
+                                <h4 class="font-bold text-lg text-gray-800 mt-3">Pragmatic</h4>
+                                <p class="text-xs text-gray-500 mt-1">Dealing with things sensibly and realistically.</p>
+                                <p class="text-xs italic text-gray-600 mt-3 bg-white p-2.5 rounded-lg border">"A pragmatic approach to solving the problem."</p>
+                            </div>
+                            <div class="p-5 rounded-xl border border-gray-200 bg-gray-50">
+                                <span class="text-xs bg-eva-100 text-eva-700 font-semibold px-2.5 py-1 rounded-full">C2 Level</span>
+                                <h4 class="font-bold text-lg text-gray-800 mt-3">Eloquent</h4>
+                                <p class="text-xs text-gray-500 mt-1">Fluent or persuasive in speaking or writing.</p>
+                                <p class="text-xs italic text-gray-600 mt-3 bg-white p-2.5 rounded-lg border">"An eloquent speech on human rights."</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SETTINGS VIEW (API KEY CONFIG) -->
+                <div x-show="activeTab === 'settings'" class="bg-white rounded-2xl border border-gray-200 p-6 sm:p-8 max-w-xl mx-auto shadow-sm">
+                    <h3 class="text-xl font-bold text-gray-800">Gemini API Settings</h3>
+                    <p class="text-sm text-gray-500 mt-1">Enter your Google Gemini API key to activate real-time AI live chat and evaluations.</p>
+                    <div class="mt-6 space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-2">Gemini API Key</label>
+                            <input type="password" x-model="apiKeyInput" placeholder="AIzaSy..." class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-eva-500 font-mono">
+                        </div>
+                        <button @click="saveApiKey()" class="w-full bg-eva-600 hover:bg-eva-700 text-white py-3 rounded-xl font-semibold text-sm transition shadow">Save API Key</button>
+                    </div>
+                </div>
+
+                <!-- OTHER MODULES PLACEHOLDER -->
+                <div x-show="!['dashboard', 'live-chat', 'vocabulary', 'settings'].includes(activeTab)" class="bg-white rounded-2xl border border-gray-200 p-8 text-center shadow-sm">
+                    <h3 class="text-xl font-bold text-gray-800 capitalize" x-text="formatTitle(activeTab) + ' Module'"></h3>
+                    <p class="text-gray-500 text-sm mt-2">This module is part of the professional suite and will be fully expanded in subsequent parts.</p>
+                    <button @click="activeTab = 'dashboard'" class="mt-6 bg-eva-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition">Back to Dashboard</button>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- JavaScript Application State -->
+    <script>
+        function evaApp() {
+            return {
+                activeTab: 'dashboard',
+                mobileMenuOpen: false,
+                apiKey: localStorage.getItem('eva_gemini_api_key') || '',
+                apiKeyInput: localStorage.getItem('eva_gemini_api_key') || '',
+                chatInput: '',
+                isChatLoading: false,
+                chatMessages: [
+                    { role: 'ai', text: 'Hello! I am Eva, your personal English AI tutor. How can I help you improve your English today?' }
+                ],
+                formatTitle(tab) {
+                    if (tab === 'live-chat') return 'Live Chat AI';
+                    if (tab === 'idioms') return 'Idioms & Phrases';
+                    return tab.replace('-', ' ');
+                },
+                saveApiKey() {
+                    this.apiKey = this.apiKeyInput.trim();
+                    localStorage.setItem('eva_gemini_api_key', this.apiKey);
+                    alert('API Key saved successfully!');
+                    this.activeTab = 'live-chat';
+                },
+                async sendChatMessage() {
+                    if (!this.chatInput.trim()) return;
+                    if (!this.apiKey) {
+                        alert('እባክዎ መጀመሪያ Settings ገብተው የ Gemini API Key ያስገቡ!');
+                        this.activeTab = 'settings';
+                        return;
+                    }
+                    const userMsg = this.chatInput;
+                    this.chatMessages.push({ role: 'user', text: userMsg });
+                    this.chatInput = '';
+                    this.isChatLoading = true;
+
+                    try {
+                        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${this.apiKey}`;
+                        const res = await fetch(url, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                contents: [
+                                    {
+                                        role: "user",
+                                        parts: [{ text: "You are Eva, a professional and friendly English language teacher. Help the user learn English, correct their grammar gently, and converse naturally. User says: " + userMsg }]
+                                    }
+                                ]
+                            })
+                        });
+                        const data = await res.json();
+                        const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't process that response.";
+                        this.chatMessages.push({ role: 'ai', text: aiText });
+                    } catch (error) {
+                        this.chatMessages.push({ role: 'ai', text: "Connection error with Gemini API. Please verify your API key." });
+                    } finally {
+                        this.isChatLoading = false;
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>LinguaLive — Learn English</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+  :root {
+    --accent: #38BDF8;
+    --accent-light: #7DD3FC;
+    --teal: #2DD4BF;
+    --bg: #0A0E14;
+    --surface: #11151D;
+    --surface2: #1A2029;
+    --border: #262E3A;
+    --text: #E8ECF2;
+    --muted: #7A8494;
+    --good: #22C55E;
+    --bad: #EF4444;
+    --warn: #F59E0B;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'Space Grotesk', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  button { font-family: inherit; }
+  a { color: var(--accent); }
+
+  /* ── Header ── */
+  .header {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,14,20,0.95); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 16px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo { display: flex; align-items: center; gap: 8px; }
+  .logo-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: linear-gradient(135deg, var(--accent), var(--teal));
+    display: flex; align-items: center; justify-content: center; font-size: 16px;
+  }
+  .logo-text { font-size: 15px; font-weight: 700; }
+  .logo-text span { color: var(--accent); }
+  .header-stats { display: flex; align-items: center; gap: 10px; }
+  .streak-pill, .xp-pill {
+    display: flex; align-items: center; gap: 4px;
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 20px;
+    padding: 4px 10px; font-size: 11px; font-weight: 700; font-family: 'Space Mono', monospace;
+  }
+  .streak-pill { color: var(--warn); }
+  .xp-pill { color: var(--accent); }
+
+  .content-pad { padding-bottom: 76px; min-height: calc(100vh - 56px); }
+  .view { display: none; padding: 16px; }
+  .view.active { display: block; }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 16px; margin-bottom: 14px; position: relative; overflow: hidden;
+  }
+  .card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+
+  .section-title {
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px;
+    color: var(--muted); margin: 18px 0 10px; display: flex; align-items: center; gap: 8px;
+  }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .btn {
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    background: linear-gradient(135deg, var(--accent), var(--teal));
+    border: none; border-radius: 10px; color: #04121A;
+    font-weight: 700; font-size: 13px; padding: 12px 16px; cursor: pointer; width: 100%;
+    transition: transform .15s, opacity .15s;
+  }
+  .btn:active { transform: scale(.98); opacity: .9; }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+  .btn-secondary {
+    background: var(--surface2); color: var(--text); border: 1px solid var(--border);
+  }
+  .btn-outline {
+    background: none; border: 1px solid var(--border); color: var(--muted);
+  }
+  .btn-sm { padding: 9px 12px; font-size: 12px; width: auto; }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  .mode-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+    padding: 14px; cursor: pointer; transition: border-color .15s;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .mode-card:active { border-color: var(--accent); }
+  .mode-icon { font-size: 22px; }
+  .mode-title { font-size: 13px; font-weight: 700; }
+  .mode-desc { font-size: 11px; color: var(--muted); line-height: 1.4; }
+  .mode-badge {
+    align-self: flex-start; font-size: 10px; font-family: 'Space Mono', monospace;
+    background: rgba(56,189,248,0.15); color: var(--accent); padding: 2px 7px; border-radius: 10px;
+  }
+
+  .progress-bar-track {
+    width: 100%; height: 8px; background: var(--surface2); border-radius: 6px; overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--teal)); border-radius: 6px; transition: width .3s; }
+
+  .stat-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; text-align: center; }
+  .stat-num { font-family: 'Space Mono', monospace; font-size: 18px; font-weight: 700; color: var(--accent); }
+  .stat-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-top: 2px; }
+
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0; background: rgba(10,14,20,0.97);
+    border-top: 1px solid var(--border); display: flex; padding: 8px 0 max(8px, env(safe-area-inset-bottom));
+    z-index: 90;
+  }
+  .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px; cursor: pointer; opacity: .4; }
+  .nav-item.active { opacity: 1; }
+  .nav-item .nav-icon { font-size: 19px; }
+  .nav-item .nav-label { font-size: 9.5px; font-weight: 600; color: var(--accent); }
+
+  /* ── Session overlay (full-screen practice mode) ── */
+  .session-overlay {
+    display: none; position: fixed; inset: 0; z-index: 250; background: var(--bg);
+    flex-direction: column;
+  }
+  .session-overlay.visible { display: flex; }
+  .session-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 16px; border-bottom: 1px solid var(--border); background: var(--surface);
+  }
+  .session-title { font-size: 15px; font-weight: 700; }
+  .session-close { background: none; border: none; color: var(--muted); font-size: 20px; cursor: pointer; padding: 4px 8px; }
+  .session-body { flex: 1; overflow-y: auto; padding: 16px; padding-bottom: 90px; }
+
+  .loader-inline { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 40px 0; color: var(--muted); font-size: 13px; }
+  .loader-ring { width: 40px; height: 40px; border-radius: 50%; border: 3px solid var(--border); border-top-color: var(--accent); animation: spin .8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .error-msg { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); border-radius: 12px; padding: 12px 14px; font-size: 13px; color: #FF9090; margin-bottom: 12px; }
+
+  /* Flashcard */
+  .flashcard {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 18px;
+    min-height: 220px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 24px; text-align: center; cursor: pointer; margin-bottom: 16px;
+  }
+  .flashcard .word { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+  .flashcard .meaning { font-size: 14px; color: var(--accent-light); margin-bottom: 8px; display: none; }
+  .flashcard .example { font-size: 12.5px; color: var(--muted); font-style: italic; display: none; }
+  .flashcard.flipped .meaning, .flashcard.flipped .example { display: block; }
+  .flashcard .tap-hint { font-size: 11px; color: var(--muted); margin-top: 10px; }
+  .grade-row { display: grid; grid-template-columns: repeat(2,1fr); gap: 8px; }
+  .grade-btn { padding: 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); font-weight: 700; font-size: 12px; cursor: pointer; }
+  .grade-btn.again { color: var(--bad); border-color: rgba(239,68,68,0.3); }
+  .grade-btn.good { color: var(--good); border-color: rgba(34,197,94,0.3); }
+
+  /* Quiz / MCQ */
+  .quiz-question { font-size: 14px; font-weight: 600; margin-bottom: 12px; line-height: 1.5; }
+  .quiz-passage { font-size: 13.5px; line-height: 1.7; color: #C6CCD6; background: var(--surface2); border-radius: 12px; padding: 14px; margin-bottom: 14px; }
+  .option-btn {
+    display: block; width: 100%; text-align: left; background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px 14px; margin-bottom: 8px; color: var(--text); font-size: 13px; cursor: pointer;
+  }
+  .option-btn.correct { border-color: var(--good); background: rgba(34,197,94,0.12); color: var(--good); }
+  .option-btn.incorrect { border-color: var(--bad); background: rgba(239,68,68,0.12); color: #FF9090; }
+  .option-btn:disabled { cursor: default; }
+  .explain-box { font-size: 12.5px; color: var(--muted); background: var(--surface2); border-radius: 10px; padding: 10px 12px; margin: 8px 0 14px; }
+
+  /* Chat */
+  .chat-scroll { display: flex; flex-direction: column; gap: 10px; padding-bottom: 8px; }
+  .bubble { max-width: 82%; padding: 10px 13px; border-radius: 14px; font-size: 13.5px; line-height: 1.5; }
+  .bubble.ai { background: var(--surface2); border: 1px solid var(--border); align-self: flex-start; border-bottom-left-radius: 4px; }
+  .bubble.user { background: linear-gradient(135deg, var(--accent), var(--teal)); color: #04121A; align-self: flex-end; border-bottom-right-radius: 4px; font-weight: 500; }
+  .bubble .speak-btn { background: none; border: none; color: var(--accent); font-size: 13px; cursor: pointer; margin-top: 4px; padding: 0; }
+  .chat-input-row { display: flex; gap: 8px; position: sticky; bottom: 0; background: var(--bg); padding-top: 8px; }
+  .chat-input {
+    flex: 1; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px;
+    color: var(--text); font-size: 13px; padding: 12px; outline: none;
+  }
+  .chat-send { background: var(--accent); border: none; border-radius: 10px; color: #04121A; font-weight: 700; padding: 0 16px; cursor: pointer; }
+
+  .scenario-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .sub-tabs { display: flex; gap: 8px; margin-bottom: 14px; }
+  .sub-tab-btn { flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface2); color: var(--muted); font-weight: 700; font-size: 12px; cursor: pointer; }
+  .sub-tab-btn.active { background: rgba(56,189,248,0.15); color: var(--accent); border-color: rgba(56,189,248,0.3); }
+
+  textarea.chat-input { resize: vertical; min-height: 90px; }
+
+  .word-compare span { padding: 1px 3px; border-radius: 4px; }
+  .word-compare .match { color: var(--good); }
+  .word-compare .miss { color: var(--bad); text-decoration: line-through; }
+
+  .call-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 72vh; text-align: center; padding: 0 12px; }
+  .call-scenario-label { font-size: 12px; color: var(--muted); margin-bottom: 22px; }
+  .call-avatar {
+    width: 96px; height: 96px; border-radius: 50%; background: var(--surface2); border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center; font-size: 40px; transition: box-shadow .3s, border-color .3s;
+  }
+  .call-avatar.speaking { border-color: var(--accent); box-shadow: 0 0 0 8px rgba(56,189,248,0.12), 0 0 0 16px rgba(56,189,248,0.06); animation: avatar-speak 1s infinite; }
+  @keyframes avatar-speak { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+  .call-status { margin-top: 18px; font-size: 13px; color: var(--muted); }
+  .call-caption { margin-top: 12px; font-size: 14.5px; line-height: 1.5; color: var(--text); max-width: 320px; min-height: 44px; }
+  .call-controls { display: flex; gap: 20px; margin-top: 26px; }
+  .call-ctrl-btn { width: 62px; height: 62px; border-radius: 50%; border: none; font-size: 24px; cursor: pointer; }
+  .call-ctrl-btn.mic { background: linear-gradient(135deg, var(--accent), var(--teal)); color: #04121A; }
+  .call-ctrl-btn.end { background: var(--bad); color: #fff; transform: rotate(135deg); }
+
+  /* Onboarding overlays */
+  .onb-overlay {
+    display: none; position: fixed; inset: 0; z-index: 400; background: var(--bg);
+    flex-direction: column; align-items: center; justify-content: center; padding: 24px;
+  }
+  .onb-overlay.visible { display: flex; }
+  .onb-box { width: 100%; max-width: 440px; }
+  .onb-icon { width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(135deg, var(--accent), var(--teal)); display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 16px; }
+  .onb-title { font-size: 19px; font-weight: 700; text-align: center; margin-bottom: 8px; }
+  .onb-desc { font-size: 13px; color: var(--muted); text-align: center; line-height: 1.6; margin-bottom: 20px; }
+  .onb-field-wrap { position: relative; margin-bottom: 10px; }
+  .onb-field { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: 'Space Mono', monospace; font-size: 13px; padding: 12px 40px 12px 12px; outline: none; }
+  .onb-toggle { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--muted); font-size: 15px; cursor: pointer; }
+  .onb-error { font-size: 12px; color: var(--bad); margin-bottom: 10px; display: none; }
+  .onb-error.visible { display: block; }
+  .onb-choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 18px; }
+  .onb-choice { padding: 14px 10px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface2); text-align: center; cursor: pointer; font-size: 13px; font-weight: 600; }
+  .onb-choice.selected { border-color: var(--accent); background: rgba(56,189,248,0.12); color: var(--accent); }
+  .onb-progress { font-size: 11px; color: var(--muted); text-align: center; margin-bottom: 14px; font-family: 'Space Mono', monospace; }
+
+  .badge-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .badge-chip { background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; padding: 6px 12px; font-size: 11px; display: flex; align-items: center; gap: 5px; }
+  .badge-chip.locked { opacity: .35; }
+
+  .bar-chart { display: flex; align-items: flex-end; gap: 6px; height: 90px; margin-top: 10px; }
+  .bar-chart .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px; height: 100%; }
+  .bar-chart .bar { width: 100%; background: linear-gradient(180deg, var(--teal), var(--accent)); border-radius: 4px 4px 0 0; min-height: 3px; }
+  .bar-chart .bar-day { font-size: 9px; color: var(--muted); }
+
+  .skill-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .skill-name { width: 76px; font-size: 12px; color: var(--muted); flex-shrink: 0; }
+  .skill-pct { width: 36px; text-align: right; font-family: 'Space Mono', monospace; font-size: 11px; color: var(--accent); flex-shrink: 0; }
+
+  .live-fab {
+    position: fixed; width: 62px; height: 62px; border-radius: 50%;
+    background: linear-gradient(135deg, #EF4444, #F59E0B);
+    box-shadow: 0 6px 20px rgba(239,68,68,0.45);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    color: #fff; font-size: 10.5px; font-weight: 800; letter-spacing: 0.5px;
+    z-index: 95; cursor: grab; user-select: none; touch-action: none;
+    animation: fab-pulse 2.2s infinite;
+  }
+  .live-fab:active { cursor: grabbing; }
+  .live-fab.dragging { animation: none; transition: none; }
+  .live-fab-dot { width: 7px; height: 7px; border-radius: 50%; background: #fff; margin-bottom: 2px; animation: dot-blink 1.2s infinite; }
+  .live-fab-label { font-family: 'Space Mono', monospace; }
+  .live-fab.on-call { animation: none; box-shadow: 0 6px 20px rgba(34,197,94,0.5); background: linear-gradient(135deg, #22C55E, #16A34A); }
+  .live-fab.on-call .live-fab-dot { background: #fff; animation: dot-blink 0.8s infinite; }
+
+  .volume-fab {
+    position: fixed; width: 50px; height: 50px; border-radius: 50%;
+    background: linear-gradient(135deg, #3B82F6, #60A5FA);
+    box-shadow: 0 6px 18px rgba(59,130,246,0.4);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; z-index: 95; cursor: grab; user-select: none; touch-action: none;
+  }
+  .volume-fab:active { cursor: grabbing; }
+  .volume-fab.dragging { transition: none; }
+
+  @keyframes fab-pulse { 0%,100% { box-shadow: 0 6px 20px rgba(239,68,68,0.45); } 50% { box-shadow: 0 6px 28px rgba(239,68,68,0.75); } }
+  @keyframes dot-blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+</style>
+</head>
+<body>
+
+<!-- ═══════ ONBOARDING: API KEY ═══════ -->
+<div class="onb-overlay" id="onbKey">
+  <div class="onb-box">
+    <div class="onb-icon">🔑</div>
+    <div class="onb-title">Connect your Gemini key</div>
+    <div class="onb-desc">LinguaLive uses your own free Gemini API key so it runs under your own quota. Get one at <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>. Stored only on this device.</div>
+    <div class="onb-error" id="onbKeyError"></div>
+    <div class="onb-field-wrap">
+      <input type="password" class="onb-field" id="onbKeyInput" placeholder="AIza..." autocomplete="off" autocapitalize="off" spellcheck="false">
+      <button class="onb-toggle" id="onbKeyToggle" type="button">👁️</button>
+    </div>
+    <button class="btn" id="onbKeySaveBtn" onclick="saveGeminiKey()">Continue</button>
+  </div>
+</div>
+
+<!-- ═══════ ONBOARDING: PLACEMENT TEST ═══════ -->
+<div class="onb-overlay" id="onbPlacement">
+  <div class="onb-box">
+    <div class="onb-progress" id="placementProgress">Question 1 / 10</div>
+    <div class="card" id="placementCard"></div>
+  </div>
+</div>
+
+<!-- ═══════ ONBOARDING: GOALS ═══════ -->
+<div class="onb-overlay" id="onbGoals">
+  <div class="onb-box">
+    <div class="onb-icon">🎯</div>
+    <div class="onb-title">What's your goal?</div>
+    <div class="onb-choice-grid" id="goalChoices">
+      <div class="onb-choice" data-val="Travel">✈️ Travel</div>
+      <div class="onb-choice" data-val="Work">💼 Work</div>
+      <div class="onb-choice" data-val="Exams">📝 Exams (IELTS/TOEFL)</div>
+      <div class="onb-choice" data-val="General">🌍 General Fluency</div>
+    </div>
+    <div class="onb-title" style="font-size:15px;">Daily study time</div>
+    <div class="onb-choice-grid" id="minutesChoices" style="margin-top:10px;">
+      <div class="onb-choice" data-val="5">5 min/day</div>
+      <div class="onb-choice" data-val="10">10 min/day</div>
+      <div class="onb-choice" data-val="20">20 min/day</div>
+      <div class="onb-choice" data-val="30">30+ min/day</div>
+    </div>
+    <button class="btn" onclick="finishOnboarding()">Start Learning</button>
+  </div>
+</div>
+
+<!-- ═══════ SESSION OVERLAY (practice modes) ═══════ -->
+<div class="session-overlay" id="sessionOverlay">
+  <div class="session-header">
+    <div class="session-title" id="sessionTitle">Practice</div>
+    <button class="session-close" onclick="closeSession()">✕</button>
+  </div>
+  <div class="session-body" id="sessionBody"></div>
+</div>
+
+<!-- ═══════ APP SHELL ═══════ -->
+<div id="appShell" style="display:none;">
+  <div class="live-fab" id="liveFab">
+    <div class="live-fab-dot" id="liveFabDot"></div>
+    <div class="live-fab-label" id="liveFabLabel">LIVE</div>
+  </div>
+  <div class="header">
+    <div class="logo">
+      <div class="logo-icon">🗣️</div>
+      <div class="logo-text">Lingua<span>Live</span></div>
+    </div>
+    <div class="header-stats">
+      <div class="streak-pill">🔥 <span id="streakVal">0</span></div>
+      <div class="xp-pill">⭐ <span id="xpVal">0</span></div>
+    </div>
+  </div>
+
+  <div class="content-pad">
+
+    <!-- HOME -->
+    <div class="view active" id="view-home">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+          <div>
+            <div style="font-size:12px;color:var(--muted);">Your level</div>
+            <div style="font-size:20px;font-weight:700;color:var(--accent);" id="cefrLevelDisplay">A1</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:12px;color:var(--muted);">Level <span id="playerLevel">1</span></div>
+            <div style="font-size:11px;color:var(--muted);" id="xpToNext">0/100 XP</div>
+          </div>
+        </div>
+        <div class="progress-bar-track"><div class="progress-bar-fill" id="xpBarFill" style="width:0%;"></div></div>
+      </div>
+
+      <div class="stat-grid">
+        <div class="card" style="padding:12px;"><div class="stat-num" id="statWords">0</div><div class="stat-label">Words</div></div>
+        <div class="card" style="padding:12px;"><div class="stat-num" id="statStreak">0</div><div class="stat-label">Day Streak</div></div>
+        <div class="card" style="padding:12px;"><div class="stat-num" id="statAccuracy">—</div><div class="stat-label">Accuracy</div></div>
+      </div>
+
+      <div class="section-title">Today</div>
+      <div class="card">
+        <div style="font-size:13px;color:var(--muted);margin-bottom:10px;">A 5-minute mixed session: vocabulary review, grammar, and reading — tailored to your level.</div>
+        <button class="btn" onclick="startDailyQuiz()">⚡ Start Daily Quiz</button>
+      </div>
+
+      <div class="section-title">Jump back in</div>
+      <div class="grid2">
+        <div class="mode-card" onclick="openVocabulary()"><div class="mode-icon">🗂️</div><div class="mode-title">Vocabulary</div><div class="mode-desc"><span id="vocabDueCount">0</span> due for review</div></div>
+        <div class="mode-card" onclick="openStory()"><div class="mode-icon">📖</div><div class="mode-title">Story Mode</div><div class="mode-desc">Continue your story</div></div>
+      </div>
+    </div>
+
+    <!-- PRACTICE -->
+    <div class="view" id="view-practice">
+      <div class="section-title">Practice Modes</div>
+      <div class="grid2">
+        <div class="mode-card" onclick="openVocabulary()"><div class="mode-icon">🗂️</div><div class="mode-title">Vocabulary</div><div class="mode-desc">Spaced-repetition flashcards</div></div>
+        <div class="mode-card" onclick="openGrammar()"><div class="mode-icon">📐</div><div class="mode-title">Grammar</div><div class="mode-desc">Lessons + drills</div></div>
+        <div class="mode-card" onclick="openReading()"><div class="mode-icon">📰</div><div class="mode-title">Reading</div><div class="mode-desc">Passages + comprehension</div></div>
+        <div class="mode-card" onclick="openListening()"><div class="mode-icon">🎧</div><div class="mode-title">Listening</div><div class="mode-desc">Dictation practice</div></div>
+        <div class="mode-card" onclick="openWriting()"><div class="mode-icon">✍️</div><div class="mode-title">Writing</div><div class="mode-desc">AI-corrected essays</div></div>
+        <div class="mode-card" onclick="openVoice()"><div class="mode-icon">🎤</div><div class="mode-title">Speaking</div><div class="mode-desc">Pronunciation practice</div></div>
+        <div class="mode-card" onclick="openStory()"><div class="mode-icon">📖</div><div class="mode-title">Story Mode</div><div class="mode-desc">Progressive short stories</div></div>
+        <div class="mode-card" onclick="switchView('chat')"><div class="mode-icon">💬</div><div class="mode-title">Live Chat</div><div class="mode-desc">Conversation practice</div></div>
+      </div>
+    </div>
+
+    <!-- CHAT -->
+    <div class="view" id="view-chat">
+      <div class="sub-tabs">
+        <button class="sub-tab-btn active" id="subTabConvo" onclick="switchChatSubTab('convo')">Live Chat</button>
+        <button class="sub-tab-btn" id="subTabTutor" onclick="switchChatSubTab('tutor')">Ask Tutor</button>
+      </div>
+
+      <div id="chatConvoPanel">
+        <div id="scenarioPicker">
+          <div class="section-title">Choose a scenario</div>
+          <div class="scenario-grid">
+            <div class="mode-card" onclick="startConversation('Ordering food at a restaurant')"><div class="mode-icon">🍽️</div><div class="mode-title">Restaurant</div></div>
+            <div class="mode-card" onclick="startConversation('A job interview')"><div class="mode-icon">💼</div><div class="mode-title">Job Interview</div></div>
+            <div class="mode-card" onclick="startConversation('Checking in at the airport')"><div class="mode-icon">✈️</div><div class="mode-title">Airport</div></div>
+            <div class="mode-card" onclick="startConversation('Casual small talk with a new friend')"><div class="mode-icon">👋</div><div class="mode-title">Small Talk</div></div>
+            <div class="mode-card" onclick="startConversation('A business meeting discussing a project')"><div class="mode-icon">📊</div><div class="mode-title">Business Meeting</div></div>
+            <div class="mode-card" onclick="startConversation('Shopping for clothes in a store')"><div class="mode-icon">🛍️</div><div class="mode-title">Shopping</div></div>
+          </div>
+        </div>
+        <div id="convoChatArea" style="display:none;">
+          <button class="btn btn-outline btn-sm" style="margin-bottom:10px;" onclick="endConversation()">← Back to scenarios</button>
+          <div class="chat-scroll" id="convoMessages"></div>
+          <div class="chat-input-row">
+            <input class="chat-input" id="convoInput" placeholder="Type your reply..." onkeydown="if(event.key==='Enter')sendConvoMessage()">
+            <button class="chat-send" onclick="sendConvoMessage()">➤</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="chatTutorPanel" style="display:none;">
+        <div class="chat-scroll" id="tutorMessages"></div>
+        <div class="chat-input-row">
+          <input class="chat-input" id="tutorInput" placeholder="Ask about grammar, words, anything..." onkeydown="if(event.key==='Enter')sendTutorMessage()">
+          <button class="chat-send" onclick="sendTutorMessage()">➤</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROGRESS -->
+    <div class="view" id="view-progress">
+      <div class="section-title">Overview</div>
+      <div class="stat-grid">
+        <div class="card" style="padding:12px;"><div class="stat-num" id="progLevel">A1</div><div class="stat-label">CEFR Level</div></div>
+        <div class="card" style="padding:12px;"><div class="stat-num" id="progXP">0</div><div class="stat-label">Total XP</div></div>
+        <div class="card" style="padding:12px;"><div class="stat-num" id="progWords">0</div><div class="stat-label">Words Learned</div></div>
+      </div>
+
+      <div class="section-title">Skill Accuracy</div>
+      <div class="card" id="skillBars"></div>
+
+      <div class="section-title">Last 7 Days (XP)</div>
+      <div class="card"><div class="bar-chart" id="xpBarChart"></div></div>
+
+      <div class="section-title">Badges</div>
+      <div class="card"><div class="badge-row" id="badgeRow"></div></div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="view" id="view-settings">
+      <div class="section-title">Gemini API Key</div>
+      <div class="card">
+        <div style="font-size:12px;color:var(--muted);margin-bottom:10px;">Update or replace your key.</div>
+        <div class="onb-field-wrap">
+          <input type="password" class="onb-field" id="settingsKeyInput" placeholder="•••• saved — leave blank to keep">
+          <button class="onb-toggle" id="settingsKeyToggle" type="button">👁️</button>
+        </div>
+        <button class="btn btn-secondary" onclick="updateGeminiKeyFromSettings()">Save Key</button>
+      </div>
+
+      <div class="section-title">Learning Goal</div>
+      <div class="card">
+        <div class="onb-choice-grid" id="settingsGoalChoices">
+          <div class="onb-choice" data-val="Travel">✈️ Travel</div>
+          <div class="onb-choice" data-val="Work">💼 Work</div>
+          <div class="onb-choice" data-val="Exams">📝 Exams</div>
+          <div class="onb-choice" data-val="General">🌍 General</div>
+        </div>
+      </div>
+
+      <div class="section-title">Daily Time Goal</div>
+      <div class="card">
+        <div class="onb-choice-grid" id="settingsMinutesChoices">
+          <div class="onb-choice" data-val="5">5 min</div>
+          <div class="onb-choice" data-val="10">10 min</div>
+          <div class="onb-choice" data-val="20">20 min</div>
+          <div class="onb-choice" data-val="30">30+ min</div>
+        </div>
+      </div>
+
+      <div class="section-title">Reset</div>
+      <div class="card">
+        <div style="font-size:12px;color:var(--muted);margin-bottom:10px;">Clears all progress, vocabulary, and history on this device. Cannot be undone.</div>
+        <button class="btn" style="background:var(--bad);color:#fff;" onclick="resetAllProgress()">Reset All Progress</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="bottom-nav">
+    <div class="nav-item active" id="navHome" onclick="switchView('home')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div>
+    <div class="nav-item" id="navPractice" onclick="switchView('practice')"><div class="nav-icon">📚</div><div class="nav-label">Practice</div></div>
+    <div class="nav-item" id="navChat" onclick="switchView('chat')"><div class="nav-icon">💬</div><div class="nav-label">Chat</div></div>
+    <div class="nav-item" id="navProgress" onclick="switchView('progress')"><div class="nav-icon">📈</div><div class="nav-label">Progress</div></div>
+    <div class="nav-item" id="navSettings" onclick="switchView('settings')"><div class="nav-icon">⚙️</div><div class="nav-label">Settings</div></div>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════════════════════
+   STORAGE KEYS & STATE
+   ════════════════════════════════════════════════ */
+const K_KEY = 'll_gemini_key';
+const K_PROFILE = 'll_profile';
+const K_PROGRESS = 'll_progress';
+const K_VOCAB = 'll_vocab';
+const K_MISTAKES = 'll_mistakes';
+const K_STORY = 'll_story';
+
+let GEMINI_KEY = localStorage.getItem(K_KEY) || '';
+const GEMINI_MODEL = 'gemini-3.6-flash';
+
+function loadJSON(key, fallback) {
+  try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }
+  catch (e) { return fallback; }
+}
+function saveJSON(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
+
+let profile = loadJSON(K_PROFILE, null); // {level, goal, minutes, placementDone}
+let progress = loadJSON(K_PROGRESS, {
+  streak: 0, lastStudyDate: null, xp: 0, badges: [],
+  skills: { speaking: {c:0,t:0}, listening: {c:0,t:0}, reading: {c:0,t:0}, writing: {c:0,t:0}, grammar: {c:0,t:0}, vocabulary: {c:0,t:0} },
+  history: []
+});
+let vocab = loadJSON(K_VOCAB, []); // [{word,meaning,example,repetition,interval,dueDate}]
+let mistakes = loadJSON(K_MISTAKES, {}); // {topic: {correct,total}}
+let story = loadJSON(K_STORY, { chapters: [] });
+
+if (window.Telegram && window.Telegram.WebApp) {
+  const tg = window.Telegram.WebApp; tg.ready(); tg.expand();
+  document.body.style.background = tg.themeParams?.bg_color || '#0A0E14';
+}
+
+/* ════════════════════════════════════════════════
+   GEMINI API HELPER (retry + error separation)
+   ════════════════════════════════════════════════ */
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+async function fetchGeminiRaw(promptText, attempt = 0) {
+  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${encodeURIComponent(GEMINI_KEY)}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: promptText }] }],
+      generationConfig: { temperature: 0.7, maxOutputTokens: 2000, responseMimeType: 'application/json' }
+    })
+  });
+  if (res.status === 503 && attempt < 2) { await sleep(1500 * (attempt + 1)); return fetchGeminiRaw(promptText, attempt + 1); }
+  return res;
+}
+
+// For free-form chat (not JSON) — conversation & tutor
+async function fetchGeminiChat(contentsArray, attempt = 0) {
+  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${encodeURIComponent(GEMINI_KEY)}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ contents: contentsArray, generationConfig: { temperature: 0.8, maxOutputTokens: 600 } })
+  });
+  if (res.status === 503 && attempt < 2) { await sleep(1500 * (attempt + 1)); return fetchGeminiChat(contentsArray, attempt + 1); }
+  return res;
+}
+
+class GeminiKeyInvalidError extends Error {}
+class GeminiNetworkError extends Error {}
+
+async function askGeminiJSON(promptText) {
+  if (!GEMINI_KEY) throw new GeminiKeyInvalidError('No key');
+  let res;
+  try { res = await fetchGeminiRaw(promptText); }
+  catch (e) { throw new GeminiNetworkError('Could not reach Gemini\'s server (network/connectivity issue).'); }
+
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    if (res.status === 400 || res.status === 401 || res.status === 403) throw new GeminiKeyInvalidError(errData?.error?.message || 'Key rejected');
+    throw new Error(errData?.error?.message || `Gemini error (HTTP ${res.status})`);
+  }
+  const data = await res.json();
+  const raw = (data.candidates?.[0]?.content?.parts || []).map(p => p.text || '').join('');
+  const clean = raw.replace(/```json|```/g, '').trim();
+  try { return JSON.parse(clean); }
+  catch (e) { throw new Error('AI response was incomplete — please try again.'); }
+}
+
+async function askGeminiText(contentsArray) {
+  if (!GEMINI_KEY) throw new GeminiKeyInvalidError('No key');
+  let res;
+  try { res = await fetchGeminiChat(contentsArray); }
+  catch (e) { throw new GeminiNetworkError('Could not reach Gemini\'s server (network/connectivity issue).'); }
+
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    if (res.status === 400 || res.status === 401 || res.status === 403) throw new GeminiKeyInvalidError(errData?.error?.message || 'Key rejected');
+    throw new Error(errData?.error?.message || `Gemini error (HTTP ${res.status})`);
+  }
+  const data = await res.json();
+  return (data.candidates?.[0]?.content?.parts || []).map(p => p.text || '').join('').trim();
+}
+
+function handleGeminiError(err, targetEl) {
+  console.error(err);
+  if (err instanceof GeminiKeyInvalidError) {
+    localStorage.removeItem(K_KEY); GEMINI_KEY = '';
+    closeSession();
+    document.getElementById('appShell').style.display = 'none';
+    openKeyOnboarding('Your Gemini key was rejected. Please re-enter it.');
+    return;
+  }
+  const msg = err instanceof GeminiNetworkError ? err.message : ('Error: ' + err.message);
+  if (targetEl) targetEl.innerHTML = `<div class="error-msg">⚠️ ${escHtml(msg)}</div>` + (targetEl.dataset.retry ? `<button class="btn" onclick="${targetEl.dataset.retry}">Try Again</button>` : '');
+}
+
+function escHtml(s) { return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+/* ════════════════════════════════════════════════
+   BOOTSTRAP / ONBOARDING
+   ════════════════════════════════════════════════ */
+function boot() {
+  if (!GEMINI_KEY) { openKeyOnboarding(); return; }
+  if (!profile || !profile.placementDone) { runPlacementTest(); return; }
+  showAppShell();
+}
+
+function openKeyOnboarding(errorMsg) {
+  document.getElementById('onbKey').classList.add('visible');
+  const errEl = document.getElementById('onbKeyError');
+  if (errorMsg) { errEl.textContent = errorMsg; errEl.classList.add('visible'); }
+  else { errEl.classList.remove('visible'); }
+}
+
+document.getElementById('onbKeyToggle').addEventListener('click', () => {
+  const inp = document.getElementById('onbKeyInput');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+});
+
+function saveGeminiKey() {
+  const val = document.getElementById('onbKeyInput').value.trim();
+  if (!val) { const e = document.getElementById('onbKeyError'); e.textContent = 'Please paste your Gemini API key.'; e.classList.add('visible'); return; }
+  GEMINI_KEY = val;
+  localStorage.setItem(K_KEY, val);
+  document.getElementById('onbKey').classList.remove('visible');
+  if (!profile || !profile.placementDone) runPlacementTest();
+  else showAppShell();
+}
+
+/* ── Placement test ── */
+let placementQuestions = [];
+let placementIndex = 0;
+let placementScore = 0;
+
+async function runPlacementTest() {
+  document.getElementById('onbPlacement').classList.add('visible');
+  const card = document.getElementById('placementCard');
+  card.innerHTML = `<div class="loader-inline"><div class="loader-ring"></div>Preparing your placement test...</div>`;
+
+  const prompt = `Generate exactly 10 English placement test questions spanning difficulty from beginner (A1) to advanced (C2), increasing in difficulty. Mix grammar and vocabulary questions. Respond ONLY with JSON, no markdown:
+{"questions":[{"question":"string","options":["a","b","c","d"],"answer":"exact text of correct option","level":"A1|A2|B1|B2|C1|C2"}]}`;
+
+  try {
+    const result = await askGeminiJSON(prompt);
+    placementQuestions = result.questions || [];
+    placementIndex = 0; placementScore = 0;
+    renderPlacementQuestion();
+  } catch (err) {
+    if (err instanceof GeminiKeyInvalidError) { document.getElementById('onbPlacement').classList.remove('visible'); handleGeminiError(err); return; }
+    card.innerHTML = `<div class="error-msg">⚠️ ${escHtml(err.message)}</div><button class="btn" onclick="runPlacementTest()">Try Again</button>`;
+  }
+}
+
+function renderPlacementQuestion() {
+  const card = document.getElementById('placementCard');
+  document.getElementById('placementProgress').textContent = `Question ${placementIndex + 1} / ${placementQuestions.length}`;
+  const q = placementQuestions[placementIndex];
+  card.innerHTML = `<div class="quiz-question">${escHtml(q.question)}</div>` +
+    q.options.map(opt => `<button class="option-btn" onclick="answerPlacement(this, ${JSON.stringify(opt).replace(/"/g,'&quot;')})">${escHtml(opt)}</button>`).join('');
+}
+
+function answerPlacement(btn, chosen) {
+  const q = placementQuestions[placementIndex];
+  document.querySelectorAll('#placementCard .option-btn').forEach(b => b.disabled = true);
+  const correct = chosen === q.answer;
+  btn.classList.add(correct ? 'correct' : 'incorrect');
+  if (correct) placementScore++;
+  setTimeout(() => {
+    placementIndex++;
+    if (placementIndex < placementQuestions.length) renderPlacementQuestion();
+    else finishPlacement();
+  }, 700);
+}
+
+function finishPlacement() {
+  const pct = placementScore / placementQuestions.length;
+  let level = 'A1';
+  if (pct >= 0.9) level = 'C2'; else if (pct >= 0.75) level = 'C1'; else if (pct >= 0.6) level = 'B2';
+  else if (pct >= 0.4) level = 'B1'; else if (pct >= 0.2) level = 'A2'; else level = 'A1';
+  profile = { level, goal: 'General', minutes: 10, placementDone: false };
+  saveJSON(K_PROFILE, profile);
+  document.getElementById('onbPlacement').classList.remove('visible');
+  document.getElementById('onbGoals').classList.add('visible');
+}
+
+document.querySelectorAll('#goalChoices .onb-choice').forEach(el => el.addEventListener('click', () => {
+  document.querySelectorAll('#goalChoices .onb-choice').forEach(x => x.classList.remove('selected'));
+  el.classList.add('selected'); profile.goal = el.dataset.val;
+}));
+document.querySelectorAll('#minutesChoices .onb-choice').forEach(el => el.addEventListener('click', () => {
+  document.querySelectorAll('#minutesChoices .onb-choice').forEach(x => x.classList.remove('selected'));
+  el.classList.add('selected'); profile.minutes = el.dataset.val;
+}));
+
+function finishOnboarding() {
+  profile.placementDone = true;
+  saveJSON(K_PROFILE, profile);
+  document.getElementById('onbGoals').classList.remove('visible');
+  showAppShell();
+}
+
+/* ════════════════════════════════════════════════
+   APP SHELL / NAVIGATION
+   ════════════════════════════════════════════════ */
+function showAppShell() {
+  document.getElementById('appShell').style.display = 'block';
+  refreshHeaderStats();
+  refreshHome();
+}
+
+function switchView(name) {
+  ['home','practice','chat','progress','settings'].forEach(v => {
+    document.getElementById('view-' + v).classList.toggle('active', v === name);
+    document.getElementById('nav' + capitalize(v)).classList.toggle('active', v === name);
+  });
+  if (name === 'home') refreshHome();
+  if (name === 'progress') refreshProgress();
+  if (name === 'settings') refreshSettings();
+}
+function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+function refreshHeaderStats() {
+  document.getElementById('streakVal').textContent = progress.streak;
+  document.getElementById('xpVal').textContent = progress.xp;
+}
+
+function xpLevel() { return Math.floor(progress.xp / 100) + 1; }
+
+function refreshHome() {
+  refreshHeaderStats();
+  document.getElementById('cefrLevelDisplay').textContent = profile.level;
+  document.getElementById('playerLevel').textContent = xpLevel();
+  const xpInLevel = progress.xp % 100;
+  document.getElementById('xpToNext').textContent = `${xpInLevel}/100 XP`;
+  document.getElementById('xpBarFill').style.width = xpInLevel + '%';
+  document.getElementById('statWords').textContent = vocab.filter(v => v.repetition >= 1).length;
+  document.getElementById('statStreak').textContent = progress.streak;
+  const acc = overallAccuracy();
+  document.getElementById('statAccuracy').textContent = acc === null ? '—' : acc + '%';
+  document.getElementById('vocabDueCount').textContent = dueVocab().length;
+}
+
+function overallAccuracy() {
+  let c = 0, t = 0;
+  Object.values(progress.skills).forEach(s => { c += s.c; t += s.t; });
+  if (!t) return null;
+  return Math.round((c / t) * 100);
+}
+
+/* ════════════════════════════════════════════════
+   PROGRESS / XP / STREAK / BADGES
+   ════════════════════════════════════════════════ */
+function recordSkill(skill, correct, total) {
+  progress.skills[skill].c += correct;
+  progress.skills[skill].t += total;
+}
+
+function awardXP(amount) {
+  progress.xp += amount;
+  const today = new Date().toISOString().slice(0, 10);
+  if (progress.lastStudyDate !== today) {
+    const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+    progress.streak = (progress.lastStudyDate === yesterday) ? progress.streak + 1 : 1;
+    progress.lastStudyDate = today;
+  }
+  let dayEntry = progress.history.find(h => h.date === today);
+  if (!dayEntry) { dayEntry = { date: today, xp: 0 }; progress.history.push(dayEntry); }
+  dayEntry.xp += amount;
+  if (progress.history.length > 30) progress.history = progress.history.slice(-30);
+  checkBadges();
+  saveJSON(K_PROGRESS, progress);
+  refreshHeaderStats();
+}
+
+function checkBadges() {
+  const wordsLearned = vocab.filter(v => v.repetition >= 1).length;
+  const add = (id) => { if (!progress.badges.includes(id)) progress.badges.push(id); };
+  if (progress.streak >= 7) add('week-streak');
+  if (wordsLearned >= 20) add('word-collector');
+  if (progress.xp >= 500) add('dedicated');
+}
+
+/* ════════════════════════════════════════════════
+   SESSION OVERLAY HELPERS
+   ════════════════════════════════════════════════ */
+function openSession(title) {
+  document.getElementById('sessionTitle').textContent = title;
+  document.getElementById('sessionOverlay').classList.add('visible');
+}
+function closeSession() {
+  document.getElementById('sessionOverlay').classList.remove('visible');
+  removeVolumeFab();
+  refreshHome();
+}
+function sessionLoading(msg) {
+  document.getElementById('sessionBody').innerHTML = `<div class="loader-inline"><div class="loader-ring"></div>${escHtml(msg || 'Loading...')}</div>`;
+}
+
+/* ════════════════════════════════════════════════
+   VOCABULARY (SRS)
+   ════════════════════════════════════════════════ */
+const SRS_INTERVALS = [1, 3, 7, 16, 35, 90];
+function dueVocab() {
+  const today = new Date().toISOString().slice(0, 10);
+  return vocab.filter(v => v.dueDate <= today);
+}
+
+function openVocabulary() {
+  openSession('Vocabulary');
+  renderVocabHome();
+}
+
+function renderVocabHome() {
+  const due = dueVocab();
+  document.getElementById('sessionBody').innerHTML = `
+    <div class="card">
+      <div style="font-size:13px;color:var(--muted);margin-bottom:10px;">${due.length} word(s) due for review. Total learned: ${vocab.length}.</div>
+      <button class="btn" style="margin-bottom:10px;" onclick="startVocabReview()" ${due.length ? '' : 'disabled'}>🗂️ Review Due Words (${due.length})</button>
+      <button class="btn btn-secondary" onclick="fetchNewVocab()">✨ Get 5 New Words</button>
+    </div>`;
+}
+
+async function fetchNewVocab() {
+  sessionLoading('Generating new vocabulary...');
+  const existing = vocab.map(v => v.word).join(', ') || 'none';
+  const prompt = `Generate 5 new English vocabulary words appropriate for a ${profile.level} (CEFR) learner whose goal is "${profile.goal}". Avoid these already-known words: ${existing}. Respond ONLY with JSON:
+{"words":[{"word":"string","meaning":"simple one-line definition","example":"one example sentence using the word"}]}`;
+  try {
+    const result = await askGeminiJSON(prompt);
+    const today = new Date().toISOString().slice(0, 10);
+    (result.words || []).forEach(w => vocab.push({ ...w, repetition: 0, interval: 1, dueDate: today }));
+    saveJSON(K_VOCAB, vocab);
+    renderVocabHome();
+  } catch (err) { handleGeminiError(err, document.getElementById('sessionBody')); }
+}
+
+let vocabQueue = []; let vocabIdx = 0;
+function startVocabReview() {
+  vocabQueue = dueVocab(); vocabIdx = 0;
+  showVocabCard();
+}
+function showVocabCard() {
+  if (vocabIdx >= vocabQueue.length) {
+    document.getElementById('sessionBody').innerHTML = `<div class="card">✅ Review complete!</div>`;
+    setTimeout(renderVocabHome, 900);
+    return;
+  }
+  const card = vocabQueue[vocabIdx];
+  document.getElementById('sessionBody').innerHTML = `
+    <div class="flashcard" id="fc" onclick="document.getElementById('fc').classList.toggle('flipped')">
+      <div class="word">${escHtml(card.word)}</div>
+      <div class="meaning">${escHtml(card.meaning)}</div>
+      <div class="example">"${escHtml(card.example)}"</div>
+      <div class="tap-hint">Tap to flip</div>
+    </div>
+    <div class="grade-row">
+      <button class="grade-btn again" onclick="gradeVocab(false)">😕 Again</button>
+      <button class="grade-btn good" onclick="gradeVocab(true)">😊 Good</button>
+    </div>`;
+}
+function gradeVocab(good) {
+  const card = vocabQueue[vocabIdx];
+  if (good) { card.repetition = Math.min(card.repetition + 1, SRS_INTERVALS.length - 1); card.interval = SRS_INTERVALS[card.repetition]; }
+  else { card.repetition = 0; card.interval = 1; }
+  const due = new Date(Date.now() + card.interval * 86400000).toISOString().slice(0, 10);
+  card.dueDate = due;
+  recordSkill('vocabulary', good ? 1 : 0, 1);
+  saveJSON(K_VOCAB, vocab);
+  awardXP(good ? 5 : 2);
+  vocabIdx++;
+  showVocabCard();
+}
+
+/* ════════════════════════════════════════════════
+   GRAMMAR DRILLS
+   ════════════════════════════════════════════════ */
+function weakTopicsSummary() {
+  const entries = Object.entries(mistakes).map(([topic, s]) => ({ topic, acc: s.correct / Math.max(s.total,1) }));
+  entries.sort((a,b) => a.acc - b.acc);
+  return entries.slice(0, 3).map(e => e.topic).join(', ') || 'none identified yet';
+}
+
+function openGrammar() { openSession('Grammar'); fetchGrammarSet(); }
+
+async function fetchGrammarSet() {
+  sessionLoading('Preparing a grammar lesson...');
+  const prompt = `Create one short English grammar lesson for a ${profile.level} (CEFR) learner. Focus on a topic they may be weak in if relevant (weak areas so far: ${weakTopicsSummary()}), otherwise pick something useful for their level. Respond ONLY with JSON:
+{"topic":"string","explanation":"2-3 sentence explanation in simple English","questions":[{"question":"string","options":["a","b","c","d"],"answer":"exact correct option text","explanation":"short reason"}]}
+Include exactly 4 questions.`;
+  try {
+    const result = await askGeminiJSON(prompt);
+    renderGrammarLesson(result);
+  } catch (err) { handleGeminiError(err, document.getElementById('sessionBody')); }
+}
+
+function renderGrammarLesson(lesson) {
+  let idx = 0; let correct = 0;
+  const body = document.getElementById('sessionBody');
+  function renderQ() {
+    if (idx >= lesson.questions.length) {
+      recordSkill('grammar', correct, lesson.questions.length);
+      if (!mistakes[lesson.topic]) mistakes[lesson.topic] = { correct: 0, total: 0 };
+      mistakes[lesson.topic].correct += correct; mistakes[lesson.topic].total += lesson.questions.length;
+      saveJSON(K_MISTAKES, mistakes);
+      awardXP(correct * 4);
+      body.innerHTML = `<div class="card">✅ Grammar drill complete: ${correct}/${lesson.questions.length} correct.</div><button class="btn" onclick="fetchGrammarSet()">Next Lesson</button>`;
+      return;
+    }
+    const q = lesson.questions[idx];
+    body.innerHTML = `
+      ${idx === 0 ? `<div class="card"><div style="font-weight:700;margin-bottom:6px;">${escHtml(lesson.topic)}</div><div style="font-size:13px;color:var(--muted);">${escHtml(lesson.explanation)}</div></div>` : ''}
+      <div class="card">
+        <div class="quiz-question">${escHtml(q.question)}</div>
+        <div id="gOpts">${q.options.map(o => `<button class="option-btn" onclick="answerGrammar(this,${JSON.stringify(o).replace(/"/g,'&quot;')})">${escHtml(o)}</button>`).join('')}</div>
+        <div id="gExplain"></div>
+      </div>`;
+    window._gq = q;
+  }
+  window.answerGrammar = (btn, chosen) => {
+    const q = window._gq;
+    document.querySelectorAll('#gOpts .option-btn').forEach(b => { b.disabled = true; if (b.textContent === q.answer) b.classList.add('correct'); });
+    if (chosen !== q.answer) btn.classList.add('incorrect'); else correct++;
+    document.getElementById('gExplain').innerHTML = `<div class="explain-box">${escHtml(q.explanation)}</div><button class="btn btn-secondary" onclick="(${renderQ.toString()})()">Next</button>`;
+    idx++;
+  };
+  renderQ();
+}
+
+/* ════════════════════════════════════════════════
+   READING COMPREHENSION
+   ════════════════════════════════════════════════ */
+function openReading() { openSession('Reading'); fetchReadingPassage(); }
+
+async function fetchReadingPassage() {
+  sessionLoading('Generating a passage...');
+  const prompt = `Write a short reading passage (80-150 words) in English at ${profile.level} (CEFR) level, topic related to "${profile.goal}" if natural. Then write 3 comprehension questions. Respond ONLY with JSON:
+{"passage":"string","questions":[{"question":"string","options":["a","b","c","d"],"answer":"exact correct option text"}]}`;
+  try {
+    const result = await askGeminiJSON(prompt);
+    renderReading(result);
+  } catch (err) { handleGeminiError(err, document.getElementById('sessionBody')); }
+}
+
+function renderReading(data) {
+  let idx = 0; let correct = 0;
+  const body = document.getElementById('sessionBody');
+  function renderQ() {
+    if (idx >= data.questions.length) {
+      recordSkill('reading', correct, data.questions.length);
+      awardXP(correct * 4);
+      body.innerHTML = `<div class="card">✅ Reading complete: ${correct}/${data.questions.length} correct.</div><button class="btn" onclick="fetchReadingPassage()">New Passage</button>`;
+      return;
+    }
+    const q = data.questions[idx];
+    body.innerHTML = `
+      ${idx === 0 ? `<div class="quiz-passage">${escHtml(data.passage)}</div>` : ''}
+      <div class="card">
+        <div class="quiz-question">${escHtml(q.question)}</div>
+        <div id="rOpts">${q.options.map(o => `<button class="option-btn" onclick="answerReading(this,${JSON.stringify(o).replace(/"/g,'&quot;')})">${escHtml(o)}</button>`).join('')}</div>
+        <div id="rNext"></div>
+      </div>`;
+    window._rq = q;
+  }
+  window.answerReading = (btn, chosen) => {
+    const q = window._rq;
+    document.querySelectorAll('#rOpts .option-btn').forEach(b => { b.disabled = true; if (b.textContent === q.answer) b.classList.add('correct'); });
+    if (chosen !== q.answer) btn.classList.add('incorrect'); else correct++;
+    document.getElementById('rNext').innerHTML = `<button class="btn btn-secondary" style="margin-top:8px;" onclick="(${renderQ.toString()})()">Next</button>`;
+    idx++;
+  };
+  renderQ();
+}
+
+/* ════════════════════════════════════════════════
+   LISTENING (DICTATION)
+   ════════════════════════════════════════════════ */
+function openListening() { openSession('Listening'); fetchListeningItem(); }
+
+async function fetchListeningItem() {
+  sessionLoading('Generating a listening exercise...');
+  const prompt = `Write ONE natural English sentence (8-16 words) appropriate for a ${profile.level} learner, for a dictation exercise. Respond ONLY with JSON: {"sentence":"string"}`;
+  try {
+    const result = await askGeminiJSON(prompt);
+    renderListening(result.sentence);
+  } catch (err) { handleGeminiError(err, document.getElementById('sessionBody')); }
+}
+
+function renderListening(sentence) {
+  const body = document.getElementById('sessionBody');
+  body.innerHTML = `
+    <div class="card">
+      <div style="font-size:13px;color:var(--muted);margin-bottom:10px;">Listen, then type exactly what you hear.</div>
+      <button class="btn btn-secondary" style="margin-bottom:12px;" onclick="speakText(${JSON.stringify(sentence)})">🔊 Play Sentence</button>
+      <input class="onb-field" id="dictInput" placeholder="Type what you hear..." style="margin-bottom:10px;">
+      <button class="btn" onclick="checkDictation(${JSON.stringify(sentence)})">Check</button>
+      <div id="dictResult"></div>
+    </div>`;
+}
+
+function normalizeText(s) { return s.toLowerCase().replace(/[.,!?;:]/g, '').trim().split(/\s+/); }
+
+function checkDictation(sentence) {
+  const typed = normalizeText(document.getElementById('dictInput').value);
+  const target = normalizeText(sentence);
+  let matches = 0;
+  const compareHtml = target.map((w, i) => {
+    const ok = typed[i] === w;
+    if (ok) matches++;
+    return `<span class="${ok ? 'match' : 'miss'}">${escHtml(w)}</span>`;
+  }).join(' ');
+  const pct = Math.round((matches / target.length) * 100);
+  recordSkill('listening', matches, target.length);
+  awardXP(Math.round(pct / 10));
+  document.getElementById('dictResult').innerHTML = `
+    <div class="explain-box word-compare"><div style="margin-bottom:6px;color:var(--text);">Correct: ${compareHtml}</div>Score: ${pct}%</div>
+    <button class="btn btn-secondary" onclick="fetchListeningItem()">Next Sentence</button>`;
+}
+
+/* ════════════════════════════════════════════════
+   WRITING PRACTICE
+   ════════════════════════════════════════════════ */
+function openWriting() { openSession('Writing'); fetchWritingPrompt(); }
+
+async function fetchWritingPrompt() {
+  sessionLoading('Preparing a writing prompt...');
+  const prompt = `Give ONE short English writing prompt suitable for a ${profile.level} learner (goal: ${profile.goal}). Respond ONLY with JSON: {"prompt":"string"}`;
+  try {
+    const result = await askGeminiJSON(prompt);
+    renderWritingPrompt(result.prompt);
+  } catch (err) { handleGeminiError(err, document.getElementById('sessionBody')); }
+}
+
+function renderWritingPrompt(promptText) {
+  document.getElementById('sessionBody').innerHTML = `
+    <div class="card">
+      <div style="font-weight:700;margin-bottom:8px;">${escHtml(promptText)}</div>
+      <textarea class="onb-field chat-input" id="writingInput" placeholder="Write a short paragraph..." style="margin-bottom:10px;"></textarea>
+      <button class="btn" onclick="submitWriting(${JSON.stringify(promptText)})">Get AI Feedback</button>
+    </div>`;
+}
+
+async function submitWriting(promptText) {
+  const text = document.getElementById('writingInput').value.trim();
+  if (!text) return;
+  sessionLoading('Reviewing your writing...');
+  const prompt = `A ${profile.level} English learner wrote the following in response to the prompt: "${promptText}"\n\nTheir text: "${text}"\n\nGive corrective feedback. Respond ONLY with JSON:
+{"correctedText":"string","issues":[{"issue":"string","suggestion":"string"}],"cefrScore":"A1|A2|B1|B2|C1|C2","encouragement":"one short encouraging sentence"}`;
+  try {
+    const result = await askGeminiJSON(prompt);
+    recordSkill('writing', 1, 1);
+    awardXP(10);
+    document.getElementById('sessionBody').innerHTML = `
+      <div class="card">
+        <div style="font-size:11px;color:var(--muted);text-transform:uppercase;margin-bottom:4px;">Corrected</div>
+        <div style="font-size:13.5px;margin-bottom:12px;">${escHtml(result.correctedText)}</div>
+        <div style="font-size:11px;color:var(--muted);text-transform:uppercase;margin-bottom:6px;">Feedback</div>
+        ${(result.issues||[]).map(i => `<div class="explain-box"><b>${escHtml(i.issue)}</b><br>${escHtml(i.suggestion)}</div>`).join('')}
+        <div style="margin:10px 0;color:var(--accent);font-size:13px;">Estimated level: ${escHtml(result.cefrScore)}</div>
+        <div style="font-size:13px;color:var(--good);">${escHtml(result.encouragement)}</div>
+      </div>
+      <button class="btn btn-secondary" onclick="fetchWritingPrompt()">New Prompt</button>`;
+  } catch (err) { handleGeminiError(err, document.getElementById('sessionBody')); }
+}
+
+/* ════════════════════════════════════════════════
+   VOICE / SPEAKING PRACTICE
+   ════════════════════════════════════════════════ */
+let ttsVolume = 1.0;
+
+function speakText(text) {
+  if (!('speechSynthesis' in window)) return;
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'en-US'; u.rate = 0.95; u.volume = ttsVolume;
+  speechSynthesis.speak(u);
+}
+
+function openVoice() { openSession('Speaking'); fetchVoiceSentence(); }
+
+async function fetchVoiceSentence() {
+  sessionLoading('Generating a sentence...');
+  const prompt = `Write ONE English sentence (6-14 words) at ${profile.level} level for pronunciation practice. Respond ONLY with JSON: {"sentence":"string"}`;
+  try {
+    const result = await askGeminiJSON(prompt);
+    renderVoicePractice(result.sentence);
+  } catch (err) { handleGeminiError(err, document.getElementById('sessionBody')); }
+}
+
+function renderVoicePractice(sentence) {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  document.getElementById('sessionBody').innerHTML = `
+    <div class="card">
+      <div style="font-size:16px;font-weight:600;margin-bottom:12px;">${escHtml(sentence)}</div>
+      <button class="btn btn-secondary" style="margin-bottom:8px;" onclick="speakText(${JSON.stringify(sentence)})">🔊 Listen</button>
+      ${SR ? `<button class="btn" onclick="startVoiceCapture(${JSON.stringify(sentence)})">🎤 Speak</button>` : `<div class="error-msg">Voice recognition isn't supported in this browser. Try Chrome on Android/desktop.</div>`}
+      <div id="voiceResult"></div>
+    </div>`;
+}
+
+function startVoiceCapture(target) {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const rec = new SR();
+  rec.lang = 'en-US'; rec.interimResults = false;
+  document.getElementById('voiceResult').innerHTML = `<div style="margin-top:10px;color:var(--muted);font-size:12px;">🎙️ Listening...</div>`;
+  rec.onresult = (e) => {
+    const transcript = e.results[0][0].transcript;
+    scoreVoiceAttempt(target, transcript);
+  };
+  rec.onerror = () => { document.getElementById('voiceResult').innerHTML = `<div class="error-msg">Could not capture audio. Check mic permission and try again.</div>`; };
+  rec.start();
+}
+
+function scoreVoiceAttempt(target, transcript) {
+  const t = normalizeText(target); const s = normalizeText(transcript);
+  let matches = 0;
+  const html = t.map((w, i) => { const ok = s[i] === w; if (ok) matches++; return `<span class="${ok?'match':'miss'}">${escHtml(w)}</span>`; }).join(' ');
+  const pct = Math.round((matches / t.length) * 100);
+  recordSkill('speaking', matches, t.length);
+  awardXP(Math.round(pct / 10));
+  document.getElementById('voiceResult').innerHTML = `
+    <div class="explain-box word-compare" style="margin-top:10px;">You said: "${escHtml(transcript)}"<br><br>${html}<br><br>Match: ${pct}%</div>
+    <button class="btn btn-secondary" onclick="fetchVoiceSentence()">Next Sentence</button>`;
+}
+
+/* ════════════════════════════════════════════════
+   STORY MODE
+   ════════════════════════════════════════════════ */
+function openStory() { openSession('Story Mode'); renderStoryHome(); }
+
+function renderStoryHome() {
+  const last = story.chapters[story.chapters.length - 1];
+  const body = document.getElementById('sessionBody');
+  if (last && !last.answered) {
+    renderStoryChapter(last, story.chapters.length - 1);
+    return;
+  }
+  body.innerHTML = `
+    <div class="card">
+      <div style="font-size:13px;color:var(--muted);margin-bottom:10px;">${story.chapters.length} chapter(s) completed so far.</div>
+      <button class="btn" onclick="fetchNextChapter()">📖 ${story.chapters.length ? 'Continue Story' : 'Start New Story'}</button>
+    </div>`;
+}
+
+async function fetchNextChapter() {
+  sessionLoading('Writing the next chapter...');
+  const soFar = story.chapters.map(c => c.text).join('\n\n') || 'This is the first chapter.';
+  const prompt = `Continue (or start, if this is the first chapter) a short serialized story in simple English at ${profile.level} (CEFR) level, engaging for an adult learner. Story so far:\n${soFar}\n\nWrite the NEXT short chapter (60-120 words), then one comprehension question about it. Respond ONLY with JSON:
+{"chapterText":"string","comprehensionQuestion":{"question":"string","options":["a","b","c","d"],"answer":"exact correct option text"},"newVocab":[{"word":"string","meaning":"string","example":"string"}]}`;
+  try {
+    const result = await askGeminiJSON(prompt);
+    const chapter = { text: result.chapterText, question: result.comprehensionQuestion, answered: false };
+    story.chapters.push(chapter);
+    const today = new Date().toISOString().slice(0, 10);
+    (result.newVocab || []).slice(0,3).forEach(w => vocab.push({ ...w, repetition: 0, interval: 1, dueDate: today }));
+    saveJSON(K_VOCAB, vocab); saveJSON(K_STORY, story);
+    renderStoryChapter(chapter, story.chapters.length - 1);
+  } catch (err) { handleGeminiError(err, document.getElementById('sessionBody')); }
+}
+
+function renderStoryChapter(chapter, index) {
+  document.getElementById('sessionBody').innerHTML = `
+    <div class="quiz-passage">${escHtml(chapter.text)}</div>
+    <div class="card">
+      <div class="quiz-question">${escHtml(chapter.question.question)}</div>
+      <div id="sOpts">${chapter.question.options.map(o => `<button class="option-btn" onclick="answerStory(this,${JSON.stringify(o).replace(/"/g,'&quot;')},${index})">${escHtml(o)}</button>`).join('')}</div>
+      <div id="sNext"></div>
+    </div>`;
+}
+
+function answerStory(btn, chosen, index) {
+  const chapter = story.chapters[index];
+  document.querySelectorAll('#sOpts .option-btn').forEach(b => { b.disabled = true; if (b.textContent === chapter.question.answer) b.classList.add('correct'); });
+  const correct = chosen === chapter.question.answer;
+  if (!correct) btn.classList.add('incorrect');
+  chapter.answered = true;
+  saveJSON(K_STORY, story);
+  recordSkill('reading', correct ? 1 : 0, 1);
+  awardXP(correct ? 8 : 3);
+  document.getElementById('sNext').innerHTML = `<button class="btn btn-secondary" style="margin-top:8px;" onclick="renderStoryHome()">Continue</button>`;
+}
+
+/* ════════════════════════════════════════════════
+   DAILY QUIZ (Home)
+   ════════════════════════════════════════════════ */
+async function startDailyQuiz() {
+  openSession('Daily Quiz');
+  sessionLoading('Building your daily mix...');
+  const prompt = `Create a short mixed English practice session for a ${profile.level} (CEFR) learner: exactly 2 grammar multiple-choice questions and 1 short reading passage (50-90 words) with 1 comprehension question. Respond ONLY with JSON:
+{"grammar":[{"question":"string","options":["a","b","c","d"],"answer":"exact correct option text"}],"reading":{"passage":"string","question":{"question":"string","options":["a","b","c","d"],"answer":"exact correct option text"}}}`;
+  try {
+    const result = await askGeminiJSON(prompt);
+    const items = [
+      ...result.grammar.map(q => ({ type: 'grammar', q })),
+      { type: 'reading', passage: result.reading.passage, q: result.reading.question }
+    ];
+    runDailyQuizItems(items, 0, 0);
+  } catch (err) { handleGeminiError(err, document.getElementById('sessionBody')); }
+}
+
+function runDailyQuizItems(items, idx, correct) {
+  const body = document.getElementById('sessionBody');
+  if (idx >= items.length) {
+    recordSkill('grammar', correct, items.length);
+    awardXP(correct * 6 + 5);
+    body.innerHTML = `<div class="card">✅ Daily Quiz complete! ${correct}/${items.length} correct. +${correct*6+5} XP</div><button class="btn" onclick="closeSession()">Done</button>`;
+    return;
+  }
+  const item = items[idx];
+  body.innerHTML = `
+    ${item.passage ? `<div class="quiz-passage">${escHtml(item.passage)}</div>` : ''}
+    <div class="card">
+      <div class="quiz-question">${escHtml(item.q.question)}</div>
+      <div id="dqOpts">${item.q.options.map(o => `<button class="option-btn" onclick="answerDailyQuiz(this,${JSON.stringify(o).replace(/"/g,'&quot;')})">${escHtml(o)}</button>`).join('')}</div>
+      <div id="dqNext"></div>
+    </div>`;
+  window._dqItems = items; window._dqIdx = idx; window._dqCorrect = correct;
+  window.answerDailyQuiz = (btn, chosen) => {
+    document.querySelectorAll('#dqOpts .option-btn').forEach(b => { b.disabled = true; if (b.textContent === item.q.answer) b.classList.add('correct'); });
+    let c = window._dqCorrect;
+    if (chosen !== item.q.answer) btn.classList.add('incorrect'); else c++;
+    document.getElementById('dqNext').innerHTML = `<button class="btn btn-secondary" style="margin-top:8px;" onclick="runDailyQuizItems(window._dqItems, window._dqIdx+1, ${c})">Next</button>`;
+  };
+}
+
+/* ════════════════════════════════════════════════
+   LIVE CONVERSATION (Chat tab)
+   ════════════════════════════════════════════════ */
+let convoHistory = []; let convoScenario = '';
+
+function switchChatSubTab(tab) {
+  document.getElementById('subTabConvo').classList.toggle('active', tab === 'convo');
+  document.getElementById('subTabTutor').classList.toggle('active', tab === 'tutor');
+  document.getElementById('chatConvoPanel').style.display = tab === 'convo' ? 'block' : 'none';
+  document.getElementById('chatTutorPanel').style.display = tab === 'tutor' ? 'block' : 'none';
+}
+
+async function startConversation(scenario) {
+  convoScenario = scenario; convoHistory = [];
+  document.getElementById('scenarioPicker').style.display = 'none';
+  document.getElementById('convoChatArea').style.display = 'block';
+  document.getElementById('convoMessages').innerHTML = `<div class="loader-inline"><div class="loader-ring"></div>Starting scenario...</div>`;
+
+  const systemMsg = `You are role-playing this scenario with an English learner (CEFR level ${profile.level}): "${scenario}". Stay in character as the other person in the scenario. Keep replies short (1-3 sentences), natural, and at an appropriate difficulty for their level. Start the conversation now with your opening line.`;
+  convoHistory.push({ role: 'user', parts: [{ text: systemMsg }] });
+  try {
+    const reply = await askGeminiText(convoHistory);
+    convoHistory.push({ role: 'model', parts: [{ text: reply }] });
+    renderConvoMessages();
+  } catch (err) { handleConvoError(err); }
+}
+
+function renderConvoMessages() {
+  const el = document.getElementById('convoMessages');
+  el.innerHTML = convoHistory.filter((m,i) => i > 0).map(m => {
+    if (m.role === 'model') return `<div class="bubble ai">${escHtml(m.parts[0].text)}<button class="speak-btn" onclick='speakText(${JSON.stringify(m.parts[0].text)})'>🔊</button></div>`;
+    return `<div class="bubble user">${escHtml(m.parts[0].text)}</div>`;
+  }).join('');
+  el.scrollTop = el.scrollHeight;
+}
+
+async function sendConvoMessage() {
+  const input = document.getElementById('convoInput');
+  const text = input.value.trim(); if (!text) return;
+  input.value = '';
+  convoHistory.push({ role: 'user', parts: [{ text }] });
+  renderConvoMessages();
+  awardXP(2);
+  try {
+    const reply = await askGeminiText(convoHistory);
+    convoHistory.push({ role: 'model', parts: [{ text: reply }] });
+    renderConvoMessages();
+  } catch (err) { handleConvoError(err); }
+}
+
+function handleConvoError(err) {
+  if (err instanceof GeminiKeyInvalidError) { handleGeminiError(err); return; }
+  document.getElementById('convoMessages').insertAdjacentHTML('beforeend', `<div class="error-msg">⚠️ ${escHtml(err.message)}</div>`);
+}
+
+function endConversation() {
+  document.getElementById('scenarioPicker').style.display = 'block';
+  document.getElementById('convoChatArea').style.display = 'none';
+}
+
+/* ── Voice Call (opened via floating LIVE button, mic in / spoken reply out) ── */
+let callHistory = []; let callScenario = ''; let callListening = false; let callActive = false;
+let callTimerInterval = null; let callStartTime = null;
+
+function openVoiceCallSession() {
+  openSession('Voice Call');
+  createVolumeFab();
+  document.getElementById('sessionBody').innerHTML = `
+    <div id="callScenarioPicker">
+      <div class="section-title">Choose a scenario to call</div>
+      <div class="scenario-grid">
+        <div class="mode-card" onclick="startVoiceCall('Ordering food at a restaurant')"><div class="mode-icon">🍽️</div><div class="mode-title">Restaurant</div></div>
+        <div class="mode-card" onclick="startVoiceCall('A job interview')"><div class="mode-icon">💼</div><div class="mode-title">Job Interview</div></div>
+        <div class="mode-card" onclick="startVoiceCall('Checking in at the airport')"><div class="mode-icon">✈️</div><div class="mode-title">Airport</div></div>
+        <div class="mode-card" onclick="startVoiceCall('Casual small talk with a new friend')"><div class="mode-icon">👋</div><div class="mode-title">Small Talk</div></div>
+        <div class="mode-card" onclick="startVoiceCall('A business meeting discussing a project')"><div class="mode-icon">📊</div><div class="mode-title">Business Meeting</div></div>
+        <div class="mode-card" onclick="startVoiceCall('Shopping for clothes in a store')"><div class="mode-icon">🛍️</div><div class="mode-title">Shopping</div></div>
+      </div>
+    </div>`;
+}
+
+function renderCallChatUI() {
+  document.getElementById('sessionBody').innerHTML = `
+    <div class="call-screen">
+      <div class="call-scenario-label">📞 ${escHtml(callScenario)}</div>
+      <div class="call-avatar" id="callAvatar">🗣️</div>
+      <div class="call-status" id="callStatus">Connecting...</div>
+      <div class="call-caption" id="callCaption"></div>
+      <div class="call-controls">
+        <button class="call-ctrl-btn mic" id="callMicBtn" onclick="startCallMicCapture()">🎤</button>
+        <button class="call-ctrl-btn end" onclick="endVoiceCall()">📞</button>
+      </div>
+      <button class="btn-outline btn btn-sm" style="width:auto;margin-top:14px;" onclick="toggleCallTypeFallback()">⌨️ Type instead</button>
+      <div class="chat-input-row" id="callTypeRow" style="display:none;width:100%;max-width:340px;margin-top:10px;">
+        <input class="chat-input" id="callTypeFallback" placeholder="Type your reply..." onkeydown="if(event.key==='Enter')sendCallTypedMessage()">
+        <button class="chat-send" onclick="sendCallTypedMessage()">➤</button>
+      </div>
+    </div>`;
+}
+
+function toggleCallTypeFallback() {
+  const row = document.getElementById('callTypeRow');
+  row.style.display = row.style.display === 'none' ? 'flex' : 'none';
+  if (row.style.display === 'flex') document.getElementById('callTypeFallback').focus();
+}
+
+/* Reopen the UI for a call that's still running in the background (tapped Live while already on a call) */
+function reopenActiveCall() {
+  openSession('Voice Call');
+  createVolumeFab();
+  renderCallChatUI();
+  setCaption(callHistory.length > 1 ? callHistory[callHistory.length - 1] : null);
+  document.getElementById('callStatus').textContent = 'Tap the mic and speak';
+}
+
+async function startVoiceCall(scenario) {
+  callScenario = scenario; callHistory = [];
+  callActive = true;
+  startCallTimer();
+  renderCallChatUI();
+  document.getElementById('callStatus').textContent = 'Connecting...';
+
+  const systemMsg = `You are role-playing this scenario on a voice call with an English learner (CEFR level ${profile.level}): "${scenario}". Stay in character as the other person. Keep replies short and natural (1-2 sentences), spoken style (no lists, no markdown), appropriate difficulty for their level. Start the call now with your opening line.`;
+  callHistory.push({ role: 'user', parts: [{ text: systemMsg }] });
+  try {
+    const reply = await askGeminiText(callHistory);
+    callHistory.push({ role: 'model', parts: [{ text: reply }] });
+    setCaption({ role: 'model', parts: [{ text: reply }] }, true);
+    const status = document.getElementById('callStatus'); if (status) status.textContent = 'Tap the mic and speak';
+  } catch (err) { handleCallError(err); }
+}
+
+/* Show the AI's avatar as "speaking" while it talks, and show the last line as a caption (no scrolling transcript) */
+function setCaption(message, speak) {
+  const avatar = document.getElementById('callAvatar');
+  const caption = document.getElementById('callCaption');
+  if (!message) { if (caption) caption.textContent = ''; return; }
+  if (caption) caption.textContent = (message.role === 'model' ? '' : 'You: ') + message.parts[0].text;
+  if (speak && message.role === 'model') {
+    if (avatar) avatar.classList.add('speaking');
+    const u = new SpeechSynthesisUtterance(message.parts[0].text);
+    u.lang = 'en-US'; u.rate = 0.95; u.volume = ttsVolume;
+    u.onend = () => { if (avatar) avatar.classList.remove('speaking'); };
+    speechSynthesis.speak(u);
+  }
+}
+
+function startCallMicCapture() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) { document.getElementById('callStatus').textContent = 'Voice recognition not supported — try "Type instead" below.'; return; }
+  if (callListening) return;
+  callListening = true;
+  const rec = new SR();
+  rec.lang = 'en-US'; rec.interimResults = false;
+  document.getElementById('callMicBtn').style.opacity = '0.6';
+  document.getElementById('callStatus').textContent = '🎙️ Listening...';
+  rec.onresult = (e) => {
+    const transcript = e.results[0][0].transcript;
+    sendCallMessage(transcript);
+  };
+  rec.onerror = () => { document.getElementById('callStatus').textContent = 'Could not hear you — check mic permission and try again.'; };
+  rec.onend = () => { callListening = false; const btn = document.getElementById('callMicBtn'); if (btn) btn.style.opacity = '1'; };
+  rec.start();
+}
+
+function sendCallTypedMessage() {
+  const input = document.getElementById('callTypeFallback');
+  const text = input.value.trim(); if (!text) return;
+  input.value = '';
+  sendCallMessage(text);
+}
+
+async function sendCallMessage(text) {
+  callHistory.push({ role: 'user', parts: [{ text }] });
+  setCaption({ role: 'user', parts: [{ text }] }, false);
+  awardXP(3);
+  document.getElementById('callStatus').textContent = 'Thinking...';
+  try {
+    const reply = await askGeminiText(callHistory);
+    callHistory.push({ role: 'model', parts: [{ text: reply }] });
+    setCaption({ role: 'model', parts: [{ text: reply }] }, true);
+    document.getElementById('callStatus').textContent = 'Tap the mic and speak';
+  } catch (err) { handleCallError(err); }
+}
+
+function handleCallError(err) {
+  if (err instanceof GeminiKeyInvalidError) { handleGeminiError(err); return; }
+  const status = document.getElementById('callStatus');
+  if (status) status.textContent = '⚠️ ' + err.message;
+}
+
+function endVoiceCall() {
+  speechSynthesis.cancel();
+  callActive = false;
+  stopCallTimer();
+  closeSession();
+}
+
+/* ── Live button call timer ── */
+function startCallTimer() {
+  callStartTime = Date.now();
+  document.getElementById('liveFab').classList.add('on-call');
+  updateFabTimerDisplay();
+  if (callTimerInterval) clearInterval(callTimerInterval);
+  callTimerInterval = setInterval(updateFabTimerDisplay, 1000);
+}
+function updateFabTimerDisplay() {
+  const secs = Math.floor((Date.now() - callStartTime) / 1000);
+  const m = String(Math.floor(secs / 60)).padStart(2, '0');
+  const s = String(secs % 60).padStart(2, '0');
+  const label = document.getElementById('liveFabLabel');
+  if (label) label.textContent = `${m}:${s}`;
+}
+function stopCallTimer() {
+  if (callTimerInterval) clearInterval(callTimerInterval);
+  callTimerInterval = null; callStartTime = null;
+  document.getElementById('liveFab').classList.remove('on-call');
+  const label = document.getElementById('liveFabLabel');
+  if (label) label.textContent = 'LIVE';
+}
+
+/* ── Floating draggable buttons (Live call + Volume toggle) ── */
+function handleLiveFabTap() {
+  if (!GEMINI_KEY || !profile) return;
+  if (callActive) reopenActiveCall();
+  else openVoiceCallSession();
+}
+
+function toggleVolumeFab() {
+  ttsVolume = ttsVolume === 1.0 ? 0.35 : 1.0;
+  document.getElementById('volumeFab').textContent = ttsVolume === 1.0 ? '🔊' : '🔈';
+}
+
+function setupDraggableFab(fab, posKey, defaultRight, defaultBottom, onTap) {
+  let dragging = false, moved = false, startX = 0, startY = 0, origX = 0, origY = 0;
+
+  function place(x, y) {
+    const margin = 6;
+    const maxX = window.innerWidth - fab.offsetWidth - margin;
+    const maxY = window.innerHeight - fab.offsetHeight - margin;
+    x = Math.min(Math.max(x, margin), maxX);
+    y = Math.min(Math.max(y, margin), maxY);
+    fab.style.left = x + 'px'; fab.style.top = y + 'px';
+    fab.style.right = 'auto'; fab.style.bottom = 'auto';
+    localStorage.setItem(posKey, JSON.stringify({ x, y }));
+  }
+
+  const saved = loadJSON(posKey, null);
+  if (saved) place(saved.x, saved.y);
+  else { fab.style.right = defaultRight + 'px'; fab.style.bottom = defaultBottom + 'px'; }
+
+  function onDown(e) {
+    dragging = true; moved = false;
+    const pt = e.touches ? e.touches[0] : e;
+    startX = pt.clientX; startY = pt.clientY;
+    const rect = fab.getBoundingClientRect();
+    origX = rect.left; origY = rect.top;
+    fab.classList.add('dragging');
+  }
+  function onMove(e) {
+    if (!dragging) return;
+    const pt = e.touches ? e.touches[0] : e;
+    const dx = pt.clientX - startX, dy = pt.clientY - startY;
+    if (Math.abs(dx) > 6 || Math.abs(dy) > 6) moved = true;
+    place(origX + dx, origY + dy);
+    e.preventDefault();
+  }
+  function onUp() {
+    if (!dragging) return;
+    dragging = false;
+    fab.classList.remove('dragging');
+    if (!moved) onTap();
+  }
+
+  fab.addEventListener('mousedown', onDown);
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('mouseup', onUp);
+  fab.addEventListener('touchstart', onDown, { passive: true });
+  window.addEventListener('touchmove', onMove, { passive: false });
+  window.addEventListener('touchend', onUp);
+}
+
+setupDraggableFab(document.getElementById('liveFab'), 'll_fab_pos', 16, 86, handleLiveFabTap);
+
+/* Volume fab only exists while the Voice Call screen is open */
+function createVolumeFab() {
+  if (document.getElementById('volumeFab')) return;
+  const el = document.createElement('div');
+  el.className = 'volume-fab';
+  el.id = 'volumeFab';
+  el.textContent = ttsVolume === 1.0 ? '🔊' : '🔈';
+  document.body.appendChild(el);
+  setupDraggableFab(el, 'll_vol_fab_pos', 92, 96, toggleVolumeFab);
+}
+function removeVolumeFab() {
+  const el = document.getElementById('volumeFab');
+  if (el) el.remove();
+}
+
+/* ════════════════════════════════════════════════
+   AI TUTOR CHAT (Chat tab)
+   ════════════════════════════════════════════════ */
+let tutorHistory = [];
+
+function renderTutorMessages() {
+  const el = document.getElementById('tutorMessages');
+  el.innerHTML = tutorHistory.map(m => m.role === 'model'
+    ? `<div class="bubble ai">${escHtml(m.parts[0].text)}</div>`
+    : `<div class="bubble user">${escHtml(m.parts[0].text)}</div>`).join('');
+  el.scrollTop = el.scrollHeight;
+}
+
+async function sendTutorMessage() {
+  const input = document.getElementById('tutorInput');
+  const text = input.value.trim(); if (!text) return;
+  input.value = '';
+  if (tutorHistory.length === 0) {
+    tutorHistory.push({ role: 'user', parts: [{ text: `You are a friendly, encouraging English tutor helping a ${profile.level} (CEFR) learner. Explain grammar and vocabulary questions clearly and simply, with examples. Keep answers concise. Here is their first question: ${text}` }] });
+  } else {
+    tutorHistory.push({ role: 'user', parts: [{ text }] });
+  }
+  renderTutorMessages();
+  try {
+    const reply = await askGeminiText(tutorHistory);
+    tutorHistory.push({ role: 'model', parts: [{ text: reply }] });
+    renderTutorMessages();
+    awardXP(1);
+  } catch (err) {
+    if (err instanceof GeminiKeyInvalidError) { handleGeminiError(err); return; }
+    document.getElementById('tutorMessages').insertAdjacentHTML('beforeend', `<div class="error-msg">⚠️ ${escHtml(err.message)}</div>`);
+  }
+}
+
+/* ════════════════════════════════════════════════
+   PROGRESS VIEW
+   ════════════════════════════════════════════════ */
+function refreshProgress() {
+  document.getElementById('progLevel').textContent = profile.level;
+  document.getElementById('progXP').textContent = progress.xp;
+  document.getElementById('progWords').textContent = vocab.filter(v => v.repetition >= 1).length;
+
+  const skillNames = { speaking:'Speaking', listening:'Listening', reading:'Reading', writing:'Writing', grammar:'Grammar', vocabulary:'Vocabulary' };
+  document.getElementById('skillBars').innerHTML = Object.entries(progress.skills).map(([k,s]) => {
+    const pct = s.t ? Math.round((s.c/s.t)*100) : 0;
+    return `<div class="skill-row"><div class="skill-name">${skillNames[k]}</div><div class="progress-bar-track"><div class="progress-bar-fill" style="width:${pct}%;"></div></div><div class="skill-pct">${pct}%</div></div>`;
+  }).join('');
+
+  const last7 = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(Date.now() - i * 86400000).toISOString().slice(0, 10);
+    const entry = progress.history.find(h => h.date === d);
+    last7.push({ date: d, xp: entry ? entry.xp : 0 });
+  }
+  const maxXp = Math.max(...last7.map(d => d.xp), 10);
+  document.getElementById('xpBarChart').innerHTML = last7.map(d => `
+    <div class="bar-col"><div class="bar" style="height:${Math.max((d.xp/maxXp)*100,3)}%;"></div><div class="bar-day">${d.date.slice(5)}</div></div>`).join('');
+
+  const allBadges = [
+    { id: 'week-streak', icon: '🔥', label: '7-Day Streak' },
+    { id: 'word-collector', icon: '🗂️', label: '20 Words' },
+    { id: 'dedicated', icon: '⭐', label: '500 XP' }
+  ];
+  document.getElementById('badgeRow').innerHTML = allBadges.map(b => `<div class="badge-chip ${progress.badges.includes(b.id) ? '' : 'locked'}">${b.icon} ${b.label}</div>`).join('');
+}
+
+/* ════════════════════════════════════════════════
+   SETTINGS VIEW
+   ════════════════════════════════════════════════ */
+document.getElementById('settingsKeyToggle').addEventListener('click', () => {
+  const inp = document.getElementById('settingsKeyInput');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+});
+
+function refreshSettings() {
+  document.getElementById('settingsKeyInput').placeholder = '•••• saved — leave blank to keep';
+  document.querySelectorAll('#settingsGoalChoices .onb-choice').forEach(el => el.classList.toggle('selected', el.dataset.val === profile.goal));
+  document.querySelectorAll('#settingsMinutesChoices .onb-choice').forEach(el => el.classList.toggle('selected', el.dataset.val === String(profile.minutes)));
+}
+
+document.querySelectorAll('#settingsGoalChoices .onb-choice').forEach(el => el.addEventListener('click', () => {
+  document.querySelectorAll('#settingsGoalChoices .onb-choice').forEach(x => x.classList.remove('selected'));
+  el.classList.add('selected'); profile.goal = el.dataset.val; saveJSON(K_PROFILE, profile);
+}));
+document.querySelectorAll('#settingsMinutesChoices .onb-choice').forEach(el => el.addEventListener('click', () => {
+  document.querySelectorAll('#settingsMinutesChoices .onb-choice').forEach(x => x.classList.remove('selected'));
+  el.classList.add('selected'); profile.minutes = el.dataset.val; saveJSON(K_PROFILE, profile);
+}));
+
+function updateGeminiKeyFromSettings() {
+  const val = document.getElementById('settingsKeyInput').value.trim();
+  if (!val) return;
+  GEMINI_KEY = val; localStorage.setItem(K_KEY, val);
+  document.getElementById('settingsKeyInput').value = '';
+}
+
+function resetAllProgress() {
+  if (!confirm('This will erase all progress, vocabulary, and history on this device. Continue?')) return;
+  localStorage.removeItem(K_PROFILE); localStorage.removeItem(K_PROGRESS);
+  localStorage.removeItem(K_VOCAB); localStorage.removeItem(K_MISTAKES); localStorage.removeItem(K_STORY);
+  location.reload();
+}
+
+/* ════════════════════════════════════════════════
+   START
+   ════════════════════════════════════════════════ */
+boot();
+</script>
+</body>
+</html>
